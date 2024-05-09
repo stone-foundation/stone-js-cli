@@ -38,7 +38,7 @@ export class Router {
    * Find command.
    *
    * @param   {IncomingEvent} event
-   * @returns {*}
+   * @returns {(AbstractCommand|undefined)}
    */
   findCommand (event) {
     return this
@@ -61,10 +61,14 @@ export class Router {
    * @returns {*}
    */
   runCommand (event, command) {
-    if (!isFunction(command.handle)) {
-      throw new TypeError(`No handle method defined in command class(${command.toString()}).`)
-    }
+    if (!command) {
+      this.#container.builder.showHelp()
+    } else {
+      if (!isFunction(command.handle)) {
+        throw new TypeError(`No handle method defined in command class(${command.toString()}).`)
+      }
 
-    return command.handle(event)
+      return command.handle(event)
+    }
   }
 }
