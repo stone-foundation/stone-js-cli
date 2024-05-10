@@ -103,20 +103,3 @@ export function getEnvVariables (options) {
 
   return Dotenv.config(options).parsed
 }
-
-/**
- * Load the env variables in .env file to process.env.
- *
- * @param {Object} options
- * @param {Object} options.options
- * @param {Object} options.private
- * @param {Object} options.public
- * @returns
- */
-export function loadEnvVariables (options) {
-  const publicOptions = { ...options?.options, ...options?.public }
-  const privateOptions = { ...options?.options, ...options?.private }
-
-  getEnvVariables(publicOptions)
-  getEnvVariables(privateOptions)
-}

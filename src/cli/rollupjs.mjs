@@ -1,8 +1,8 @@
 import { rollup } from 'rollup'
 import deepmerge from 'deepmerge'
 import babel from '@rollup/plugin-babel'
-import { getEnvVariables } from './utils.mjs'
 import replace from '@rollup/plugin-replace'
+import { getEnvVariables } from './utils.mjs'
 import multi from '@rollup/plugin-multi-entry'
 import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
@@ -12,11 +12,11 @@ import { basePath, buildPath, distPath } from '@stone-js/common'
 /**
  * Rollup build.
  *
- * @param   {Config} config
+ * @param {Config} config
  * @returns
  */
 export async function rollupBuild (config) {
-  const options = makeBuildOptions(config.get('autoload.modules'), config.get('rollupOtions', {}), config.get('dotenv', {}))
+  const options = makeBuildOptions(config)
 
   for (const option of options) {
     const bundle = await rollup(option)
@@ -39,12 +39,14 @@ export async function rollupBundle () {
  * Make Rollup build options.
  *
  * @private
- * @param   {Object} inputs
- * @param   {Object} options
- * @param   {Object} dotenvOptions
+ * @param   {Config} config
  * @returns {Object}
  */
-function makeBuildOptions (inputs, options, dotenvOptions) {
+function makeBuildOptions (config) {
+  const inputs = config.get('autoload.modules')
+  const options = config.get('rollupOtions', {})
+  const dotenvOptions = config.get('dotenv', {})
+
   return Object.entries(inputs).map(([name, input]) => deepmerge({
     input: basePath(input),
     output: [

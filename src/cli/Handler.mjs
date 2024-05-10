@@ -3,8 +3,8 @@ import { Mapper } from '@stone-js/adapters'
 import { version } from '../../package.json'
 import { buildTask } from './task-build.mjs'
 import { serveTask } from './task-serve.mjs'
+import { getEnvVariables } from './utils.mjs'
 import { customTask } from './task-custom.mjs'
-import { loadEnvVariables } from './utils.mjs'
 import { mapperInputResolver } from './resolvers.mjs'
 import { Container } from '@stone-js/service-container'
 import { CommonInputMiddleware } from './middleware.mjs'
@@ -49,8 +49,8 @@ export class Handler {
    * Useful to initialize things at each events.
    */
   beforeHandle () {
+    this.#loadDotenvVariables()
     this.#command(this.#container.builder)
-    loadEnvVariables(this.#container.config.get('dotenv', {}))
   }
 
   /**
@@ -100,5 +100,19 @@ export class Handler {
       })
       .help()
       .version(version)
+  }
+
+  /**
+   * Load the env variables in .env file to process.env.
+   *
+   * @returns
+   */
+  #loadDotenvVariables () {
+    const options = this.#container.config.get('dotenv', {})
+    const publicOptions = { ...options?.options, ...options?.public }
+    const privateOptions = { ...options?.options, ...options?.private }
+
+    getEnvVariables(publicOptions)
+    getEnvVariables(privateOptions)
   }
 }
