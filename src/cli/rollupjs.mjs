@@ -1,6 +1,8 @@
 import { rollup } from 'rollup'
 import deepmerge from 'deepmerge'
 import babel from '@rollup/plugin-babel'
+import { getEnvVariables } from './utils.mjs'
+import replace from '@rollup/plugin-replace'
 import multi from '@rollup/plugin-multi-entry'
 import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
@@ -14,7 +16,7 @@ import { basePath, buildPath, distPath } from '@stone-js/common'
  * @returns
  */
 export async function rollupBuild (config) {
-  const options = makeBuildOptions(config.get('autoload.modules'), config.get('rollupOtions', {}))
+  const options = makeBuildOptions(config.get('autoload.modules'), config.get('rollupOtions', {}), config.get('dotenv', {}))
 
   for (const option of options) {
     const bundle = await rollup(option)
@@ -38,10 +40,11 @@ export async function rollupBundle () {
  *
  * @private
  * @param   {Object} inputs
- * @param   {Object} [options={}]
+ * @param   {Object} options
+ * @param   {Object} dotenvOptions
  * @returns {Object}
  */
-function makeBuildOptions (inputs, options = {}) {
+function makeBuildOptions (inputs, options, dotenvOptions) {
   return Object.entries(inputs).map(([name, input]) => deepmerge({
     input: basePath(input),
     output: [
@@ -52,7 +55,8 @@ function makeBuildOptions (inputs, options = {}) {
       nodeExternals({ deps: false }), // Must always be before `nodeResolve()`.
       nodeResolve(),
       babel({ babelHelpers: 'bundled' }),
-      commonjs()
+      commonjs(),
+      replace(replaceProcessEnvVars(dotenvOptions))
     ]
   }, options))
 }
@@ -78,5 +82,32 @@ function makeBundleOptions () {
       babel({ babelHelpers: 'bundled' }),
       commonjs()
     ]
+  }
+}
+
+/**
+ * Replace process env variables.
+ *
+ * @private
+ * @param   {Object} options
+ * @returns {Object}
+ */
+function replaceProcessEnvVars (options) {
+  const publicOptions = { ...options?.options, ...options?.public }
+  const prefix = publicOptions.prefix ?? 'process.__env__'
+
+  // Get public envs
+  const publicEnv = getEnvVariables(publicOptions)
+
+  // Build public values
+  const values = prefix.endsWith('.')
+    ? Object
+      .entries(publicEnv)
+      .reduce((prev, [key, value]) => ({ ...prev, [`${prefix}${key}`]: JSON.stringify(value) }), {})
+    : { [prefix]: JSON.stringify(publicEnv) }
+
+  return {
+    values,
+    ...options?.replace
   }
 }

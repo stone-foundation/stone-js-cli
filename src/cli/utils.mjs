@@ -1,5 +1,7 @@
+import Dotenv from 'dotenv'
 import { globSync } from 'glob'
 import { readFileSync } from 'node:fs'
+import DotenvExpand from 'dotenv-expand'
 import { createHash } from 'node:crypto'
 import { basePath, buildPath } from '@stone-js/common'
 import { readJsonSync, pathExistsSync, outputJsonSync } from 'fs-extra/esm'
@@ -80,4 +82,41 @@ export function shouldBuild (container) {
       if (prev) return prev
       return Object.keys(cache).filter(v => !files.includes(v)).length > 0 || !cache[filePath] || cache[filePath] !== getFileHash(filePath)
     }, false)
+}
+
+/**
+ * Get the env variables in .env file use Dotenv package.
+ *
+ * @param   {Object}  options
+ * @param   {boolean} options.debug
+ * @param   {boolean} options.expand
+ * @param   {boolean} options.override
+ * @param   {boolean} options.ignoreProcessEnv
+ * @returns {Object}
+ */
+export function getEnvVariables (options) {
+  options.processEnv = options.ignoreProcessEnv ? {} : process.env
+
+  if (options.expand) {
+    return DotenvExpand.expand({ ignoreProcessEnv: options.ignoreProcessEnv, parsed: Dotenv.config(options).parsed }).parsed
+  }
+
+  return Dotenv.config(options).parsed
+}
+
+/**
+ * Load the env variables in .env file to process.env.
+ *
+ * @param {Object} options
+ * @param {Object} options.options
+ * @param {Object} options.private
+ * @param {Object} options.public
+ * @returns
+ */
+export function loadEnvVariables (options) {
+  const publicOptions = { ...options?.options, ...options?.public }
+  const privateOptions = { ...options?.options, ...options?.private }
+
+  getEnvVariables(publicOptions)
+  getEnvVariables(privateOptions)
 }

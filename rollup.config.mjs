@@ -23,11 +23,13 @@ export default Object.entries(inputs).map(([name, input]) => ({
   ],
   external: [
     'glob',
+    'dotenv',
     'chokidar',
     /^@?rollup/,
     'cross-spawn',
     '@babel/core',
     'fs-extra/esm',
+    'dotenv-expand'
   ],
   plugins: [
     json(),

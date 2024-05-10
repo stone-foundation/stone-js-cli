@@ -4,6 +4,7 @@ import { version } from '../../package.json'
 import { buildTask } from './task-build.mjs'
 import { serveTask } from './task-serve.mjs'
 import { customTask } from './task-custom.mjs'
+import { loadEnvVariables } from './utils.mjs'
 import { mapperInputResolver } from './resolvers.mjs'
 import { Container } from '@stone-js/service-container'
 import { CommonInputMiddleware } from './middleware.mjs'
@@ -49,6 +50,7 @@ export class Handler {
    */
   beforeHandle () {
     this.#command(this.#container.builder)
+    loadEnvVariables(this.#container.config.get('dotenv', {}))
   }
 
   /**
