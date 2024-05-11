@@ -1,8 +1,8 @@
-import { setCache } from './utils.mjs'
+import { setCache } from '../utils.mjs'
 import { emptyDirSync } from 'fs-extra/esm'
 import { Pipeline } from '@stone-js/pipeline'
 import { buildPath, distPath } from '@stone-js/common'
-import { rollupBuild, rollupBundle } from './rollupjs.mjs'
+import { rollupBuild, rollupBundle } from '../bundler/rollupjs.mjs'
 import { makeBootstrapFile, makeConsoleBootstrapFile } from './stubs.mjs'
 
 /** @returns {pipeable[]} */
@@ -34,7 +34,7 @@ export function buildTask (container) {
   return Pipeline
     .create()
     .send(container)
-    .through(buildPipes.concat(bundlePipes))
+    .through([].concat(bundlePipes))
     .thenReturn()
 }
 

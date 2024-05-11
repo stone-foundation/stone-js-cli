@@ -1,9 +1,9 @@
 import Dotenv from 'dotenv'
 import { globSync } from 'glob'
 import { readFileSync } from 'node:fs'
-import DotenvExpand from 'dotenv-expand'
 import { createHash } from 'node:crypto'
-import { basePath, buildPath } from '@stone-js/common'
+import DotenvExpand from 'dotenv-expand'
+import { basePath, buildPath, RuntimeError } from '@stone-js/common'
 import { readJsonSync, pathExistsSync, outputJsonSync } from 'fs-extra/esm'
 
 /**
@@ -19,7 +19,7 @@ import { readJsonSync, pathExistsSync, outputJsonSync } from 'fs-extra/esm'
 export function getApplicationFiles (config) {
   return Object
     .entries(config.get('autoload.modules'))
-    .map(([name, pattern]) => [name, globSync(basePath(pattern))])
+    .map(([name, pattern]) => checkAutoloadModule(config, name) && [name, globSync(basePath(pattern))])
 }
 
 /**
@@ -102,4 +102,29 @@ export function getEnvVariables (options) {
   }
 
   return Dotenv.config(options).parsed
+}
+
+/**
+ * Check autoload module.
+ *
+ * @param   {Config} config
+ * @param   {string} module
+ * @returns {boolean}
+ * @throws  {RuntimeError}
+ */
+export function checkAutoloadModule (config, module) {
+  const autoload = `autoload.modules.${module}`
+
+  if (!config.has(autoload)) {
+    throw new RuntimeError(`No ${autoload} option found in 'stone.config' file.`)
+  }
+
+  const pattern = config.get(autoload)
+  const files = globSync(basePath(pattern))
+
+  if (!files[0] || !pathExistsSync(files[0])) {
+    throw new RuntimeError(`Your ${pattern.split('/').shift()} directory cannot be empty.`)
+  }
+
+  return true
 }

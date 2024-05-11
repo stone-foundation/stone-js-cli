@@ -1,5 +1,5 @@
 import { Handler } from './Handler.mjs'
-import { NodeConsoleAdapter } from '@stone-js/adapters'
+import { NodeConsoleAdapter } from './NodeConsoleAdapter.mjs'
 
 /**
  * Class representing a Stone.js console App.

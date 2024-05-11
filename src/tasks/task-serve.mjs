@@ -1,7 +1,7 @@
 import spawn from 'cross-spawn'
 import { watch } from 'chokidar'
 import { argv } from 'node:process'
-import { shouldBuild } from './utils.mjs'
+import { shouldBuild } from '../utils.mjs'
 import { buildApp } from './task-build.mjs'
 import { basePath, buildPath } from '@stone-js/common'
 

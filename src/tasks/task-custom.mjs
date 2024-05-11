@@ -1,8 +1,8 @@
 import spawn from 'cross-spawn'
 import { argv } from 'node:process'
-import { shouldBuild } from './utils.mjs'
 import { buildApp } from './task-build.mjs'
 import { buildPath } from '@stone-js/common'
+import { checkAutoloadModule, shouldBuild } from '../utils.mjs'
 
 /**
  * Custom task.
@@ -12,6 +12,8 @@ import { buildPath } from '@stone-js/common'
  * @returns
  */
 export const customTask = async (container, _event, showHelp = false) => {
+  checkAutoloadModule(container.config, 'commands')
+
   if (shouldBuild(container)) {
     await buildApp(container, () => startProcess(showHelp))
   } else {

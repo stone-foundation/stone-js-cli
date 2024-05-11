@@ -1,8 +1,9 @@
 import { rollup } from 'rollup'
 import deepmerge from 'deepmerge'
+import json from '@rollup/plugin-json'
 import babel from '@rollup/plugin-babel'
 import replace from '@rollup/plugin-replace'
-import { getEnvVariables } from './utils.mjs'
+import { getEnvVariables } from '../utils.mjs'
 import multi from '@rollup/plugin-multi-entry'
 import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
@@ -53,9 +54,14 @@ function makeBuildOptions (config) {
       { format: 'es', file: buildPath(`${name}.mjs`) }
     ],
     plugins: [
+      json(),
       multi(),
-      nodeExternals({ deps: false }), // Must always be before `nodeResolve()`.
-      nodeResolve(),
+      nodeExternals({
+        include: /^@stone-js/
+      }), // Must always be before `nodeResolve()`.
+      nodeResolve({
+        exportConditions: ['node', 'import', 'require', 'default']
+      }),
       babel({ babelHelpers: 'bundled' }),
       commonjs(),
       replace(replaceProcessEnvVars(dotenvOptions))
@@ -79,9 +85,11 @@ function makeBundleOptions () {
       // { format: 'es', file: distPath('stone.mjs'), plugins: terser() }
     ],
     plugins: [
+      json(),
       nodeExternals({ deps: false }), // Must always be before `nodeResolve()`.
-      nodeResolve(),
-      babel({ babelHelpers: 'bundled' }),
+      nodeResolve({
+        exportConditions: ['node', 'import', 'require', 'default']
+      }),
       commonjs()
     ]
   }
