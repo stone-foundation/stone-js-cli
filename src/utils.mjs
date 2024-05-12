@@ -18,8 +18,9 @@ import { readJsonSync, pathExistsSync, outputJsonSync } from 'fs-extra/esm'
  */
 export function getApplicationFiles (config) {
   return Object
-    .entries(config.get('autoload.modules'))
-    .map(([name, pattern]) => checkAutoloadModule(config, name) && [name, globSync(basePath(pattern))])
+    .entries(config.get('autoload.modules', {}))
+    .filter(([name]) => checkAutoloadModule(config, name, false))
+    .map(([name, pattern]) => [name, globSync(basePath(pattern))])
 }
 
 /**
@@ -109,10 +110,11 @@ export function getEnvVariables (options) {
  *
  * @param   {Config} config
  * @param   {string} module
+ * @param   {boolean} [throwError=false]
  * @returns {boolean}
  * @throws  {RuntimeError}
  */
-export function checkAutoloadModule (config, module) {
+export function checkAutoloadModule (config, module, throwError = true) {
   const autoload = `autoload.modules.${module}`
 
   if (!config.has(autoload)) {
@@ -123,7 +125,11 @@ export function checkAutoloadModule (config, module) {
   const files = globSync(basePath(pattern))
 
   if (!files[0] || !pathExistsSync(files[0])) {
-    throw new RuntimeError(`Your ${pattern.split('/').shift()} directory cannot be empty.`)
+    if (throwError) {
+      throw new RuntimeError(`Your ${pattern.split('/').shift()} directory cannot be empty.`)
+    } else {
+      return false
+    }
   }
 
   return true

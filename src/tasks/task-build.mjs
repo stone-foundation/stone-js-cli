@@ -1,9 +1,9 @@
 import { setCache } from '../utils.mjs'
 import { emptyDirSync } from 'fs-extra/esm'
 import { Pipeline } from '@stone-js/pipeline'
+import { makeBootstrapFile } from './stubs.mjs'
 import { buildPath, distPath } from '@stone-js/common'
 import { rollupBuild, rollupBundle } from '../bundler/rollupjs.mjs'
-import { makeBootstrapFile, makeConsoleBootstrapFile } from './stubs.mjs'
 
 /** @returns {pipeable[]} */
 const buildPipes = [
@@ -11,8 +11,8 @@ const buildPipes = [
   pipeable(() => emptyDirSync(buildPath())),
   pipeable((container) => rollupBuild(container.config)),
   pipeable((container) => setCache(container.config)),
-  pipeable(() => makeBootstrapFile()),
-  pipeable(() => makeConsoleBootstrapFile()),
+  pipeable((container) => makeBootstrapFile(container.config, 'build')),
+  pipeable((container) => makeBootstrapFile(container.config, 'build', true)),
   pipeable(() => console.info('Build finished'))
 ]
 

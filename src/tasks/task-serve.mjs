@@ -1,7 +1,6 @@
 import spawn from 'cross-spawn'
 import { watch } from 'chokidar'
 import { argv } from 'node:process'
-import { shouldBuild } from '../utils.mjs'
 import { buildApp } from './task-build.mjs'
 import { basePath, buildPath } from '@stone-js/common'
 
@@ -15,15 +14,9 @@ import { basePath, buildPath } from '@stone-js/common'
 export const serveTask = async (container) => {
   let serverProcess
 
-  if (shouldBuild(container)) {
-    await buildApp(container, () => { serverProcess = startProcess(serverProcess) })
-  } else {
-    serverProcess = startProcess(serverProcess)
-  }
+  await buildApp(container, () => { serverProcess = startProcess(serverProcess) })
 
-  appWatcher(async () => {
-    await buildApp(container, () => { serverProcess = startProcess(serverProcess) })
-  })
+  appWatcher(() => buildApp(container, () => { serverProcess = startProcess(serverProcess) }))
 }
 
 /**

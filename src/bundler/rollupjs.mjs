@@ -3,12 +3,12 @@ import deepmerge from 'deepmerge'
 import json from '@rollup/plugin-json'
 import babel from '@rollup/plugin-babel'
 import replace from '@rollup/plugin-replace'
-import { getEnvVariables } from '../utils.mjs'
 import multi from '@rollup/plugin-multi-entry'
 import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import nodeExternals from 'rollup-plugin-node-externals'
 import { basePath, buildPath, distPath } from '@stone-js/common'
+import { checkAutoloadModule, getEnvVariables } from '../utils.mjs'
 
 /**
  * Rollup build.
@@ -44,29 +44,28 @@ export async function rollupBundle () {
  * @returns {Object}
  */
 function makeBuildOptions (config) {
-  const inputs = config.get('autoload.modules')
-  const options = config.get('rollupOtions', {})
-  const dotenvOptions = config.get('dotenv', {})
-
-  return Object.entries(inputs).map(([name, input]) => deepmerge({
-    input: basePath(input),
-    output: [
-      { format: 'es', file: buildPath(`${name}.mjs`) }
-    ],
-    plugins: [
-      json(),
-      multi(),
-      nodeExternals({
-        include: /^@stone-js/
-      }), // Must always be before `nodeResolve()`.
-      nodeResolve({
-        exportConditions: ['node', 'import', 'require', 'default']
-      }),
-      babel({ babelHelpers: 'bundled' }),
-      commonjs(),
-      replace(replaceProcessEnvVars(dotenvOptions))
-    ]
-  }, options))
+  return Object
+    .entries(config.get('autoload.modules', {}))
+    .filter(([name]) => checkAutoloadModule(config, name, false))
+    .map(([name, input]) => deepmerge({
+      input: basePath(input),
+      output: [
+        { format: 'es', file: buildPath(`${name}.mjs`) }
+      ],
+      plugins: [
+        json(),
+        multi(),
+        nodeExternals({
+          include: /^@stone-js/
+        }), // Must always be before `nodeResolve()`.
+        nodeResolve({
+          exportConditions: ['node', 'import', 'require', 'default']
+        }),
+        babel({ babelHelpers: 'bundled' }),
+        commonjs(),
+        replace(replaceProcessEnvVars(config))
+      ]
+    }, config.get('rollupOtions', {})))
 }
 
 /**
@@ -99,10 +98,11 @@ function makeBundleOptions () {
  * Replace process env variables.
  *
  * @private
- * @param   {Object} options
+ * @param   {Config} config
  * @returns {Object}
  */
-function replaceProcessEnvVars (options) {
+function replaceProcessEnvVars (config) {
+  const options = config.get('dotenv', {})
   const publicOptions = { ...options?.options, ...options?.public }
   const prefix = publicOptions.prefix ?? 'process.__env__'
 

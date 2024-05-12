@@ -4,7 +4,10 @@ import { Mapper } from '@stone-js/adapters'
 import { getEnvVariables } from './utils.mjs'
 import { buildTask } from './tasks/task-build.mjs'
 import { serveTask } from './tasks/task-serve.mjs'
+import { cacheTask } from './tasks/task-cache.mjs'
 import { customTask } from './tasks/task-custom.mjs'
+import { configTask } from './tasks/task-config.mjs'
+import { exportTask } from './tasks/task-export.mjs'
 import { mapperInputResolver } from './resolvers.mjs'
 import { Container } from '@stone-js/service-container'
 import { CommonInputMiddleware } from './middleware.mjs'
@@ -50,7 +53,7 @@ export class Handler {
    */
   beforeHandle () {
     this.#loadDotenvVariables()
-    this.#command(this.#container.builder)
+    this.#registerCommand(this.#container.builder)
   }
 
   /**
@@ -67,6 +70,15 @@ export class Handler {
       case ['serve', 's'].includes(event.get('task')):
         await serveTask(this.#container, event)
         break
+      case ['export', 'e'].includes(event.get('task')):
+        await exportTask(this.#container, event)
+        break
+      case ['config', 'c'].includes(event.get('task')):
+        await configTask(this.#container, event)
+        break
+      case ['cache', 'ca'].includes(event.get('task')):
+        await cacheTask(this.#container, event)
+        break
       case ['list', 'ls', 'l'].includes(event.get('task')):
         await customTask(this.#container, event, true)
         break
@@ -77,11 +89,12 @@ export class Handler {
   }
 
   /**
-   * Command builder.
+   * Register command.
    *
-   * @param {Yargs} builder - Yargs command builder.
+   * @param   {Object} builder - Yargs builder.
+   * @returns
    */
-  #command (builder) {
+  #registerCommand (builder) {
     builder
       .command({
         command: 'build',
@@ -97,6 +110,62 @@ export class Handler {
         command: 'list',
         aliases: ['l', 'ls'],
         desc: 'List all custom commands'
+      })
+      .command({
+        command: 'export [module]',
+        aliases: ['e'],
+        desc: 'Export app bootstrap files',
+        builder: (yargs) => {
+          return yargs
+            .positional('module', {
+              type: 'string',
+              default: 'app',
+              choices: ['app', 'console', 'all'],
+              desc: 'module name to override'
+            })
+            .option('force', {
+              alias: 'f',
+              type: 'boolean',
+              default: false,
+              desc: 'Force overriding'
+            })
+        }
+      })
+      .command({
+        command: 'config <action> <module>',
+        aliases: ['c'],
+        desc: 'Manage configuration options',
+        builder: (yargs) => {
+          return yargs
+            .positional('action', {
+              type: 'string',
+              choices: ['make'],
+              desc: 'copy options module from package to app'
+            })
+            .positional('module', {
+              type: 'string',
+              desc: 'package name. e.g. @stone-js/adapters'
+            })
+            .option('force', {
+              alias: 'f',
+              type: 'boolean',
+              default: false,
+              desc: 'Force overriding'
+            })
+        }
+      })
+      .command({
+        command: 'cache <action>',
+        aliases: ['ca'],
+        desc: 'Manage app cache',
+        builder: (yargs) => {
+          return yargs
+            .positional('action', {
+              type: 'string',
+              choices: ['free'],
+              desc: 'cache action'
+            })
+        }
       })
       .help()
       .version(version)

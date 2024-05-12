@@ -59,13 +59,14 @@
     "test:lcov": "npm run test:cvg -- --coverageReporters=lcov text"
   },
   "peerDependencies": {
-    "@stone-js/adapters": "^0.0.1",
+    "@stone-js/core": "^0.0.1",
+    "@stone-js/adapters": "^0.0.1"
+  },
+  "dependencies": {
     "@stone-js/common": "^0.0.1",
     "@stone-js/config": "^0.0.1",
     "@stone-js/pipeline": "^0.0.1",
-    "@stone-js/service-container": "^0.0.1"
-  },
-  "dependencies": {
+    "@stone-js/service-container": "^0.0.1",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-json": "^6.0.1",

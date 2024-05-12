@@ -15,7 +15,7 @@ import { CommandServiceProvider } from '../command/CommandServiceProvider.mjs'
  * @returns {Object}
  */
 export function addConsoleOptions (appOptions, currentAdapter = false) {
-  if (appOptions.adapters.find(v => v.app.adapter.alias === NODE_CONSOLE_PLATFORM)) {
+  if (appOptions.adapters?.find(v => v.app.adapter.alias === NODE_CONSOLE_PLATFORM)) {
     appOptions.adapters = appOptions.adapters.map(v => {
       if (v.app.adapter.alias === NODE_CONSOLE_PLATFORM) {
         return deepmerge(v, consoleOptions)
@@ -24,10 +24,10 @@ export function addConsoleOptions (appOptions, currentAdapter = false) {
       }
     })
   } else {
-    appOptions.adapters.push(consoleOptions)
+    appOptions.adapters?.push(consoleOptions)
   }
 
-  if (currentAdapter) {
+  if (currentAdapter && appOptions.app?.adapter) {
     appOptions.app.adapter.current = NODE_CONSOLE_PLATFORM
   }
 

@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs'
+import { checkAutoloadModule } from '../utils.mjs'
 import { basePath, buildPath } from '@stone-js/common'
 import { outputFileSync, pathExistsSync } from 'fs-extra/esm'
 
@@ -7,13 +8,10 @@ import { outputFileSync, pathExistsSync } from 'fs-extra/esm'
  *
  * @returns {string}
  */
-export const bootstrap = `
-import * as app from './app.mjs'
-import * as options from './options.mjs'
+export const bootstrapStub = `
+__app_modules_import__
 import { StoneFactory } from '@stone-js/core'
-import { ConfigLoader } from '@stone-js/config'
-import { getStoneOptions } from '@stone-js/common'
-import * as defaultPipes from '@stone-js/config/pipes'
+import { ConfigLoader, getStoneOptions } from '@stone-js/core/config'
 
 /**
  * Get stone config options.
@@ -21,24 +19,21 @@ import * as defaultPipes from '@stone-js/config/pipes'
 const stoneOptions = await getStoneOptions()
 
 /**
- * Set default configuration pipes.
- * Useful for modules autoload builder.
- */
-stoneOptions.autoload.pipes = Object.values(defaultPipes).concat(stoneOptions.autoload.pipes ?? [])
-
-/**
  * Get app options.
  */
-const appOptions = await ConfigLoader.create(stoneOptions).load({ app, options })
+const appOptions = await ConfigLoader.create(stoneOptions).load({ __app_module_names__ })
 
 /**
  * Run application.
  */
-const stone = await StoneFactory
-  .create(appOptions)
-  .hook('onInit', () => stoneOptions.onInit?.())
-  .run()
+const stone = await StoneFactory.createAndRun(appOptions)
 
+/**
+ * Export adapter specific output.
+ * Usefull for FAAS handler like AWS lambda handler.
+ * 
+ * @returns {Object}
+ */
 export { stone }
 `
 
@@ -47,14 +42,10 @@ export { stone }
  *
  * @returns {string}
  */
-export const consoleBootstrap = `
-import * as app from './app.mjs'
-import * as options from './options.mjs'
-import * as commands from './commands.mjs'
+export const consoleBootstrapStub = `
+__app_modules_import__
 import { StoneFactory } from '@stone-js/core'
-import { ConfigLoader } from '@stone-js/config'
-import { getStoneOptions } from '@stone-js/common'
-import * as defaultPipes from '@stone-js/config/pipes'
+import { ConfigLoader, getStoneOptions } from '@stone-js/core/config'
 import { consolePipes, addConsoleOptions } from '@stone-js/cli/config'
 
 /**
@@ -68,7 +59,7 @@ const stoneOptions = await getStoneOptions()
  * Set default configuration pipes.
  * Useful for modules autoload builder.
  */
-stoneOptions.autoload.pipes = consolePipes.concat(Object.values(defaultPipes), stoneOptions.autoload.pipes ?? [])
+stoneOptions.autoload.pipes = consolePipes.concat(stoneOptions.autoload.pipes ?? [])
 
 /**
  * Get app options.
@@ -76,7 +67,7 @@ stoneOptions.autoload.pipes = consolePipes.concat(Object.values(defaultPipes), s
  * 
  * @returns {Object}
  */
-let appOptions = await ConfigLoader.create(stoneOptions).load({ app, options, commands })
+let appOptions = await ConfigLoader.create(stoneOptions).load({ __app_module_names__ })
 
 /**
  * Set console adapter options.
@@ -87,32 +78,60 @@ appOptions = addConsoleOptions(appOptions, true)
 /**
  * Run application.
  */
-StoneFactory
-  .create(appOptions)
-  .hook('onInit', () => stoneOptions.onInit?.())
-  .run()
+StoneFactory.createAndRun(appOptions)
 `
 
 /**
  * Make App boostrap module from stub.
+ * In .stone directory for build action.
+ * And a the root of the project for export action.
  *
+ * @param {Config} config
+ * @param {string} action - Action can be: `build` or `export`.
+ * @param {boolean} [isConsole=false] - Build for console.
+ * @param {boolean} [force=false] - Force file override if exists.
  * @returns
  */
-export function makeBootstrapFile () {
-  const content = pathExistsSync(basePath('app.bootstrap.mjs'))
-    ? readFileSync(basePath('app.bootstrap.mjs'), 'utf-8')
-    : bootstrap
-  outputFileSync(buildPath('app.bootstrap.mjs'), content.trim())
+export function makeBootstrapFile (config, action, isConsole = false, force = false) {
+  const exclude = isConsole ? [] : ['commands']
+  let stub = isConsole ? consoleBootstrapStub : bootstrapStub
+  const filename = isConsole ? 'console.bootstrap.mjs' : 'app.bootstrap.mjs'
+
+  if (action === 'export') {
+    if (pathExistsSync(basePath(filename)) && !force) {
+      return console.log(`Cannot override an existing file(${filename}). Use --force to override it.`)
+    } else {
+      outputFileSync(basePath(filename), normalizeBootstrapStub(config, stub, action, exclude))
+    }
+  } else {
+    stub = pathExistsSync(basePath(filename)) ? readFileSync(basePath(filename), 'utf-8') : stub
+    outputFileSync(buildPath(filename), normalizeBootstrapStub(config, stub, action, exclude))
+  }
 }
 
 /**
- * Make Console App boostrap module from stub.
+ * Normalize bootstrap content by replace module import statement.
  *
+ * @param {Config} config
+ * @param {string} stub
+ * @param {string} action - Action can be: `build` or `export`
  * @returns
  */
-export function makeConsoleBootstrapFile () {
-  const content = pathExistsSync(basePath('console.bootstrap.mjs'))
-    ? readFileSync(basePath('console.bootstrap.mjs'), { throws: false })
-    : consoleBootstrap
-  outputFileSync(buildPath('console.bootstrap.mjs'), content.trim())
+export function normalizeBootstrapStub (config, stub, action, exclude = []) {
+  const modules = Object
+    .keys(config.get('autoload.modules', {}))
+    .filter((name) => checkAutoloadModule(config, name, false))
+    .filter((name) => !exclude.includes(name))
+
+  const statement = modules.map((name) => `import * as ${name} from './${name}.mjs'`)
+
+  stub = stub
+    .replace('__app_module_names__', modules.join(', '))
+    .replace('__app_modules_import__', statement.join('\n'))
+
+  if (action === 'export') {
+    return stub.trim().replaceAll('./', './.stone/')
+  } else {
+    return stub.trim().replaceAll('./.stone/', './')
+  }
 }

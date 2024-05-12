@@ -9,6 +9,7 @@ import { checkAutoloadModule, shouldBuild } from '../utils.mjs'
  *
  * @param   {Container} container
  * @param   {IncomingEvent} [event]
+ * @param   {boolean} [showHelp=false]
  * @returns
  */
 export const customTask = async (container, _event, showHelp = false) => {
