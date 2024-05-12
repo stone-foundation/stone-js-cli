@@ -1,5 +1,5 @@
 import deepmerge from 'deepmerge'
-import { isConstructor } from '@stone-js/common'
+import { classLevelDecoratorChecker } from '@stone-js/common'
 
 /**
  * Command Decorator: Useful for customizing classes as Command.
@@ -17,9 +17,7 @@ import { isConstructor } from '@stone-js/common'
  */
 export const Command = (options = {}) => {
   return (target) => {
-    if (!isConstructor(target)) {
-      throw new TypeError('This decorator can only be applied at class level.')
-    }
+    classLevelDecoratorChecker(target)
 
     const metadata = {
       command: options
