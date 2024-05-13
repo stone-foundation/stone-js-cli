@@ -34,7 +34,7 @@ export function buildTask (container) {
   return Pipeline
     .create()
     .send(container)
-    .through([].concat(bundlePipes))
+    .through(buildPipes.concat(bundlePipes))
     .thenReturn()
 }
 
