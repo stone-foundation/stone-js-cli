@@ -1,7 +1,7 @@
 import deepmerge from 'deepmerge'
 import { Mapper } from '@stone-js/adapters'
 import { mapperInputResolver } from '../resolvers.mjs'
-import { NODE_CONSOLE_PLATFORM } from '../constants.mjs'
+import { NODE_CONSOLE_PLATFORM } from '@stone-js/common'
 import { CommonInputMiddleware } from '../middleware.mjs'
 import { NodeConsoleAdapter } from '../NodeConsoleAdapter.mjs'
 import { CommandServiceProvider } from '../command/CommandServiceProvider.mjs'

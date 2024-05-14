@@ -1,5 +1,5 @@
 import { Router } from './Router.mjs'
-import { isFunction } from '@stone-js/common'
+import { isFunction, NODE_CONSOLE_PLATFORM } from '@stone-js/common'
 
 /**
  * Class representing a CommandServiceProvider.
@@ -23,6 +23,16 @@ export class CommandServiceProvider {
   /** @returns {Function[]} */
   get #commands () {
     return this.#config.get('app.commands', [])
+  }
+
+  /**
+   * Skip this provider.
+   * Useful to register your provider based on platform.
+   *
+   * @returns {boolean}
+   */
+  mustSkip () {
+    return this.#container.make('platformName') !== NODE_CONSOLE_PLATFORM
   }
 
   /**
@@ -58,7 +68,7 @@ export class CommandServiceProvider {
       .map(command => this.#container.resolve(command, true))
       .forEach(command => {
         if (!isFunction(command.registerCommand)) {
-          throw new TypeError(`No registerCommand method defined in command class(${command.toString()}).`)
+          throw new TypeError(`No registerCommand method defined in command class(${command.constructor.name}).`)
         }
 
         command.registerCommand(this.#container.builder)

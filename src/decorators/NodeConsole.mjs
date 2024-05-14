@@ -1,6 +1,5 @@
 import deepmerge from 'deepmerge'
-import { NODE_CONSOLE_PLATFORM } from '../constants.mjs'
-import { classLevelDecoratorChecker } from '@stone-js/common'
+import { classLevelDecoratorChecker, NODE_CONSOLE_PLATFORM } from '@stone-js/common'
 
 /**
  * NodeConsole Decorator: Useful for customizing classes to ensure applications run smoothly on node.js platforms.

@@ -7,7 +7,7 @@ import { LogicError } from '@stone-js/common'
  */
 export class AbstractCommand {
   /**
-   * Create a new instance of Provider.
+   * Create a new command.
    *
    * @param {Container} container
    */

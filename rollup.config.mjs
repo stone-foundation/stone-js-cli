@@ -10,7 +10,6 @@ const inputs = {
   decorators: 'src/decorators/*.mjs',
   index: [
     'src/App.mjs',
-    'src/constants.mjs',
     'src/command/Router.mjs',
     'src/NodeConsoleAdapter.mjs',
     'src/command/AbstractCommand.mjs',
