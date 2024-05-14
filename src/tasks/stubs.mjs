@@ -11,7 +11,7 @@ import { outputFileSync, pathExistsSync } from 'fs-extra/esm'
 export const bootstrapStub = `
 __app_modules_import__
 import { StoneFactory } from '@stone-js/core'
-import { ConfigLoader, getStoneOptions } from '@stone-js/core/config'
+import { ConfigBuilder, getStoneOptions } from '@stone-js/core/config'
 
 /**
  * Get stone config options.
@@ -21,7 +21,7 @@ const stoneOptions = await getStoneOptions()
 /**
  * Get app options.
  */
-const appOptions = await ConfigLoader.create(stoneOptions).load({ __app_module_names__ })
+const appOptions = await ConfigBuilder.create(stoneOptions).build({ __app_module_names__ })
 
 /**
  * Run application.
@@ -45,7 +45,7 @@ export { stone }
 export const consoleBootstrapStub = `
 __app_modules_import__
 import { StoneFactory } from '@stone-js/core'
-import { ConfigLoader, getStoneOptions } from '@stone-js/core/config'
+import { ConfigBuilder, getStoneOptions } from '@stone-js/core/config'
 import { consolePipes, addConsoleOptions } from '@stone-js/cli/config'
 
 /**
@@ -67,7 +67,7 @@ stoneOptions.autoload.pipes = consolePipes.concat(stoneOptions.autoload.pipes ??
  * 
  * @returns {Object}
  */
-let appOptions = await ConfigLoader.create(stoneOptions).load({ __app_module_names__ })
+let appOptions = await ConfigBuilder.create(stoneOptions).build({ __app_module_names__ })
 
 /**
  * Set console adapter options.
