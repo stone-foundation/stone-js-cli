@@ -1,38 +1,9 @@
-import deepmerge from 'deepmerge'
 import { Mapper } from '@stone-js/adapters'
 import { mapperInputResolver } from '../resolvers.mjs'
 import { NODE_CONSOLE_PLATFORM } from '@stone-js/common'
 import { CommonInputMiddleware } from '../middleware.mjs'
 import { NodeConsoleAdapter } from '../NodeConsoleAdapter.mjs'
 import { CommandServiceProvider } from '../command/CommandServiceProvider.mjs'
-
-/**
- * Add console options to app options.
- * And merge it with previous console options so we can add NodeConsoleAdapter only at run time.
- *
- * @param   {Object} appOptions - Application options.
- * @param   {boolean} currentAdapter - Set this as the current decorator.
- * @returns {Object}
- */
-export function addConsoleOptions (appOptions, currentAdapter = false) {
-  if (appOptions.adapters?.find(v => v.app.adapter.alias === NODE_CONSOLE_PLATFORM)) {
-    appOptions.adapters = appOptions.adapters.map(v => {
-      if (v.app.adapter.alias === NODE_CONSOLE_PLATFORM) {
-        return deepmerge(v, consoleOptions)
-      } else {
-        return v
-      }
-    })
-  } else {
-    appOptions.adapters?.push(consoleOptions)
-  }
-
-  if (currentAdapter && appOptions.app?.adapter) {
-    appOptions.app.adapter.current = NODE_CONSOLE_PLATFORM
-  }
-
-  return appOptions
-}
 
 /**
  * Console options.

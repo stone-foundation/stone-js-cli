@@ -45,8 +45,8 @@ export { stone }
 export const consoleBootstrapStub = `
 __app_modules_import__
 import { StoneFactory } from '@stone-js/core'
-import { ConfigBuilder, getStoneOptions } from '@stone-js/core/config'
-import { consolePipes, addConsoleOptions } from '@stone-js/cli/config'
+import { ConfigBuilder } from '@stone-js/cli/config'
+import { getStoneOptions } from '@stone-js/core/config'
 
 /**
  * Get stone config options.
@@ -56,24 +56,12 @@ import { consolePipes, addConsoleOptions } from '@stone-js/cli/config'
 const stoneOptions = await getStoneOptions()
 
 /**
- * Set default configuration pipes.
- * Useful for modules autoload builder.
- */
-stoneOptions.autoload.pipes = consolePipes.concat(stoneOptions.autoload.pipes ?? [])
-
-/**
  * Get app options.
  * Auto build app options.
  * 
  * @returns {Object}
  */
-let appOptions = await ConfigBuilder.create(stoneOptions).build({ __app_module_names__ })
-
-/**
- * Set console adapter options.
- * Useful to only enable and isolate console on for cli command.
- */
-appOptions = addConsoleOptions(appOptions, true)
+const appOptions = await ConfigBuilder.create(stoneOptions).build({ __app_module_names__ })
 
 /**
  * Run application.
