@@ -11,12 +11,8 @@ import { outputFileSync, pathExistsSync } from 'fs-extra/esm'
 export const bootstrapStub = `
 __app_modules_import__
 import { StoneFactory } from '@stone-js/core'
-import { ConfigBuilder, getStoneOptions } from '@stone-js/core/config'
-
-/**
- * Get stone config options.
- */
-const stoneOptions = await getStoneOptions()
+__stone_config_import__
+import { ConfigBuilder } from '@stone-js/core/config'
 
 /**
  * Get app options.
@@ -45,15 +41,10 @@ export { stone }
 export const consoleBootstrapStub = `
 __app_modules_import__
 import { StoneFactory } from '@stone-js/core'
-import { ConfigBuilder } from '@stone-js/cli/config'
-import { getStoneOptions } from '@stone-js/core/config'
-
-/**
- * Get stone config options.
- * 
- * @returns {Object}
- */
-const stoneOptions = await getStoneOptions()
+__stone_config_import__
+__stone_cli_config_import__
+import { ConfigBuilder } from '@stone-js/core/config'
+import { NODE_CONSOLE_PLATFORM, merge } from '@stone-js/common'
 
 /**
  * Get app options.
@@ -61,7 +52,12 @@ const stoneOptions = await getStoneOptions()
  * 
  * @returns {Object}
  */
-const appOptions = await ConfigBuilder.create(stoneOptions).build({ __app_module_names__ })
+const appOptions = await ConfigBuilder.create(merge(stoneOptions, stoneCliOptions)).build({ __app_module_names__ })
+
+/**
+ * Force console as current adapter
+ */
+appOptions.app.adapter.current = NODE_CONSOLE_PLATFORM
 
 /**
  * Run application.
@@ -118,8 +114,16 @@ export function normalizeBootstrapStub (config, stub, action, exclude = []) {
     .replace('__app_modules_import__', statement.join('\n'))
 
   if (action === 'export') {
-    return stub.trim().replaceAll('./', './.stone/')
+    return stub
+      .trim()
+      .replaceAll('./', './.stone/')
+      .replace('__stone_config_import__', "import { stoneOptions } from './stone.config.mjs'")
+      .replace('__stone_cli_config_import__', "import { stoneCliOptions } from './cli.config.mjs'")
   } else {
-    return stub.trim().replaceAll('./.stone/', './')
+    return stub
+      .trim()
+      .replaceAll('./.stone/', './')
+      .replace('__stone_config_import__', "import { stoneOptions } from '../stone.config.mjs'")
+      .replace('__stone_cli_config_import__', "import { stoneCliOptions } from '../cli.config.mjs'")
   }
 }

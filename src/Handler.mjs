@@ -162,7 +162,7 @@ export class Handler {
           return yargs
             .positional('action', {
               type: 'string',
-              choices: ['free'],
+              choices: ['clear'],
               desc: 'cache action'
             })
         }

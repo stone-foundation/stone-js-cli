@@ -1,14 +1,14 @@
 import { rollup } from 'rollup'
-import deepmerge from 'deepmerge'
 import json from '@rollup/plugin-json'
 import babel from '@rollup/plugin-babel'
 import replace from '@rollup/plugin-replace'
+import { pathExistsSync } from 'fs-extra/esm'
 import multi from '@rollup/plugin-multi-entry'
 import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import nodeExternals from 'rollup-plugin-node-externals'
-import { basePath, buildPath, distPath } from '@stone-js/common'
 import { checkAutoloadModule, getEnvVariables } from '../utils.mjs'
+import { basePath, buildPath, distPath, merge, importModule } from '@stone-js/common'
 
 /**
  * Rollup build.
@@ -17,7 +17,7 @@ import { checkAutoloadModule, getEnvVariables } from '../utils.mjs'
  * @returns
  */
 export async function rollupBuild (config) {
-  const options = makeBuildOptions(config)
+  const options = await makeBuildOptions(config)
 
   for (const option of options) {
     const bundle = await rollup(option)
@@ -43,11 +43,13 @@ export async function rollupBundle () {
  * @param   {Config} config
  * @returns {Object}
  */
-function makeBuildOptions (config) {
+async function makeBuildOptions (config) {
+  const rollupOtions = await getRollupConfig()
+
   return Object
     .entries(config.get('autoload.modules', {}))
     .filter(([name]) => checkAutoloadModule(config, name, false))
-    .map(([name, input]) => deepmerge({
+    .map(([name, input]) => merge({
       input: basePath(input),
       output: [
         { format: 'es', file: buildPath(`${name}.mjs`) }
@@ -65,7 +67,7 @@ function makeBuildOptions (config) {
         commonjs(),
         replace(replaceProcessEnvVars(config))
       ]
-    }, config.get('rollupOtions', {})))
+    }, rollupOtions))
 }
 
 /**
@@ -120,4 +122,19 @@ function replaceProcessEnvVars (config) {
     values,
     ...options?.replace
   }
+}
+
+/**
+ * Get rollup config.
+ *
+ * @private
+ * @returns {Object}
+ */
+async function getRollupConfig () {
+  if (pathExistsSync(basePath('rollup.config.mjs'))) {
+    const module = await importModule('rollup.config.mjs')
+    return Object.values(module).shift() ?? {}
+  }
+
+  return {}
 }
