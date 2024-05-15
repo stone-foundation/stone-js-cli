@@ -11,13 +11,12 @@ import { outputFileSync, pathExistsSync } from 'fs-extra/esm'
 export const bootstrapStub = `
 __app_modules_import__
 import { StoneFactory } from '@stone-js/core'
-__stone_config_import__
 import { ConfigBuilder } from '@stone-js/core/config'
 
 /**
  * Get app options.
  */
-const appOptions = await ConfigBuilder.create(stoneOptions).build({ __app_module_names__ })
+const appOptions = await ConfigBuilder.create().build({ __app_module_names__ })
 
 /**
  * Run application.
@@ -41,10 +40,7 @@ export { stone }
 export const consoleBootstrapStub = `
 __app_modules_import__
 import { StoneFactory } from '@stone-js/core'
-__stone_config_import__
-__stone_cli_config_import__
 import { ConfigBuilder } from '@stone-js/core/config'
-import { NODE_CONSOLE_PLATFORM, merge } from '@stone-js/common'
 
 /**
  * Get app options.
@@ -52,12 +48,7 @@ import { NODE_CONSOLE_PLATFORM, merge } from '@stone-js/common'
  * 
  * @returns {Object}
  */
-const appOptions = await ConfigBuilder.create(merge(stoneOptions, stoneCliOptions)).build({ __app_module_names__ })
-
-/**
- * Force console as current adapter
- */
-appOptions.app.adapter.current = NODE_CONSOLE_PLATFORM
+const appOptions = await ConfigBuilder.create().build({ __app_module_names__ })
 
 /**
  * Run application.
@@ -77,9 +68,9 @@ StoneFactory.createAndRun(appOptions)
  * @returns
  */
 export function makeBootstrapFile (config, action, isConsole = false, force = false) {
-  const exclude = isConsole ? [] : ['commands']
   let stub = isConsole ? consoleBootstrapStub : bootstrapStub
-  const filename = isConsole ? 'console.bootstrap.mjs' : 'app.bootstrap.mjs'
+  const filename = isConsole ? 'cli.bootstrap.mjs' : 'app.bootstrap.mjs'
+  const exclude = isConsole ? [] : config.get('autoload.exclude', ['commands'])
 
   if (action === 'export') {
     if (pathExistsSync(basePath(filename)) && !force) {
@@ -98,7 +89,8 @@ export function makeBootstrapFile (config, action, isConsole = false, force = fa
  *
  * @param {Config} config
  * @param {string} stub
- * @param {string} action - Action can be: `build` or `export`
+ * @param {string} action - Action can be: `build` or `export`.
+ * @param {string} [exclude=[]] - Modules to exclude from import.
  * @returns
  */
 export function normalizeBootstrapStub (config, stub, action, exclude = []) {
@@ -114,16 +106,8 @@ export function normalizeBootstrapStub (config, stub, action, exclude = []) {
     .replace('__app_modules_import__', statement.join('\n'))
 
   if (action === 'export') {
-    return stub
-      .trim()
-      .replaceAll('./', './.stone/')
-      .replace('__stone_config_import__', "import { stoneOptions } from './stone.config.mjs'")
-      .replace('__stone_cli_config_import__', "import { stoneCliOptions } from './cli.config.mjs'")
+    return stub.trim().replaceAll('./', './.stone/')
   } else {
-    return stub
-      .trim()
-      .replaceAll('./.stone/', './')
-      .replace('__stone_config_import__', "import { stoneOptions } from '../stone.config.mjs'")
-      .replace('__stone_cli_config_import__', "import { stoneCliOptions } from '../cli.config.mjs'")
+    return stub.trim().replaceAll('./.stone/', './')
   }
 }

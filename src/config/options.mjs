@@ -1,3 +1,4 @@
+import { cliPipes } from './pipes.mjs'
 import { Mapper } from '@stone-js/adapters'
 import { mapperInputResolver } from '../resolvers.mjs'
 import { NODE_CONSOLE_PLATFORM } from '@stone-js/common'
@@ -6,11 +7,18 @@ import { NodeConsoleAdapter } from '../NodeConsoleAdapter.mjs'
 import { CommandServiceProvider } from '../command/CommandServiceProvider.mjs'
 
 /**
- * Console adapter options.
+ * Cli options.
  *
  * @returns {Object}
 */
-export const consoleAdapterOptions = {
+export const cliOptions = {
+  // Options builder namespace.
+  builder: {
+
+    // Here you can define pipes to build the app options.
+    pipes: cliPipes
+  },
+
   // Adapters namespace
   adapters: [{
     // App namespace.
@@ -19,11 +27,12 @@ export const consoleAdapterOptions = {
       // Adapter options to be merged with global adapter options.
       adapter: {
 
+        // Here you can set this adapter as preferred.
+        // This value is used to force the app use this adapter.
+        preferred: true,
+
         // Here you can define your adapter alias name.
         alias: NODE_CONSOLE_PLATFORM,
-
-        // Here you can define your default adapter
-        default: true,
 
         // Adapter class constructor.
         type: NodeConsoleAdapter

@@ -31,5 +31,5 @@ export const customTask = async (container, _event, showHelp = false) => {
  */
 function startProcess (showHelp) {
   const args = showHelp ? ['--help'] : argv.slice(2)
-  spawn('node', [buildPath('console.bootstrap.mjs'), ...args], { stdio: 'inherit' })
+  spawn('node', [buildPath('cli.bootstrap.mjs'), ...args], { stdio: 'inherit' })
 }

@@ -120,7 +120,7 @@ export class Handler {
             .positional('module', {
               type: 'string',
               default: 'app',
-              choices: ['app', 'console', 'all'],
+              choices: ['app', 'cli', 'all'],
               desc: 'module name to override'
             })
             .option('force', {

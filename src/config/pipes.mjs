@@ -1,5 +1,6 @@
 /**
  * Merge cli class definitions modules with app modules.
+ * This is an initializer pipe and must have low priotity.
  *
  * @param   {Passable} passable - Input data to transform via middleware.
  * @param   {Function} next - Pass to next middleware.
@@ -24,4 +25,7 @@ export const CommandPipe = (passable, next) => {
 }
 
 /** @returns {Array} */
-export const consolePipes = [MergeWithAppModulesPipe, CommandPipe]
+export const cliPipes = [
+  { pipe: MergeWithAppModulesPipe, priority: 0.1 },
+  { pipe: CommandPipe, priority: 1 }
+]
