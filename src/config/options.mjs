@@ -1,10 +1,6 @@
-import { cliPipes } from './pipes.mjs'
 import { Mapper } from '@stone-js/adapters'
-import { mapperInputResolver } from '../resolvers.mjs'
-import { NODE_CONSOLE_PLATFORM } from '@stone-js/common'
-import { CommonInputMiddleware } from '../middleware.mjs'
-import { NodeConsoleAdapter } from '../NodeConsoleAdapter.mjs'
-import { CommandServiceProvider } from '../command/CommandServiceProvider.mjs'
+import { IncomingEvent, NODE_CONSOLE_PLATFORM } from '@stone-js/common'
+import { CommandServiceProvider, NodeConsoleAdapter, CommonInputMiddleware, cliPipes } from '@stone-js/cli'
 
 /**
  * Cli options.
@@ -49,7 +45,7 @@ export const cliOptions = {
           type: Mapper,
 
           // Output mapper resolve.
-          resolver: mapperInputResolver,
+          resolver: (passable) => IncomingEvent.create(passable.event),
 
           // Input mapper middleware. Can be class constructor or alias.
           // Middleware must be registered before using it in the app middleware array.

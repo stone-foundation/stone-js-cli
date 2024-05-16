@@ -10,6 +10,8 @@ const inputs = {
   decorators: 'src/decorators/*.mjs',
   index: [
     'src/App.mjs',
+    'src/pipes/*.mjs',
+    'src/middleware.mjs',
     'src/command/Router.mjs',
     'src/NodeConsoleAdapter.mjs',
     'src/command/AbstractCommand.mjs',
@@ -25,7 +27,9 @@ export default Object.entries(inputs).map(([name, input]) => ({
   plugins: [
     json(),
     multi(),
-    nodeExternals(), // Must always be before `nodeResolve()`.
+    nodeExternals({
+      include: [/^[@stone-js/cli]/]
+    }), // Must always be before `nodeResolve()`.
     nodeResolve({
       exportConditions: ['node', 'import', 'require', 'default']
     }),

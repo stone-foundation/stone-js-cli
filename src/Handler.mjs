@@ -2,13 +2,13 @@ import { Config } from '@stone-js/config'
 import { version } from '../package.json'
 import { Mapper } from '@stone-js/adapters'
 import { getEnvVariables } from './utils.mjs'
+import { IncomingEvent } from '@stone-js/common'
 import { buildTask } from './tasks/task-build.mjs'
 import { serveTask } from './tasks/task-serve.mjs'
 import { cacheTask } from './tasks/task-cache.mjs'
 import { customTask } from './tasks/task-custom.mjs'
 import { configTask } from './tasks/task-config.mjs'
 import { exportTask } from './tasks/task-export.mjs'
-import { mapperInputResolver } from './resolvers.mjs'
 import { Container } from '@stone-js/service-container'
 import { CommonInputMiddleware } from './middleware.mjs'
 
@@ -39,7 +39,7 @@ export class Handler {
   constructor (options) {
     this.#container = new Container()
     this.#container.instance(Config, Config.create(options)).alias(Config, 'config')
-    this.#container.singleton('inputMapper', (container) => Mapper.create(container, [CommonInputMiddleware], mapperInputResolver))
+    this.#container.singleton('inputMapper', (container) => Mapper.create(container, [CommonInputMiddleware], (passable) => IncomingEvent.create(passable.event)))
   }
 
   /** @return {Container} */
