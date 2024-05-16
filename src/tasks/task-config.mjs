@@ -47,7 +47,7 @@ const makeConfig = async (module, force) => {
     const stub = readFileSync(originPath, 'utf-8')
 
     if (pathExistsSync(destPath) && !force) {
-      return console.log(`Cannot override an existing file(${filename}). Use --force to override it.`)
+      return console.log(`Cannot override an existing file(${filename}) for this module(${module}). Use --force to override it.`)
     } else {
       outputFileSync(destPath, stub.trim())
     }
