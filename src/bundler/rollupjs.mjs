@@ -63,9 +63,19 @@ async function makeBuildOptions (config) {
         nodeResolve({
           exportConditions: ['node', 'import', 'require', 'default']
         }),
-        babel({ babelHelpers: 'bundled' }),
         commonjs(),
-        replace(replaceProcessEnvVars(config))
+        replace(replaceProcessEnvVars(config)),
+        babel({
+          babelHelpers: 'bundled',
+          babelrc: false,
+          configFile: false,
+          presets: [
+            ['@babel/preset-env']
+          ],
+          plugins: [
+            ['@babel/plugin-proposal-decorators', { version: '2023-11' }]
+          ]
+        })
       ]
     }, rollupOtions))
 }
