@@ -134,7 +134,7 @@ export class Handler {
       .command({
         command: 'config <action> <module>',
         aliases: ['c'],
-        desc: 'Manage configuration options',
+        desc: 'Manage configuration options. Useful to export third party config/options.',
         builder: (yargs) => {
           return yargs
             .positional('action', {

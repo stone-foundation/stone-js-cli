@@ -23,7 +23,7 @@ import { classLevelDecoratorChecker, merge } from '@stone-js/common'
  * @param  {number} options.builder.defaultPipesPriority - Default priority for all pipes.
  * @return {Function}
  */
-export const App = (options = {}) => {
+export const StoneCli = (options = {}) => {
   return (target) => {
     classLevelDecoratorChecker(target)
 

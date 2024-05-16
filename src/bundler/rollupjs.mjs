@@ -48,7 +48,7 @@ async function makeBuildOptions (config) {
 
   return Object
     .entries(config.get('autoload.modules', {}))
-    .filter(([name]) => checkAutoloadModule(config, name, false))
+    .filter(([name]) => checkAutoloadModule(config, name))
     .map(([name, input]) => merge({
       input: basePath(input),
       output: [

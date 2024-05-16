@@ -14,7 +14,7 @@ import { StoneFactory } from '@stone-js/core'
 import { ConfigBuilder } from '@stone-js/core/config'
 
 /**
- * Get app options.
+ * Auto build app options.
  */
 const appOptions = await ConfigBuilder.create().build({ __app_module_names__ })
 
@@ -25,7 +25,7 @@ const stone = await StoneFactory.createAndRun(appOptions)
 
 /**
  * Export adapter specific output.
- * Usefull for FAAS handler like AWS lambda handler.
+ * Useful for FAAS handler like AWS lambda handler.
  * 
  * @returns {Object}
  */
@@ -43,7 +43,6 @@ import { StoneFactory } from '@stone-js/core'
 import { ConfigBuilder } from '@stone-js/core/config'
 
 /**
- * Get app options.
  * Auto build app options.
  * 
  * @returns {Object}
@@ -72,9 +71,15 @@ export function makeBootstrapFile (config, action, isConsole = false, force = fa
   const filename = isConsole ? 'cli.bootstrap.mjs' : 'app.bootstrap.mjs'
   const exclude = isConsole ? [] : config.get('autoload.exclude', ['commands'])
 
+  // Do not create boostrap file when commands folder is empty.
+  if (isConsole && !checkAutoloadModule(config, 'commands')) {
+    return false
+  }
+
   if (action === 'export') {
     if (pathExistsSync(basePath(filename)) && !force) {
-      return console.log(`Cannot override an existing file(${filename}). Use --force to override it.`)
+      console.log(`Cannot override an existing file(${filename}). Use --force to override it.`)
+      return false
     } else {
       outputFileSync(basePath(filename), normalizeBootstrapStub(config, stub, action, exclude))
     }
@@ -82,6 +87,8 @@ export function makeBootstrapFile (config, action, isConsole = false, force = fa
     stub = pathExistsSync(basePath(filename)) ? readFileSync(basePath(filename), 'utf-8') : stub
     outputFileSync(buildPath(filename), normalizeBootstrapStub(config, stub, action, exclude))
   }
+
+  return true
 }
 
 /**
@@ -96,7 +103,7 @@ export function makeBootstrapFile (config, action, isConsole = false, force = fa
 export function normalizeBootstrapStub (config, stub, action, exclude = []) {
   const modules = Object
     .keys(config.get('autoload.modules', {}))
-    .filter((name) => checkAutoloadModule(config, name, false))
+    .filter((name) => checkAutoloadModule(config, name))
     .filter((name) => !exclude.includes(name))
 
   const statement = modules.map((name) => `import * as ${name} from './${name}.mjs'`)

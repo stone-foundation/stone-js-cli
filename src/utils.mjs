@@ -19,7 +19,7 @@ import { readJsonSync, pathExistsSync, outputJsonSync } from 'fs-extra/esm'
 export function getApplicationFiles (config) {
   return Object
     .entries(config.get('autoload.modules', {}))
-    .filter(([name]) => checkAutoloadModule(config, name, false))
+    .filter(([name]) => checkAutoloadModule(config, name))
     .map(([name, pattern]) => [name, globSync(basePath(pattern))])
 }
 
@@ -114,7 +114,7 @@ export function getEnvVariables (options) {
  * @returns {boolean}
  * @throws  {RuntimeError}
  */
-export function checkAutoloadModule (config, module, throwError = true) {
+export function checkAutoloadModule (config, module, throwError = false) {
   const autoload = `autoload.modules.${module}`
 
   if (!config.has(autoload)) {
