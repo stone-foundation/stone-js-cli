@@ -3,6 +3,7 @@ import { version } from '../package.json'
 import { Mapper } from '@stone-js/adapters'
 import { getEnvVariables } from './utils.mjs'
 import { IncomingEvent } from '@stone-js/common'
+import { initTask } from './tasks/task-init.mjs'
 import { buildTask } from './tasks/task-build.mjs'
 import { serveTask } from './tasks/task-serve.mjs'
 import { cacheTask } from './tasks/task-cache.mjs'
@@ -64,6 +65,9 @@ export class Handler {
    */
   async handle (event) {
     switch (true) {
+      case ['init', 'i'].includes(event.get('task')):
+        await initTask(this.#container, event)
+        break
       case ['build', 'b'].includes(event.get('task')):
         await buildTask(this.#container, event)
         break
@@ -110,6 +114,25 @@ export class Handler {
         command: 'list',
         aliases: ['l', 'ls'],
         desc: 'List all custom commands'
+      })
+      .command({
+        command: 'init <type>',
+        aliases: ['i'],
+        desc: 'Create a fresh Stone app or activate the cli',
+        builder: (yargs) => {
+          return yargs
+            .positional('type', {
+              type: 'string',
+              choices: ['app', 'cli'],
+              desc: 'To create a new Stone app use `app` and `cli` to activate the cli in an existing project.'
+            })
+            .option('force', {
+              alias: 'f',
+              type: 'boolean',
+              default: false,
+              desc: 'Force overriding'
+            })
+        }
       })
       .command({
         command: 'export [module]',

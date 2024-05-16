@@ -3,7 +3,7 @@ import { checkAutoloadModule } from '../utils.mjs'
 
 /**
  * Export task.
- * Usefull to export app cli.bootstrap.mjs and app.bootstrap.mjs
+ * Useful to export app cli.bootstrap.mjs and app.bootstrap.mjs
  * For customization.
  *
  * @param {Container} container

@@ -3,7 +3,7 @@ import { buildPath } from '@stone-js/common'
 
 /**
  * Cache task.
- * Usefull for cache management
+ * Useful for cache management
  *
  * @param {Container} container
  * @param {IncomingEvent} event
