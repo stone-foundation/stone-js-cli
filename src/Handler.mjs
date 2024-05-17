@@ -9,6 +9,7 @@ import { serveTask } from './tasks/task-serve.mjs'
 import { cacheTask } from './tasks/task-cache.mjs'
 import { customTask } from './tasks/task-custom.mjs'
 import { exportTask } from './tasks/task-export.mjs'
+import { typingsTask } from './tasks/task-typings.mjs'
 import { Container } from '@stone-js/service-container'
 import { CommonInputMiddleware } from './middleware.mjs'
 
@@ -76,6 +77,9 @@ export class Handler {
       case ['export', 'e'].includes(event.get('task')):
         await exportTask(this.#container, event)
         break
+      case ['typings', 't'].includes(event.get('task')):
+        await typingsTask(this.#container, event)
+        break
       case ['cache', 'ca'].includes(event.get('task')):
         await cacheTask(this.#container, event)
         break
@@ -112,15 +116,15 @@ export class Handler {
         desc: 'List all custom commands'
       })
       .command({
-        command: 'init <type>',
+        command: 'init',
         aliases: ['i'],
         desc: 'Create a fresh Stone app or activate the cli',
         builder: (yargs) => {
           return yargs
-            .positional('type', {
-              type: 'string',
-              choices: ['app', 'cli'],
-              desc: 'To create a new Stone app use `app` and `cli` to activate the cli in an existing project.'
+            .option('cli', {
+              alias: 'c',
+              type: 'boolean',
+              desc: 'Activate the cli in an existing project.'
             })
             .option('force', {
               alias: 'f',
@@ -150,15 +154,30 @@ export class Handler {
         }
       })
       .command({
-        command: 'cache <action>',
+        command: 'typings',
+        aliases: ['t'],
+        desc: 'Check code typings for typescript or flow project.',
+        builder: (yargs) => {
+          return yargs
+            .option('watch', {
+              alias: 'w',
+              type: 'boolean',
+              default: false,
+              desc: 'Launch checker in watch mode. Only for Typescript.'
+            })
+        }
+      })
+      .command({
+        command: 'cache',
         aliases: ['ca'],
         desc: 'Manage app cache',
         builder: (yargs) => {
           return yargs
-            .positional('action', {
-              type: 'string',
-              choices: ['clear'],
-              desc: 'cache action'
+            .option('clear', {
+              alias: 'c',
+              type: 'boolean',
+              default: false,
+              desc: 'Clear cache'
             })
         }
       })

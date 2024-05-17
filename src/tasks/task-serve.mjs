@@ -14,8 +14,10 @@ import { basePath, buildPath } from '@stone-js/common'
 export const serveTask = async (container) => {
   let serverProcess
 
+  // Build and run app.
   await buildApp(container, () => { serverProcess = startProcess(serverProcess) })
 
+  // Rebuild and restart app on files changed.
   appWatcher(() => buildApp(container, () => { serverProcess = startProcess(serverProcess) }))
 }
 
@@ -55,6 +57,6 @@ function appWatcher (handler) {
  * @returns {Object}
  */
 function startProcess (serverProcess) {
-  serverProcess && serverProcess.kill()
+  serverProcess?.kill()
   return spawn('node', [buildPath('app.bootstrap.mjs'), ...argv.slice(2)], { stdio: 'inherit' })
 }

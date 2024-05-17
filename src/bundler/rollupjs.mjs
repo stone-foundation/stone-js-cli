@@ -26,7 +26,7 @@ export async function rollupBuild (config) {
  * @returns
  */
 export async function rollupBundle (_config) {
-  const options = makeBundleOptions()
+  const options = await makeBundleOptions()
   const bundle = await rollup(options)
   await Promise.all(options.output.map(bundle.write))
 }
@@ -60,13 +60,18 @@ async function makeBuildOptions (config) {
  */
 async function makeBundleOptions () {
   const rollupOtions = await getRollupConfig()
+  const bundleExcludes = ['replace', 'babel', 'multi-entry']
 
-  return rollupOtions({
+  const options = rollupOtions({
     input: buildPath('app.bootstrap.mjs'),
     output: [{ format: 'es', file: distPath('stone.mjs') }],
     externaleOptions: { deps: false },
-    replaceOptions: {}
+    replaceOptions: { preventAssignment: true }
   })
+
+  options.plugins = options.plugins.filter(plugin => !bundleExcludes.includes(plugin.name))
+
+  return options
 }
 
 /**

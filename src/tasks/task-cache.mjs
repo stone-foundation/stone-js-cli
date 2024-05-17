@@ -10,7 +10,7 @@ import { buildPath } from '@stone-js/common'
  * @returns
  */
 export const cacheTask = async (_container, event) => {
-  if (event.get('action') === 'clear') {
+  if (event.get('clear')) {
     emptyDirSync(buildPath())
     return console.log('Cache deleted!')
   }

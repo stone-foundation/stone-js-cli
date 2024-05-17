@@ -11,7 +11,7 @@ import { outputFileSync, pathExistsSync } from 'fs-extra/esm'
  * @returns
  */
 export const initTask = async (container, event) => {
-  if (event.get('type') === 'cli') {
+  if (event.get('cli')) {
     initCli(container, event)
   }
 }
