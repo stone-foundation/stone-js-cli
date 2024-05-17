@@ -20,7 +20,7 @@ const buildPipes = [
 const bundlePipes = [
   pipeable(() => console.info('Bundling...')),
   pipeable(() => emptyDirSync(distPath())),
-  pipeable(() => rollupBundle())
+  pipeable((container) => rollupBundle(container.config))
 ]
 
 /**

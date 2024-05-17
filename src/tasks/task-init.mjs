@@ -1,3 +1,4 @@
+import { makeFilename } from '../utils.mjs'
 import { commandsPath } from '@stone-js/common'
 import { outputFileSync, pathExistsSync } from 'fs-extra/esm'
 
@@ -22,9 +23,9 @@ export const initTask = async (container, event) => {
  * @param {IncomingEvent} event
  * @returns
  */
-const initCli = async (_container, event) => {
-  const filename = 'Application.mjs'
+const initCli = async (container, event) => {
   const force = event.get('force', false)
+  const filename = makeFilename(container.config, 'Application')
 
   if (pathExistsSync(commandsPath(filename)) && !force) {
     console.log('Cannot init cli because your commands folder already contains `Application.mjs`. Use --force to override it.')

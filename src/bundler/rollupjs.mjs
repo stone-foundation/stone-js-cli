@@ -1,14 +1,8 @@
 import { rollup } from 'rollup'
-import json from '@rollup/plugin-json'
-import babel from '@rollup/plugin-babel'
-import replace from '@rollup/plugin-replace'
 import { pathExistsSync } from 'fs-extra/esm'
-import multi from '@rollup/plugin-multi-entry'
-import commonjs from '@rollup/plugin-commonjs'
-import nodeResolve from '@rollup/plugin-node-resolve'
-import nodeExternals from 'rollup-plugin-node-externals'
+import rollupConfig from './rollup.config.mjs'
 import { checkAutoloadModule, getEnvVariables } from '../utils.mjs'
-import { basePath, buildPath, distPath, merge, importModule } from '@stone-js/common'
+import { basePath, buildPath, distPath, importModule } from '@stone-js/common'
 
 /**
  * Rollup build.
@@ -28,9 +22,10 @@ export async function rollupBuild (config) {
 /**
  * Rollup bundle.
  *
+ * @param {Config} config
  * @returns
  */
-export async function rollupBundle () {
+export async function rollupBundle (_config) {
   const options = makeBundleOptions()
   const bundle = await rollup(options)
   await Promise.all(options.output.map(bundle.write))
@@ -44,66 +39,49 @@ export async function rollupBundle () {
  * @returns {Object}
  */
 async function makeBuildOptions (config) {
-  const rollupOtions = await getRollupConfig()
+  const rollupOtions = await getRollupConfig(config)
 
   return Object
     .entries(config.get('autoload.modules', {}))
     .filter(([name]) => checkAutoloadModule(config, name))
-    .map(([name, input]) => merge({
+    .map(([name, input]) => rollupOtions({
       input: basePath(input),
-      output: [
-        { format: 'es', file: buildPath(`${name}.mjs`) }
-      ],
-      plugins: [
-        json(),
-        multi(),
-        nodeExternals({
-          include: /^@stone-js/
-        }), // Must always be before `nodeResolve()`.
-        nodeResolve({
-          exportConditions: ['node', 'import', 'require', 'default']
-        }),
-        commonjs(),
-        replace(replaceProcessEnvVars(config)),
-        babel({
-          babelHelpers: 'bundled',
-          babelrc: false,
-          configFile: false,
-          presets: [
-            ['@babel/preset-env']
-          ],
-          plugins: [
-            ['@babel/plugin-proposal-decorators', { version: '2023-11' }]
-          ]
-        })
-      ]
-    }, rollupOtions))
+      output: [{ format: 'es', file: buildPath(`${name}.mjs`) }],
+      externaleOptions: { include: /^@stone-js/ },
+      replaceOptions: replaceProcessEnvVars(config)
+    }))
 }
 
 /**
  * Make Rollup bundle options.
  *
  * @private
- * @param   {Object} inputs
- * @param   {Object} [options={}]
  * @returns {Object}
  */
-function makeBundleOptions () {
-  return {
+async function makeBundleOptions () {
+  const rollupOtions = await getRollupConfig()
+
+  return rollupOtions({
     input: buildPath('app.bootstrap.mjs'),
-    output: [
-      { format: 'es', file: distPath('stone.mjs') }
-      // { format: 'es', file: distPath('stone.mjs'), plugins: terser() }
-    ],
-    plugins: [
-      json(),
-      nodeExternals({ deps: false }), // Must always be before `nodeResolve()`.
-      nodeResolve({
-        exportConditions: ['node', 'import', 'require', 'default']
-      }),
-      commonjs()
-    ]
+    output: [{ format: 'es', file: distPath('stone.mjs') }],
+    externaleOptions: { deps: false },
+    replaceOptions: {}
+  })
+}
+
+/**
+ * Get rollup config.
+ *
+ * @private
+ * @returns {Object}
+ */
+async function getRollupConfig () {
+  if (pathExistsSync(basePath('rollup.config.mjs'))) {
+    const module = await importModule('rollup.config.mjs')
+    return Object.values(module).shift() ?? rollupConfig
   }
+
+  return rollupConfig
 }
 
 /**
@@ -132,19 +110,4 @@ function replaceProcessEnvVars (config) {
     values,
     ...options?.replace
   }
-}
-
-/**
- * Get rollup config.
- *
- * @private
- * @returns {Object}
- */
-async function getRollupConfig () {
-  if (pathExistsSync(basePath('rollup.config.mjs'))) {
-    const module = await importModule('rollup.config.mjs')
-    return Object.values(module).shift() ?? {}
-  }
-
-  return {}
 }

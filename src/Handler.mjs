@@ -8,7 +8,6 @@ import { buildTask } from './tasks/task-build.mjs'
 import { serveTask } from './tasks/task-serve.mjs'
 import { cacheTask } from './tasks/task-cache.mjs'
 import { customTask } from './tasks/task-custom.mjs'
-import { configTask } from './tasks/task-config.mjs'
 import { exportTask } from './tasks/task-export.mjs'
 import { Container } from '@stone-js/service-container'
 import { CommonInputMiddleware } from './middleware.mjs'
@@ -77,9 +76,6 @@ export class Handler {
       case ['export', 'e'].includes(event.get('task')):
         await exportTask(this.#container, event)
         break
-      case ['config', 'c'].includes(event.get('task')):
-        await configTask(this.#container, event)
-        break
       case ['cache', 'ca'].includes(event.get('task')):
         await cacheTask(this.#container, event)
         break
@@ -137,37 +133,13 @@ export class Handler {
       .command({
         command: 'export [module]',
         aliases: ['e'],
-        desc: 'Export app bootstrap files',
+        desc: 'Useful to export Stone.js or third party config/options.',
         builder: (yargs) => {
           return yargs
             .positional('module', {
               type: 'string',
               default: 'app',
-              choices: ['app', 'cli', 'all'],
-              desc: 'module name to override'
-            })
-            .option('force', {
-              alias: 'f',
-              type: 'boolean',
-              default: false,
-              desc: 'Force overriding'
-            })
-        }
-      })
-      .command({
-        command: 'config <action> <module>',
-        aliases: ['c'],
-        desc: 'Manage configuration options. Useful to export third party config/options.',
-        builder: (yargs) => {
-          return yargs
-            .positional('action', {
-              type: 'string',
-              choices: ['make'],
-              desc: 'copy options module from package to app'
-            })
-            .positional('module', {
-              type: 'string',
-              desc: 'package name. e.g. @stone-js/adapters'
+              desc: 'module or package name to export. e.g. app, cli, rollup, @stone-js/adapters'
             })
             .option('force', {
               alias: 'f',

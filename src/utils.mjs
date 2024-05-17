@@ -24,6 +24,17 @@ export function getApplicationFiles (config) {
 }
 
 /**
+ * Make filename with extension.
+ *
+ * @param   {Config} config
+ * @param   {string} filename
+ * @returns {string}
+ */
+export function makeFilename (config, filename) {
+  return filename.concat(config.get('autoload.type') === 'typescript' ? '.ts' : '.mjs')
+}
+
+/**
  * Get File Hash.
  * Create a file hash for caching purpose.
  *
