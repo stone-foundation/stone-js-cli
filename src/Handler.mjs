@@ -1,8 +1,8 @@
 import { Config } from '@stone-js/config'
 import { version } from '../package.json'
 import { Mapper } from '@stone-js/adapters'
+import { pathExistsSync } from 'fs-extra/esm'
 import { getEnvVariables } from './utils.mjs'
-import { IncomingEvent } from '@stone-js/common'
 import { initTask } from './tasks/task-init.mjs'
 import { buildTask } from './tasks/task-build.mjs'
 import { serveTask } from './tasks/task-serve.mjs'
@@ -12,6 +12,7 @@ import { exportTask } from './tasks/task-export.mjs'
 import { typingsTask } from './tasks/task-typings.mjs'
 import { Container } from '@stone-js/service-container'
 import { CommonInputMiddleware } from './middleware.mjs'
+import { IncomingEvent, basePath } from '@stone-js/common'
 
 /**
  * Class representing a Stone.js console Handler.
@@ -64,32 +65,53 @@ export class Handler {
    * @returns
    */
   async handle (event) {
-    switch (true) {
-      case ['init', 'i'].includes(event.get('task')):
-        await initTask(this.#container, event)
-        break
-      case ['build', 'b'].includes(event.get('task')):
-        await buildTask(this.#container, event)
-        break
-      case ['serve', 's'].includes(event.get('task')):
-        await serveTask(this.#container, event)
-        break
-      case ['export', 'e'].includes(event.get('task')):
-        await exportTask(this.#container, event)
-        break
-      case ['typings', 't'].includes(event.get('task')):
-        await typingsTask(this.#container, event)
-        break
-      case ['cache', 'ca'].includes(event.get('task')):
-        await cacheTask(this.#container, event)
-        break
-      case ['list', 'ls', 'l'].includes(event.get('task')):
-        await customTask(this.#container, event, true)
-        break
-      default:
-        await customTask(this.#container, event)
-        break
+    // Check if `stone.config.mjs` exists
+    if (this.#ensureStoneConfigExists(event)) {
+      switch (true) {
+        case ['init', 'i'].includes(event.get('task')):
+          await initTask(this.#container, event)
+          break
+        case ['build', 'b'].includes(event.get('task')):
+          await buildTask(this.#container, event)
+          break
+        case ['serve', 's'].includes(event.get('task')):
+          await serveTask(this.#container, event)
+          break
+        case ['export', 'e'].includes(event.get('task')):
+          await exportTask(this.#container, event)
+          break
+        case ['typings', 't'].includes(event.get('task')):
+          await typingsTask(this.#container, event)
+          break
+        case ['cache', 'ca'].includes(event.get('task')):
+          await cacheTask(this.#container, event)
+          break
+        case ['list', 'ls', 'l'].includes(event.get('task')):
+          await customTask(this.#container, event, true)
+          break
+        default:
+          await customTask(this.#container, event)
+          break
+      }
+    } else {
+      this.#container.output.error('You cannot use this command outside of a Stone project.')
+      this.#container.output.error('All Stone projects must have a `stone.config.mjs` file at its root.')
     }
+  }
+
+  /**
+   * Ensure Stone config.
+   * Check if stone config exists.
+   * Stone.config must exist for all task except
+   * for `stone init app`.
+   *
+   * @param {IncomingEvent} event
+   * @returns
+   */
+  #ensureStoneConfigExists (event) {
+    return ((['init', 'i'].includes(event.get('task')) && event.get('action') === 'app')) ||
+      pathExistsSync(basePath('stone.config.js')) ||
+      pathExistsSync(basePath('stone.config.mjs'))
   }
 
   /**
@@ -116,15 +138,21 @@ export class Handler {
         desc: 'List all custom commands'
       })
       .command({
-        command: 'init',
+        command: 'init [action] [project-name]',
         aliases: ['i'],
         desc: 'Create a fresh Stone app or activate the cli',
         builder: (yargs) => {
           return yargs
-            .option('cli', {
-              alias: 'c',
-              type: 'boolean',
-              desc: 'Activate the cli in an existing project.'
+            .positional('action', {
+              type: 'string',
+              default: 'app',
+              choices: ['app', 'cli'],
+              desc: 'init a new app or the cli in an existing app'
+            })
+            .positional('project-name', {
+              type: 'string',
+              default: 'stone-project',
+              desc: 'your project name'
             })
             .option('force', {
               alias: 'f',

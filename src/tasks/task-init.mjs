@@ -1,3 +1,4 @@
+import spawn from 'cross-spawn'
 import { makeFilename } from '../utils.mjs'
 import { commandsPath } from '@stone-js/common'
 import { outputFileSync, pathExistsSync } from 'fs-extra/esm'
@@ -11,8 +12,10 @@ import { outputFileSync, pathExistsSync } from 'fs-extra/esm'
  * @returns
  */
 export const initTask = async (container, event) => {
-  if (event.get('cli')) {
+  if (event.get('action') === 'cli') {
     initCli(container, event)
+  } else {
+    spawn('npm', ['create', '@stone-js@latest', event.get('project-name')], { stdio: 'inherit' })
   }
 }
 

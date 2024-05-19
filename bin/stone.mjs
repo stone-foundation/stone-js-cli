@@ -7,7 +7,7 @@ import { getStoneOptions } from '@stone-js/core/config'
  * 
  * @returns {Object}
  */
-const stoneOptions = await getStoneOptions()
+const stoneOptions = await getStoneOptions(false)
 
 /**
  * Execute CLI application.
