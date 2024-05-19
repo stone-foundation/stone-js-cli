@@ -154,6 +154,12 @@ export class Handler {
               default: 'stone-project',
               desc: 'your project name'
             })
+            .option('yes', {
+              alias: 'y',
+              default: false,
+              type: 'boolean',
+              desc: 'create with default values'
+            })
             .option('force', {
               alias: 'f',
               type: 'boolean',

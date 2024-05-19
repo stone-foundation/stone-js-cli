@@ -15,8 +15,21 @@ export const initTask = async (container, event) => {
   if (event.get('action') === 'cli') {
     initCli(container, event)
   } else {
-    spawn('npm', ['create', '@stone-js@latest', event.get('project-name')], { stdio: 'inherit' })
+    launchStarter(event)
   }
+}
+
+/**
+ * Launch Stone.js starter.
+ *
+ * @param {IncomingEvent} event
+ * @returns
+ */
+const launchStarter = async (event) => {
+  const args = [event.get('project-name'), '--']
+  event.get('yes') && args.push('--yes', event.get('yes'))
+  event.get('force') && args.push('--force', event.get('force'))
+  spawn('npm', ['create', '@stone-js@latest'].concat(args), { stdio: 'inherit' })
 }
 
 /**
