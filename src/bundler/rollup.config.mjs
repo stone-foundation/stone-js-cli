@@ -6,13 +6,13 @@ import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import nodeExternals from 'rollup-plugin-node-externals'
 
-export default ({ input, output, externaleOptions, replaceOptions }) => {
+export default ({ input, output, externalsOptions = {}, replaceOptions }) => {
   return {
     input,
     output,
     plugins: [
       multi(),
-      nodeExternals(externaleOptions), // Must always be before `nodeResolve()`.
+      nodeExternals(externalsOptions), // Must always be before `nodeResolve()`.
       nodeResolve({
         extensions: ['.js', '.mjs', '.ts'],
         exportConditions: ['node', 'import', 'require', 'default']

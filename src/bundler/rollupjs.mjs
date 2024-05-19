@@ -47,7 +47,6 @@ async function makeBuildOptions (config) {
     .map(([name, input]) => rollupOtions({
       input: basePath(input),
       output: [{ format: 'es', file: buildPath(`${name}.mjs`) }],
-      externaleOptions: { include: /^@stone-js/ },
       replaceOptions: replaceProcessEnvVars(config)
     }))
 }
@@ -65,7 +64,7 @@ async function makeBundleOptions () {
   const options = rollupOtions({
     input: buildPath('app.bootstrap.mjs'),
     output: [{ format: 'es', file: distPath('stone.mjs') }],
-    externaleOptions: { deps: false },
+    externalsOptions: { deps: false },
     replaceOptions: { preventAssignment: true }
   })
 
