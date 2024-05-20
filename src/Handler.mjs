@@ -1,8 +1,9 @@
 import { Config } from '@stone-js/config'
 import { version } from '../package.json'
-import { Mapper } from '@stone-js/adapters'
+import { basePath } from '@stone-js/common'
 import { pathExistsSync } from 'fs-extra/esm'
 import { getEnvVariables } from './utils.mjs'
+import { AdapterMapper } from '@stone-js/core'
 import { initTask } from './tasks/task-init.mjs'
 import { buildTask } from './tasks/task-build.mjs'
 import { serveTask } from './tasks/task-serve.mjs'
@@ -12,7 +13,7 @@ import { exportTask } from './tasks/task-export.mjs'
 import { typingsTask } from './tasks/task-typings.mjs'
 import { Container } from '@stone-js/service-container'
 import { CommonInputMiddleware } from './middleware.mjs'
-import { IncomingEvent, basePath } from '@stone-js/common'
+import { IncomingEvent } from '@stone-js/event-foundation'
 
 /**
  * Class representing a Stone.js console Handler.
@@ -41,7 +42,7 @@ export class Handler {
   constructor (options) {
     this.#container = new Container()
     this.#container.instance(Config, Config.create(options)).alias(Config, 'config')
-    this.#container.singleton('inputMapper', (container) => Mapper.create(container, [CommonInputMiddleware], (passable) => IncomingEvent.create(passable.event)))
+    this.#container.singleton('inputMapper', (container) => AdapterMapper.create(container, [CommonInputMiddleware], (passable) => IncomingEvent.create(passable.event)))
   }
 
   /** @return {Container} */
@@ -177,7 +178,7 @@ export class Handler {
             .positional('module', {
               type: 'string',
               default: 'app',
-              desc: 'module or package name to export. e.g. app, cli, rollup, @stone-js/adapters'
+              desc: 'module or package name to export. e.g. app, cli, rollup, @stone-js/node-adapter'
             })
             .option('force', {
               alias: 'f',

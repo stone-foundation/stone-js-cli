@@ -12,6 +12,7 @@ const inputs = {
   index: [
     'src/App.mjs',
     'src/pipes/*.mjs',
+    'src/constants.mjs',
     'src/middleware.mjs',
     'src/command/Router.mjs',
     'src/NodeConsoleAdapter.mjs',
@@ -29,7 +30,7 @@ export default Object.entries(inputs).map(([name, input]) => ({
     json(),
     multi(),
     nodeExternals({
-      include: [/^[@stone-js/cli]/]
+      include: [/^@stone-js\/cli/]
     }), // Must always be before `nodeResolve()`.
     nodeResolve({
       exportConditions: ['node', 'import', 'require', 'default']

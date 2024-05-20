@@ -4,10 +4,11 @@ import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { argv } from 'node:process'
 import { hideBin } from 'yargs/helpers'
-import { Adapter } from '@stone-js/adapters'
+import { Adapter } from '@stone-js/core'
+import { NODE_CONSOLE_PLATFORM } from './constants.mjs'
 import { CommandInput } from './command/CommandInput.mjs'
+import { RuntimeError, isBrowser } from '@stone-js/common'
 import { CommandOutput } from './command/CommandOutput.mjs'
-import { RuntimeError, isBrowser, NODE_CONSOLE_PLATFORM } from '@stone-js/common'
 
 /**
  * Class representing a NodeConsoleAdapter.

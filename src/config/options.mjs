@@ -1,5 +1,6 @@
-import { Mapper } from '@stone-js/adapters'
-import { IncomingEvent, NODE_CONSOLE_PLATFORM } from '@stone-js/common'
+import { AdapterMapper } from '@stone-js/core'
+import { NODE_CONSOLE_PLATFORM } from '../constants.mjs'
+import { IncomingEvent } from '@stone-js/event-foundation'
 import { CommandServiceProvider, NodeConsoleAdapter, CommonInputMiddleware, cliPipes } from '@stone-js/cli'
 
 /**
@@ -42,7 +43,7 @@ export const cliOptions = {
         input: {
 
           // Mapper class constructor.
-          type: Mapper,
+          type: AdapterMapper,
 
           // Output mapper resolve.
           resolver: (passable) => IncomingEvent.create(passable.event),

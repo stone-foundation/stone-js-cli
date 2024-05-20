@@ -1,5 +1,6 @@
 import { Router } from './Router.mjs'
-import { isFunction, NODE_CONSOLE_PLATFORM } from '@stone-js/common'
+import { isFunction } from '@stone-js/common'
+import { NODE_CONSOLE_PLATFORM } from '../constants.mjs'
 
 /**
  * Class representing a CommandServiceProvider.

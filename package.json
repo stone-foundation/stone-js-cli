@@ -59,8 +59,8 @@
     "test:lcov": "npm run test:cvg -- --coverageReporters=lcov text"
   },
   "peerDependencies": {
-    "@stone-js/adapters": "^0.0.1",
-    "@stone-js/core": "^0.0.1"
+    "@stone-js/core": "^0.0.1",
+    "@stone-js/event-foundation": "^0.0.1"
   },
   "dependencies": {
     "@babel/core": "^7.24.5",
