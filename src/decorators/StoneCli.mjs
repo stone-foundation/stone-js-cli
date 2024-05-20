@@ -15,12 +15,12 @@ import { classLevelDecoratorChecker, merge } from '@stone-js/common'
  * @author Mr. Stone <evensstone@gmail.com>
  *
  * @memberOf Decorators
- * @param  {Object} options - The decorator configuration options.
+ * @param  {Object} [options] - The decorator configuration options.
  * @param  {Function[]} [options.providers] - Service providers for cli app.
  * @param  {(Function|Function[]|string|string[])} [options.middleware] - Input middleware to transform incomming event before handling.
- * @param  {Array} options.builder.pipes - Pipes for config builder.
- * @param  {string[]} options.builder.reduce - Modules du reduce and deep merge to object.
- * @param  {number} options.builder.defaultPipesPriority - Default priority for all pipes.
+ * @param  {Array} [options.builder.pipes] - Pipes for config builder.
+ * @param  {string[]} [options.builder.reduce] - Modules du reduce and deep merge to object.
+ * @param  {number} [options.builder.defaultPipesPriority] - Default priority for all pipes.
  * @return {Function}
  */
 export const StoneCli = (options = {}) => {
