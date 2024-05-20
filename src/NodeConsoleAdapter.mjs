@@ -29,13 +29,14 @@ export class NodeConsoleAdapter extends Adapter {
 
     const handler = this._handlerFactory()
     const container = handler.container
-    const builder = yargs(hideBin(argv)).scriptName('stone')
+    const builder = yargs(hideBin(argv))
 
     this._setPlatform(container, NODE_CONSOLE_PLATFORM)
 
     container
       .instanceIf('format', chalk)
       .instanceIf('builder', builder)
+      .instanceIf('cliPlatform', NODE_CONSOLE_PLATFORM)
       .instanceIf('output', new CommandOutput(console, ora, chalk))
       .instanceIf('input', new CommandInput(inquirer.createPromptModule()))
 

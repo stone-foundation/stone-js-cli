@@ -14,7 +14,7 @@ import { checkAutoloadModule, shouldBuild } from '../utils.mjs'
  */
 export const customTask = async (container, _event, showHelp = false) => {
   if (!checkAutoloadModule(container.config, 'commands')) {
-    console.info('No custom commands found!')
+    container.output.error('No custom commands found!')
     return container.builder.showHelp()
   }
 

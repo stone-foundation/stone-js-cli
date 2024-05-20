@@ -218,6 +218,7 @@ export class Handler {
       })
       .help()
       .version(version)
+      .scriptName('stone')
   }
 
   /**
