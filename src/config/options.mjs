@@ -1,6 +1,5 @@
-import { AdapterMapper } from '@stone-js/core'
 import { NODE_CONSOLE_PLATFORM } from '../constants.mjs'
-import { IncomingEvent } from '@stone-js/event-foundation'
+import { IncomingEvent, AdapterMapper } from '@stone-js/core'
 import { CommandServiceProvider, NodeConsoleAdapter, CommonInputMiddleware, cliPipes } from '@stone-js/cli'
 
 /**

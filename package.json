@@ -4,7 +4,10 @@
   "description": "Stone.js cli",
   "author": "Mr. Stone <evensstone@gmail.com>",
   "license": "MIT",
-  "repository": "git@github.com:stonemjs/cli.git",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/stonemjs/cli.git"
+  },
   "homepage": "https://github.com/stonemjs/cli#readme",
   "bugs": {
     "url": "https://github.com/stonemjs/cli/issues"
@@ -60,7 +63,7 @@
   },
   "peerDependencies": {
     "@stone-js/core": "^0.0.1",
-    "@stone-js/event-foundation": "^0.0.1"
+    "@stone-js/http-core": "^0.0.1"
   },
   "dependencies": {
     "@babel/core": "^7.24.5",

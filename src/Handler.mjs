@@ -3,7 +3,6 @@ import { version } from '../package.json'
 import { basePath } from '@stone-js/common'
 import { pathExistsSync } from 'fs-extra/esm'
 import { getEnvVariables } from './utils.mjs'
-import { AdapterMapper } from '@stone-js/core'
 import { initTask } from './tasks/task-init.mjs'
 import { buildTask } from './tasks/task-build.mjs'
 import { serveTask } from './tasks/task-serve.mjs'
@@ -13,7 +12,7 @@ import { exportTask } from './tasks/task-export.mjs'
 import { typingsTask } from './tasks/task-typings.mjs'
 import { Container } from '@stone-js/service-container'
 import { CommonInputMiddleware } from './middleware.mjs'
-import { IncomingEvent } from '@stone-js/event-foundation'
+import { IncomingEvent, AdapterMapper } from '@stone-js/core'
 
 /**
  * Class representing a Stone.js console Handler.
