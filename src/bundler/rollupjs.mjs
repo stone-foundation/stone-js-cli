@@ -25,8 +25,8 @@ export async function rollupBuild (config) {
  * @param {Config} config
  * @returns
  */
-export async function rollupBundle (_config) {
-  const options = await makeBundleOptions()
+export async function rollupBundle (config) {
+  const options = await makeBundleOptions(config)
   const bundle = await rollup(options)
   await Promise.all(options.output.map(bundle.write))
 }
@@ -47,7 +47,7 @@ async function makeBuildOptions (config) {
     .map(([name, input]) => rollupOtions({
       input: basePath(input),
       output: [{ format: 'es', file: buildPath(`${name}.mjs`) }],
-      replaceOptions: replaceProcessEnvVars(config)
+      replaceOptions: { preventAssignment: true }
     }))
 }
 
@@ -55,17 +55,18 @@ async function makeBuildOptions (config) {
  * Make Rollup bundle options.
  *
  * @private
+ * @param   {Config} config
  * @returns {Object}
  */
-async function makeBundleOptions () {
+async function makeBundleOptions (config) {
   const rollupOtions = await getRollupConfig()
-  const bundleExcludes = ['replace', 'babel', 'multi-entry']
+  const bundleExcludes = ['babel', 'multi-entry']
 
   const options = rollupOtions({
     input: buildPath('app.bootstrap.mjs'),
     output: [{ format: 'es', file: distPath('stone.mjs') }],
     externalsOptions: { deps: false },
-    replaceOptions: { preventAssignment: true }
+    replaceOptions: replaceProcessEnvVars(config)
   })
 
   options.plugins = options.plugins.filter(plugin => !bundleExcludes.includes(plugin.name))
