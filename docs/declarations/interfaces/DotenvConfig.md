@@ -14,7 +14,7 @@
 
 #### Defined in
 
-declarations.ts:23
+[declarations.ts:23](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/declarations.ts#L23)
 
 ***
 
@@ -24,7 +24,7 @@ declarations.ts:23
 
 #### Defined in
 
-declarations.ts:24
+[declarations.ts:24](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/declarations.ts#L24)
 
 ***
 
@@ -34,7 +34,7 @@ declarations.ts:24
 
 #### Defined in
 
-declarations.ts:25
+[declarations.ts:25](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/declarations.ts#L25)
 
 ***
 
@@ -44,4 +44,4 @@ declarations.ts:25
 
 #### Defined in
 
-declarations.ts:22
+[declarations.ts:22](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/declarations.ts#L22)

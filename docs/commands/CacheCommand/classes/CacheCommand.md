@@ -38,7 +38,7 @@ If the Blueprint config or EventEmitter is not bound to the container.
 
 #### Defined in
 
-commands/CacheCommand.ts:41
+[commands/CacheCommand.ts:42](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/CacheCommand.ts#L42)
 
 ## Methods
 
@@ -60,4 +60,4 @@ Handle the incoming event.
 
 #### Defined in
 
-commands/CacheCommand.ts:51
+[commands/CacheCommand.ts:52](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/CacheCommand.ts#L52)

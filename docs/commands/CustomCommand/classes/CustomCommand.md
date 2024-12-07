@@ -34,7 +34,7 @@ If the Blueprint config or EventEmitter is not bound to the container.
 
 #### Defined in
 
-commands/CustomCommand.ts:29
+[commands/CustomCommand.ts:26](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/CustomCommand.ts#L26)
 
 ## Methods
 
@@ -60,4 +60,4 @@ The blueprint.
 
 #### Defined in
 
-commands/CustomCommand.ts:41
+[commands/CustomCommand.ts:38](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/CustomCommand.ts#L38)

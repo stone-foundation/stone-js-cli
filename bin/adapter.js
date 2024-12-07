@@ -1,11 +1,28 @@
-import { IntegrationError, Adapter, AdapterEventBuilder, IncomingEvent, ErrorHandler, defaultKernelResolver, defaultLoggerResolver, OutgoingResponse, setClassMetadata, hasMetadata, getMetadata, AdapterHandlerMiddleware, addBlueprint } from '@stone-js/core';
+import yargs from 'yargs';
+import { argv } from 'node:process';
+import { hideBin } from 'yargs/helpers';
+import { IntegrationError, Adapter, AdapterEventBuilder, IncomingEvent, ErrorHandler, defaultKernelResolver, defaultLoggerResolver, OutgoingResponse, setClassMetadata, hasMetadata, getMetadata, AdapterHandlerMiddleware, addBlueprint } from './core.js';
 import ProgressBar from 'progress';
 import ora from 'ora';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import yargs from 'yargs';
-import { argv } from 'node:process';
-import { hideBin } from 'yargs/helpers';
+
+var version = "0.0.0";
+
+/**
+ * A constant representing the Node Cli platform identifier.
+ *
+ * This constant is used as an alias for the Node Cli Adapter within the Stone.js framework.
+ * It helps in identifying and configuring platform-specific adapters or components for handling
+ * incoming requests and responses.
+ */
+const NODE_CONSOLE_PLATFORM = 'node_console';
+/**
+ * A constant representing the default command not found code.
+ *
+ * This constant is used to indicate that a command was not found or does not exist.
+ */
+const COMMAND_NOT_FOUND_CODE = 404;
 
 /**
  * Wrapper for generic raw responses.
@@ -80,7 +97,8 @@ class NodeCliAdapterError extends IntegrationError {
         this.name = 'NodeCliAdapterError';
     }
     get exitCode() {
-        return this.cause?.exitCode ?? 1;
+        const cause = this.cause;
+        return cause?.exitCode ?? cause?.statusCode ?? 500;
     }
 }
 
@@ -133,6 +151,14 @@ class NodeCliAdapter extends Adapter {
         return new this(options);
     }
     /**
+     * Retrieves the list of registered command classes.
+     *
+     * @returns An array of command constructor functions.
+     */
+    get commands() {
+        return this.blueprint.get('stone.adapter.commands', []);
+    }
+    /**
      * Executes the adapter and provides an Node Cli-compatible handler function.
      *
      * The `run` method processes events, manages context, and returns the appropriate response.
@@ -143,12 +169,11 @@ class NodeCliAdapter extends Adapter {
      */
     async run() {
         await this.onInit();
-        const executionContext = this.blueprint.get('stone.adapter.commandBuilder');
-        if (executionContext === undefined) {
-            throw new NodeCliAdapterError('Command builder is required to run the Node Cli Adapter, set it in CLI blueprint `stone.adapter.commandBuilder`.');
-        }
-        const rawEvent = await this.makeRawEvent(executionContext);
-        return await this.eventListener(rawEvent, executionContext);
+        const executionContext = yargs(hideBin(argv)).help().version(version).scriptName('stone');
+        const rawEvent = await this.registerAppCommands(executionContext).makeRawEvent(executionContext);
+        const response = await this.eventListener(rawEvent, executionContext);
+        response === COMMAND_NOT_FOUND_CODE && executionContext.showHelp();
+        return response;
     }
     /**
      * Initializes the adapter and validates its execution context.
@@ -190,25 +215,44 @@ class NodeCliAdapter extends Adapter {
             incomingEventBuilder
         });
     }
+    /**
+     * Creates a raw event object from the parsed command line arguments.
+     *
+     * @param builder - The execution context that provides the parsed command line arguments.
+     * @returns A promise that resolves to a `NodeCliEvent` object containing the parsed arguments.
+     *
+     * The returned object includes all parsed arguments except for `_` and `$0`, which are stored
+     * separately in the `_extra` and `_script` properties, respectively.
+     */
     async makeRawEvent(builder) {
-        const argv = await builder.argv;
+        const argv = await builder.parse();
         const args = Object.fromEntries(Object.entries(argv).filter(([key]) => !['_', '$0'].includes(key)));
         return {
             ...args,
-            __extra: argv._,
-            __script: argv.$0
+            _extra: argv._,
+            _script: argv.$0
         };
     }
+    /**
+     * Registers application commands in the service container.
+     */
+    registerAppCommands(builder) {
+        this
+            .commands
+            .map(([, options]) => options)
+            .forEach((options) => this.registerCommand(options, builder));
+        return this;
+    }
+    /**
+     * Registers a single command using its `registerCommand` method.
+     *
+     * @param command - The command instance to register.
+     */
+    registerCommand(options, builder) {
+        const cmd = [[options.name].concat(options.args ?? []).join(' ')].concat(options.alias ?? []);
+        builder.command(cmd, options.desc ?? '', options.options);
+    }
 }
-
-/**
- * A constant representing the Node Cli platform identifier.
- *
- * This constant is used as an alias for the Node Cli Adapter within the Stone.js framework.
- * It helps in identifying and configuring platform-specific adapters or components for handling
- * incoming requests and responses.
- */
-const NODE_CONSOLE_PLATFORM = 'node_console';
 
 /**
  * Resolves a logger for a blueprint.
@@ -557,9 +601,9 @@ class CommandRouter {
      * @returns The matching command, or undefined if no match is found.
      */
     findCommand(event) {
-        return this.commands
-            .map(([commandClass, options]) => ({ options, command: this.resolveCommand(commandClass) }))
-            .find(({ command, options }) => this.checkCommandMatch(command, event, options))?.command;
+        const commands = this.commands.map(([commandClass, options]) => ({ options, command: this.resolveCommand(commandClass) }));
+        return commands.find(({ command, options }) => this.checkCommandMatch(command, event, options))?.command ??
+            commands.find(({ options }) => options.name === '*')?.command;
     }
     /**
      * Runs the given command with the provided event.
@@ -570,14 +614,13 @@ class CommandRouter {
      */
     async runCommand(event, command) {
         if (command === undefined) {
-            this.showHelp();
-            return OutgoingResponse.create({ content: '', statusCode: 1 });
+            return OutgoingResponse.create({ statusCode: COMMAND_NOT_FOUND_CODE });
         }
         else if (typeof command.handle === 'function') {
             return await command.handle(event);
         }
         else {
-            throw new NodeCliAdapterError('Command does not implement a "handle" method.');
+            throw new NodeCliAdapterError('Command does not implement an "handle" method.');
         }
     }
     /**
@@ -610,18 +653,8 @@ class CommandRouter {
             return command.match(event);
         }
         else {
-            return event.getMetadataValue('task') === options.name || options.alias?.includes(event.getMetadataValue('task')) === true;
-        }
-    }
-    /**
-     * Displays help information when no command matches the event.
-     */
-    showHelp() {
-        const builder = this.blueprint.get('stone.adapter.commandBuilder')
-        if (builder !== undefined) {
-            builder.showHelp().scriptName('stone')
-        } else {
-            console.error('No help available.')
+            const task = event.getMetadataValue('_task');
+            return options.name === task || options.alias === task || (Array.isArray(options.alias) && options.alias.includes(task ?? ''));
         }
     }
 }
@@ -658,14 +691,6 @@ class CommandServiceProvider {
         this.blueprint = blueprint;
     }
     /**
-     * Retrieves the list of registered command classes.
-     *
-     * @returns An array of command constructor functions.
-     */
-    get commands() {
-        return this.blueprint.get('stone.adapter.commands', []);
-    }
-    /**
      * Retrieves the router classes.
      *
      * @returns Command Router constructor functions.
@@ -687,9 +712,8 @@ class CommandServiceProvider {
      */
     register() {
         this
-            .registerCommandUtils() // Must be registered first or always before the app commands.
             .registerRouter()
-            .registerAppCommands();
+            .registerCommandUtils();
     }
     /**
      * Registers the router in the service container.
@@ -701,50 +725,6 @@ class CommandServiceProvider {
                 .singletonIf(this.router, (container) => Reflect.construct(this.router, [container]))
                 .alias(this.router, 'router');
         }
-        return this;
-    }
-    /**
-     * Registers application commands in the service container.
-     */
-    registerAppCommands() {
-        this
-            .commands
-            .map(([commandClass, options]) => ({ options, command: this.resolveCommand(commandClass) }))
-            .forEach(({ options }) => this.registerCommand(options));
-        return this;
-    }
-    /**
-     * Resolves a command instance from the container.
-     *
-     * @param commandClass - The command constructor function.
-     * @returns The resolved command instance.
-     */
-    resolveCommand(commandClass) {
-        let command;
-        if (typeof commandClass === 'function') {
-            command = Object.prototype.hasOwnProperty.call(commandClass, 'prototype')
-                ? this.container.resolve(commandClass, true)
-                : { handle: commandClass };
-        }
-        if (command === undefined) {
-            throw new NodeCliAdapterError(`Failed to resolve command: ${commandClass.name}`);
-        }
-        return command;
-    }
-    /**
-     * Registers a single command using its `registerCommand` method.
-     *
-     * @param command - The command instance to register.
-     */
-    registerCommand(options) {
-        const builder = this.blueprint.get('stone.adapter.commandBuilder');
-        if (builder === undefined) {
-            throw new NodeCliAdapterError('Command builder is required by command service provider, set it in CLI blueprint `stone.adapter.commandBuilder`.');
-        }
-        builder
-            .command([options.name].concat(options.args ?? []).join(' '), options.desc ?? '', {
-            builder: options.options ?? {}
-        });
         return this;
     }
     /**
@@ -807,6 +787,32 @@ const CommandMiddleware = ({ modules, blueprint }, next) => {
 };
 
 /**
+ * Middleware for handling raw responses in the Node CLI adapter.
+ *
+ * This middleware processes outgoing responses and attaches the necessary exit code, and status codes to the raw response.
+ */
+class RawResponseMiddleware {
+    /**
+     * Handles the outgoing response, processes it, and invokes the next middleware in the pipeline.
+     *
+     * @param context - The adapter context containing the raw event, execution context, and other data.
+     * @param next - The next middleware to be invoked in the pipeline.
+     * @returns A promise that resolves to the processed context.
+     * @throws {NodeCliAdapterError} If required components are missing in the context.
+     */
+    async handle(context, next) {
+        if (context.outgoingResponse === undefined || context.rawResponseBuilder?.add === undefined) {
+            throw new NodeCliAdapterError('The context is missing required components.');
+        }
+        context
+            .rawResponseBuilder
+            .add('exitCode', context.outgoingResponse.statusCode ?? COMMAND_NOT_FOUND_CODE)
+            .add('statusCode', context.outgoingResponse.statusCode ?? COMMAND_NOT_FOUND_CODE);
+        return await next(context);
+    }
+}
+
+/**
  * Middleware for handling incoming events in the Node CLI adapter.
  *
  * This middleware processes the incoming event and prepares it for the next middleware in the pipeline.
@@ -827,7 +833,7 @@ class IncomingEventMiddleware {
         context
             .incomingEventBuilder
             .add('source', context.executionContext)
-            .add('metadata', { args: context.rawEvent, task: context.rawEvent.__extra.shift() });
+            .add('metadata', { ...context.rawEvent, _task: context.rawEvent._extra.shift() });
         return await next(context);
     }
 }
@@ -857,13 +863,13 @@ const nodeCliAdapterBlueprint = {
                 resolver: nodeCliAdapterResolver,
                 middleware: [
                     { priority: 0, pipe: IncomingEventMiddleware },
-                    { priority: 100, pipe: AdapterHandlerMiddleware }
+                    { priority: 100, pipe: AdapterHandlerMiddleware },
+                    { priority: 200, pipe: RawResponseMiddleware }
                 ],
                 hooks: {},
                 errorHandler: {
                     resolver: nodeCliErrorHandlerResolver
                 },
-                commandBuilder: yargs(hideBin(argv)),
                 current: false,
                 default: false,
                 preferred: false,
@@ -911,4 +917,4 @@ const NodeConsoleAdapter = (options = {}) => {
     };
 };
 
-export { COMMAND_KEY, Command, CommandInput, CommandMiddleware, CommandOutput, CommandRouter, CommandServiceProvider, IncomingEventMiddleware, NODE_CONSOLE_PLATFORM, NodeCliAdapter, NodeCliAdapterError, NodeConsoleAdapter, RawResponseWrapper, nodeCliAdapterBlueprint, nodeCliAdapterResolver, nodeCliErrorHandlerResolver };
+export { COMMAND_KEY, COMMAND_NOT_FOUND_CODE, Command, CommandInput, CommandMiddleware, CommandOutput, CommandRouter, CommandServiceProvider, IncomingEventMiddleware, NODE_CONSOLE_PLATFORM, NodeCliAdapter, NodeCliAdapterError, NodeConsoleAdapter, RawResponseMiddleware, RawResponseWrapper, nodeCliAdapterBlueprint, nodeCliAdapterResolver, nodeCliErrorHandlerResolver };

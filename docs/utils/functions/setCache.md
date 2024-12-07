@@ -25,4 +25,4 @@ The configuration object.
 
 ## Defined in
 
-utils.ts:141
+[utils.ts:143](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/utils.ts#L143)

@@ -46,4 +46,4 @@ Whether the bootstrap file was successfully created.
 
 ## Defined in
 
-utils.ts:292
+[utils.ts:294](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/utils.ts#L294)

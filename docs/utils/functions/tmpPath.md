@@ -22,4 +22,4 @@ Resolve path from system tmp directory.
 
 ## Defined in
 
-utils.ts:32
+[utils.ts:34](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/utils.ts#L34)

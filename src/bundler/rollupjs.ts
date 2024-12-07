@@ -1,10 +1,12 @@
+import fsExtra from 'fs-extra'
 import { Plugin, rollup } from 'rollup'
-import { pathExistsSync } from 'fs-extra'
 import rollupConfig from './rollup.config'
 import { IBlueprint } from '@stone-js/core'
 import { StoneRollupOptions } from '../declarations.js'
 import { RollupReplaceOptions } from '@rollup/plugin-replace'
 import { checkAutoloadModule, getEnvVariables, basePath, buildPath, distPath, importModule } from '../utils.js'
+
+const { pathExistsSync } = fsExtra
 
 /**
  * Rollup build process.
@@ -102,7 +104,8 @@ async function makeBundleOptions (blueprint: IBlueprint): Promise<StoneRollupOpt
 async function getRollupConfig (_blueprint?: IBlueprint): Promise<(options: StoneRollupOptions) => StoneRollupOptions> {
   if (pathExistsSync(basePath('rollup.config.mjs'))) {
     const module = await importModule<{ [k: string]: (options: StoneRollupOptions) => StoneRollupOptions }>('rollup.config.mjs')
-    return Object.values(module ?? {}).shift() ?? rollupConfig
+    const config = Object.values(module ?? {}).shift()
+    return typeof config === 'function' ? config : rollupConfig
   }
 
   return rollupConfig

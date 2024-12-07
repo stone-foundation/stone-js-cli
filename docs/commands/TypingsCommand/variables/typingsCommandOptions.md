@@ -10,4 +10,4 @@
 
 ## Defined in
 
-commands/TypingsCommand.ts:8
+[commands/TypingsCommand.ts:8](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/TypingsCommand.ts#L8)

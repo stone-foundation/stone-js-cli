@@ -10,4 +10,4 @@
 
 ## Defined in
 
-commands/CacheCommand.ts:8
+[commands/CacheCommand.ts:10](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/CacheCommand.ts#L10)

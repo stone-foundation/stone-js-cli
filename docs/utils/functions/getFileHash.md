@@ -27,4 +27,4 @@ The MD5 hash of the file content.
 
 ## Defined in
 
-utils.ts:119
+[utils.ts:121](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/utils.ts#L121)

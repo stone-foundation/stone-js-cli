@@ -36,4 +36,4 @@ Handle the incoming event.
 
 #### Defined in
 
-commands/InitCommand.ts:37
+[commands/InitCommand.ts:37](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/InitCommand.ts#L37)

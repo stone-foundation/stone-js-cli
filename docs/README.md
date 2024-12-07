@@ -10,6 +10,7 @@
 ![Maintenance](https://img.shields.io/maintenance/yes/2024)
 [![Publish Package to npmjs](https://github.com/stonemjs/cli/actions/workflows/release.yml/badge.svg)](https://github.com/stonemjs/cli/actions/workflows/release.yml)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 Stone.js Command line interface.
 

@@ -42,4 +42,4 @@ RuntimeError - If the module is invalid and `throwError` is true.
 
 ## Defined in
 
-utils.ts:196
+[utils.ts:198](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/utils.ts#L198)

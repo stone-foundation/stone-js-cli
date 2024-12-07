@@ -14,4 +14,4 @@
 
 #### Defined in
 
-declarations.ts:6
+[declarations.ts:6](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/declarations.ts#L6)

@@ -26,4 +26,4 @@ The resulting path after joining the current working directory with the provided
 
 ## Defined in
 
-utils.ts:22
+[utils.ts:24](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/utils.ts#L24)

@@ -1,5 +1,6 @@
+import deepmerge from 'deepmerge'
+import { onInit } from '../hooks'
 import { defineAppBlueprint, stoneBlueprint } from '@stone-js/core'
-import { StoneCliServiceProvider } from '../StoneCliServiceProvider'
 import { ListCommand, listCommandOptions } from '../commands/ListCommand'
 import { InitCommand, initCommandOptions } from '../commands/InitCommand'
 import { BuildCommand, buildCommandOptions } from '../commands/BuildCommand'
@@ -14,6 +15,7 @@ import { NodeCliAdapterConfig, CommandRouter, nodeCliAdapterBlueprint } from '@s
  * Configuration for the Stone Cli Adapter.
  */
 const stoneCliAdapterConfig: Partial<NodeCliAdapterConfig> = {
+  hooks: { onInit },
   router: CommandRouter,
   commands: [
     [InitCommand, initCommandOptions],
@@ -32,7 +34,6 @@ const stoneCliAdapterConfig: Partial<NodeCliAdapterConfig> = {
  */
 export const stoneCliBlueprint = defineAppBlueprint(stoneBlueprint, nodeCliAdapterBlueprint, {
   stone: {
-    adapter: stoneCliAdapterConfig,
-    providers: [StoneCliServiceProvider]
+    adapter: deepmerge(nodeCliAdapterBlueprint.stone.adapters[0], stoneCliAdapterConfig)
   }
 })

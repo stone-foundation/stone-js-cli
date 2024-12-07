@@ -1,3 +1,4 @@
+import fsExtra from 'fs-extra'
 import { globSync } from 'glob'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
@@ -11,7 +12,8 @@ import { DotenvOptions } from './declarations'
 import Dotenv, { DotenvPopulateInput } from 'dotenv'
 import { NextPipe, Pipe, Pipeline } from '@stone-js/pipeline'
 import { appBootstrapStub, consoleBootstrapStub } from './stubs'
-import { readJsonSync, pathExistsSync, outputJsonSync, outputFileSync } from 'fs-extra'
+
+const { readJsonSync, pathExistsSync, outputJsonSync, outputFileSync } = fsExtra
 
 /**
  * Constructs a base path by joining the current working directory with the provided paths.

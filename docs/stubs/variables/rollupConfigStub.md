@@ -12,4 +12,4 @@ Rollup config stub.
 
 ## Defined in
 
-stubs.ts:57
+[stubs.ts:52](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/stubs.ts#L52)

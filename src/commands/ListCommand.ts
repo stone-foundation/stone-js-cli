@@ -1,9 +1,9 @@
 import spawn from 'cross-spawn'
-import { buildApp, buildPath, shouldBuild } from '../utils'
+import { buildPipes } from './BuildCommand'
 import { CliError } from '../errors/CliError'
+import { buildApp, buildPath, shouldBuild } from '../utils'
 import { CommandOptions } from '@stone-js/node-cli-adapter'
 import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
-import { buildPipes } from './BuildCommand'
 
 export const listCommandOptions: CommandOptions = {
   name: 'list',

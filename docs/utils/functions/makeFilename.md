@@ -32,4 +32,4 @@ The filename with the appropriate extension.
 
 ## Defined in
 
-utils.ts:108
+[utils.ts:110](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/utils.ts#L110)

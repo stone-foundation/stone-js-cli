@@ -1,9 +1,11 @@
-import { emptyDirSync } from 'fs-extra'
+import fsExtra from 'fs-extra'
 import { CliError } from '../errors/CliError'
 import { CommandOptions } from '@stone-js/node-cli-adapter'
 import { rollupBuild, rollupBundle } from '../bundler/rollupjs'
 import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
 import { buildApp, buildPath, distPath, makeBootstrapFile, pipeable, setCache } from '../utils'
+
+const { emptyDirSync } = fsExtra
 
 export const buildCommandOptions: CommandOptions = {
   name: 'build',

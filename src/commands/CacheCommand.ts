@@ -1,14 +1,15 @@
 import { Argv } from 'yargs'
+import fsExtra from 'fs-extra'
 import { buildPath } from '../utils'
-import { emptyDirSync } from 'fs-extra'
 import { CliError } from '../errors/CliError'
 import { CommandOptions, CommandOutput } from '@stone-js/node-cli-adapter'
 import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
 
+const { emptyDirSync } = fsExtra
+
 export const cacheCommandOptions: CommandOptions = {
-  name: 'build',
-  alias: 'b',
-  args: [],
+  name: 'cache',
+  alias: 'c',
   desc: 'Manage app cache',
   options: (yargs: Argv) => {
     return yargs

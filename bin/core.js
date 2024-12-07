@@ -487,6 +487,132 @@ class ConfigBuilder {
 }
 
 /**
+ * Log level enumeration to define possible log levels.
+ */
+var LogLevel;
+(function (LogLevel) {
+    LogLevel["TRACE"] = "trace";
+    LogLevel["DEBUG"] = "debug";
+    LogLevel["INFO"] = "info";
+    LogLevel["WARN"] = "warn";
+    LogLevel["ERROR"] = "error";
+})(LogLevel || (LogLevel = {}));
+
+/**
+ * Console Logger class.
+ *
+ * This class implements the ILogger interface and uses either the native console object or a custom logging tool.
+ *
+ * @example
+ * ```typescript
+ * const logger = ConsoleLogger.create({ blueprint });
+ * logger.info('Application started');
+ * ```
+ */
+class ConsoleLogger {
+    blueprint;
+    /**
+     * Create a new ConsoleLogger instance.
+     *
+     * @param {LoggerOptions} options - Options for creating the ConsoleLogger.
+     * @returns {ConsoleLogger} - A new instance of ConsoleLogger.
+     */
+    static create(options) {
+        return new this(options);
+    }
+    /**
+     * Constructs a ConsoleLogger instance.
+     *
+     * @param {LoggerOptions} options - Options for creating the ConsoleLogger.
+     */
+    constructor({ blueprint }) {
+        if (blueprint === undefined) {
+            throw new RuntimeError('Blueprint is required to create a ConsoleLogger instance.');
+        }
+        this.blueprint = blueprint;
+    }
+    /**
+     * Logs informational messages.
+     *
+     * @param {string} message - The message to log.
+     * @param {...unknown[]} optionalParams - Optional parameters to log.
+     */
+    info(message, ...optionalParams) {
+        if (this.shouldLog(LogLevel.INFO)) {
+            console.info(this.formatMessage(message), ...optionalParams);
+        }
+    }
+    /**
+     * Logs debug-level messages, used for debugging purposes.
+     *
+     * @param {string} message - The message to log.
+     * @param {...unknown[]} optionalParams - Optional parameters to log.
+     */
+    debug(message, ...optionalParams) {
+        if (this.shouldLog(LogLevel.DEBUG)) {
+            console.debug(this.formatMessage(message), ...optionalParams);
+        }
+    }
+    /**
+     * Logs warnings, used to indicate potential issues.
+     *
+     * @param {string} message - The warning message to log.
+     * @param {...unknown[]} optionalParams - Optional parameters to log.
+     */
+    warn(message, ...optionalParams) {
+        if (this.shouldLog(LogLevel.WARN)) {
+            console.warn(this.formatMessage(message), ...optionalParams);
+        }
+    }
+    /**
+     * Logs errors, used to report errors or exceptions.
+     *
+     * @param {string} message - The error message to log.
+     * @param {...unknown[]} optionalParams - Optional parameters to log.
+     */
+    error(message, ...optionalParams) {
+        if (this.shouldLog(LogLevel.ERROR)) {
+            console.error(this.formatMessage(message), ...optionalParams);
+        }
+    }
+    /**
+     * Logs general messages, similar to `info` but less specific.
+     *
+     * @param {string} message - The message to log.
+     * @param {...unknown[]} optionalParams - Optional parameters to log.
+     */
+    log(message, ...optionalParams) {
+        if (this.shouldLog(LogLevel.INFO)) {
+            console.log(this.formatMessage(message), ...optionalParams);
+        }
+    }
+    /**
+     * Determines if the specified log level should be logged based on the current log level setting.
+     *
+     * @param {'trace' | 'debug' | 'info' | 'warn' | 'error'} level - The log level to check.
+     * @returns {boolean} - True if the specified log level should be logged, otherwise false.
+     */
+    shouldLog(level) {
+        const levels = ['trace', 'debug', 'info', 'warn', 'error'];
+        const requestedLevelIndex = levels.indexOf(level);
+        const currentLevelIndex = levels.indexOf(this.blueprint.get('stone.logger.level', 'info'));
+        return requestedLevelIndex >= currentLevelIndex;
+    }
+    /**
+     * Formats the log message by optionally adding a timestamp.
+     *
+     * @param {string} message - The message to format.
+     * @returns {string} - The formatted message.
+     */
+    formatMessage(message) {
+        if (this.blueprint.get('stone.logger.useTimestamp', false)) {
+            return `[${new Date().toISOString()}] ${message}`;
+        }
+        return message;
+    }
+}
+
+/**
  * Custom error for Initialization layer operations.
  */
 class InitializationError extends RuntimeError {
@@ -670,132 +796,6 @@ class CoreServiceProvider {
 }
 
 /**
- * Log level enumeration to define possible log levels.
- */
-var LogLevel;
-(function (LogLevel) {
-    LogLevel["TRACE"] = "trace";
-    LogLevel["DEBUG"] = "debug";
-    LogLevel["INFO"] = "info";
-    LogLevel["WARN"] = "warn";
-    LogLevel["ERROR"] = "error";
-})(LogLevel || (LogLevel = {}));
-
-/**
- * Console Logger class.
- *
- * This class implements the ILogger interface and uses either the native console object or a custom logging tool.
- *
- * @example
- * ```typescript
- * const logger = ConsoleLogger.create({ blueprint });
- * logger.info('Application started');
- * ```
- */
-class ConsoleLogger {
-    blueprint;
-    /**
-     * Create a new ConsoleLogger instance.
-     *
-     * @param {LoggerOptions} options - Options for creating the ConsoleLogger.
-     * @returns {ConsoleLogger} - A new instance of ConsoleLogger.
-     */
-    static create(options) {
-        return new this(options);
-    }
-    /**
-     * Constructs a ConsoleLogger instance.
-     *
-     * @param {LoggerOptions} options - Options for creating the ConsoleLogger.
-     */
-    constructor({ blueprint }) {
-        if (blueprint === undefined) {
-            throw new RuntimeError('Blueprint is required to create a ConsoleLogger instance.');
-        }
-        this.blueprint = blueprint;
-    }
-    /**
-     * Logs informational messages.
-     *
-     * @param {string} message - The message to log.
-     * @param {...unknown[]} optionalParams - Optional parameters to log.
-     */
-    info(message, ...optionalParams) {
-        if (this.shouldLog(LogLevel.INFO)) {
-            console.info(this.formatMessage(message), ...optionalParams);
-        }
-    }
-    /**
-     * Logs debug-level messages, used for debugging purposes.
-     *
-     * @param {string} message - The message to log.
-     * @param {...unknown[]} optionalParams - Optional parameters to log.
-     */
-    debug(message, ...optionalParams) {
-        if (this.shouldLog(LogLevel.DEBUG)) {
-            console.debug(this.formatMessage(message), ...optionalParams);
-        }
-    }
-    /**
-     * Logs warnings, used to indicate potential issues.
-     *
-     * @param {string} message - The warning message to log.
-     * @param {...unknown[]} optionalParams - Optional parameters to log.
-     */
-    warn(message, ...optionalParams) {
-        if (this.shouldLog(LogLevel.WARN)) {
-            console.warn(this.formatMessage(message), ...optionalParams);
-        }
-    }
-    /**
-     * Logs errors, used to report errors or exceptions.
-     *
-     * @param {string} message - The error message to log.
-     * @param {...unknown[]} optionalParams - Optional parameters to log.
-     */
-    error(message, ...optionalParams) {
-        if (this.shouldLog(LogLevel.ERROR)) {
-            console.error(this.formatMessage(message), ...optionalParams);
-        }
-    }
-    /**
-     * Logs general messages, similar to `info` but less specific.
-     *
-     * @param {string} message - The message to log.
-     * @param {...unknown[]} optionalParams - Optional parameters to log.
-     */
-    log(message, ...optionalParams) {
-        if (this.shouldLog(LogLevel.INFO)) {
-            console.log(this.formatMessage(message), ...optionalParams);
-        }
-    }
-    /**
-     * Determines if the specified log level should be logged based on the current log level setting.
-     *
-     * @param {'trace' | 'debug' | 'info' | 'warn' | 'error'} level - The log level to check.
-     * @returns {boolean} - True if the specified log level should be logged, otherwise false.
-     */
-    shouldLog(level) {
-        const levels = ['trace', 'debug', 'info', 'warn', 'error'];
-        const requestedLevelIndex = levels.indexOf(level);
-        const currentLevelIndex = levels.indexOf(this.blueprint.get('stone.logger.level', 'info'));
-        return requestedLevelIndex >= currentLevelIndex;
-    }
-    /**
-     * Formats the log message by optionally adding a timestamp.
-     *
-     * @param {string} message - The message to format.
-     * @returns {string} - The formatted message.
-     */
-    formatMessage(message) {
-        if (this.blueprint.get('stone.logger.useTimestamp', false)) {
-            return `[${new Date().toISOString()}] ${message}`;
-        }
-        return message;
-    }
-}
-
-/**
  * Custom error for Integration layer operations.
  */
 class IntegrationError extends RuntimeError {
@@ -957,7 +957,7 @@ class ErrorHandler {
     reportError(error) {
         this.reportedError.add(error);
         const errorContext = this.buildErrorContext(error);
-        const level = Object.entries(this.levels).find(([, classes]) => classes.find(Class => error instanceof Class))?.[0] ?? 'error';
+        const level = (Object.entries(this.levels).find(([, classes]) => classes.find(Class => error instanceof Class))?.[0] ?? 'error');
         if (level in this.logger) {
             this.logger[level]?.(error.message, errorContext);
         }
@@ -1021,7 +1021,17 @@ class Event {
      * @param fallback - The fallback value if the key is not found.
      * @returns The value associated with the key or the fallback.
      */
-    getMetadataValue(key, fallback = null) {
+    get(key, fallback) {
+        return this.getMetadataValue(key, fallback);
+    }
+    /**
+     * Get data from metadata.
+     *
+     * @param key - The key to retrieve from metadata.
+     * @param fallback - The fallback value if the key is not found.
+     * @returns The value associated with the key or the fallback.
+     */
+    getMetadataValue(key, fallback) {
         return get(this.metadata, key, fallback);
     }
     /**
@@ -1031,7 +1041,7 @@ class Event {
      * @param value - The value to associate with the key.
      * @returns This Event instance.
      */
-    setMetadataValue(key, value = null) {
+    setMetadataValue(key, value) {
         Object.entries(isPlainObject(key) ? key : { [key]: value }).forEach(([name, val]) => set(this.metadata, name, val));
         return this;
     }
@@ -1192,10 +1202,11 @@ class Kernel {
         for (const provider of this.providers) {
             await provider.onTerminate?.();
         }
-        const event = this.container.make('event');
+        const event = this.container.has('event') ? this.container.make('event') : undefined;
         const response = this.container.has('response') ? this.container.make('response') : undefined;
+        const pipelineOptions = this.makePipelineOptions();
         await Pipeline
-            .create(this.makePipelineOptions())
+            .create(pipelineOptions)
             .send({ event, response })
             .via('terminate')
             .through(this.terminateMiddleware)
@@ -1525,9 +1536,10 @@ class Adapter {
         finally {
             try {
                 await this.onTerminate(eventHandler, context);
-            } catch (e) {
+            }
+            catch (e) {
                 const error = IntegrationError.create(e.message, { cause: e, metadata: context });
-                result = this.errorHandler.report(error).render(error);
+                this.errorHandler.report(error);
             }
         }
         return result;
@@ -1652,27 +1664,6 @@ class AdapterEventBuilder {
 }
 
 /**
- * ConfigMiddleware decorator to mark a class as middleware within the Stone.js framework.
- *
- * This decorator is used to customize classes as middleware, allowing them to be registered and managed
- * as part of the request/response lifecycle or other layers such as adapter, kernel, or router.
- *
- * @param options - The configuration options for the middleware, including platform, priority, singleton registration, alias, layer, and type.
- * @returns A decorator function to set metadata on the target class.
- *
- * @example
- * ```typescript
- * @ConfigMiddleware({ priority: 1, singleton: true })
- * class MyMiddleware {
- *   // ConfigMiddleware class logic here.
- * }
- * ```
- */
-const ConfigMiddleware = (options = {}) => {
-    return setClassMetadata(CONFIG_MIDDLEWARE_KEY, options);
-};
-
-/**
  * AdapterMiddleware decorator to mark a class as middleware within the Stone.js framework.
  *
  * This decorator is used to customize classes as middleware, allowing them to be registered and managed
@@ -1694,21 +1685,24 @@ const AdapterMiddleware = (options = {}) => {
 };
 
 /**
- * Configuration decorator to set imperative configuration.
+ * ConfigMiddleware decorator to mark a class as middleware within the Stone.js framework.
+ *
+ * This decorator is used to customize classes as middleware, allowing them to be registered and managed
+ * as part of the request/response lifecycle or other layers such as adapter, kernel, or router.
+ *
+ * @param options - The configuration options for the middleware, including platform, priority, singleton registration, alias, layer, and type.
+ * @returns A decorator function to set metadata on the target class.
  *
  * @example
  * ```typescript
- * @Configuration()
- * class MyClass {
- *   // ...
+ * @ConfigMiddleware({ priority: 1, singleton: true })
+ * class MyMiddleware {
+ *   // ConfigMiddleware class logic here.
  * }
  * ```
- *
- * @param options - The configuration options.
- * @returns A class decorator function that sets the metadata using the provided options.
  */
-const Configuration = (options = {}) => {
-    return setClassMetadata(CONFIGURATION_KEY, options);
+const ConfigMiddleware = (options = {}) => {
+    return setClassMetadata(CONFIG_MIDDLEWARE_KEY, options);
 };
 
 /**
@@ -1750,6 +1744,24 @@ const Service = (options = {}) => {
  * ```
  */
 const Injectable = Service;
+
+/**
+ * Configuration decorator to set imperative configuration.
+ *
+ * @example
+ * ```typescript
+ * @Configuration()
+ * class MyClass {
+ *   // ...
+ * }
+ * ```
+ *
+ * @param options - The configuration options.
+ * @returns A class decorator function that sets the metadata using the provided options.
+ */
+const Configuration = (options = {}) => {
+    return setClassMetadata(CONFIGURATION_KEY, options);
+};
 
 /**
  * Listener decorator to mark a class as a listener for a specific event.
@@ -1794,24 +1806,24 @@ const Middleware = (options = {}) => {
 };
 
 /**
- * Subscriber decorator to mark a class as a subscriber.
+ * Provider decorator to mark a class as a ServiceProvider and automatically bind its services to the container.
  *
- * This decorator is useful for customizing classes as subscribers within the Stone.js framework,
- * allowing them to listen for events or perform specific tasks based on their subscription.
+ * This decorator is useful for marking classes as service providers within the Stone.js framework,
+ * allowing them to manage and provide their services to the service container.
  *
- * @param options - The configuration options for the subscriber.
+ * @param options - The configuration options for the provider.
  * @returns A decorator function to set metadata on the target class.
  *
  * @example
  * ```typescript
- * @Subscriber({ event: 'UserCreated' })
- * class UserCreatedSubscriber {
- *   // Subscriber class logic here.
+ * @Provider({ singleton: true })
+ * class MyServiceProvider {
+ *   // Service provider logic here.
  * }
  * ```
  */
-const Subscriber = (options = {}) => {
-    return setClassMetadata(SUBSCRIBER_KEY, options);
+const Provider = (options = {}) => {
+    return setClassMetadata(PROVIDER_KEY, options);
 };
 
 /**
@@ -1916,11 +1928,7 @@ class KernelHandlerMiddleware {
      */
     async executeHandler(handler, event) {
         if (typeof handler.handle === 'function') {
-            try {
-                return await handler.handle(event);
-            } catch (error) {
-                throw InitializationError.create(error.message, { cause: error, metadata: { handler, event } });
-            }
+            return await handler.handle(event);
         }
         return await handler(event);
     }
@@ -2354,25 +2362,63 @@ const StoneApp = (options = {}, blueprints = []) => {
 };
 
 /**
- * Provider decorator to mark a class as a ServiceProvider and automatically bind its services to the container.
+ * Subscriber decorator to mark a class as a subscriber.
  *
- * This decorator is useful for marking classes as service providers within the Stone.js framework,
- * allowing them to manage and provide their services to the service container.
+ * This decorator is useful for customizing classes as subscribers within the Stone.js framework,
+ * allowing them to listen for events or perform specific tasks based on their subscription.
  *
- * @param options - The configuration options for the provider.
+ * @param options - The configuration options for the subscriber.
  * @returns A decorator function to set metadata on the target class.
  *
  * @example
  * ```typescript
- * @Provider({ singleton: true })
- * class MyServiceProvider {
- *   // Service provider logic here.
+ * @Subscriber({ event: 'UserCreated' })
+ * class UserCreatedSubscriber {
+ *   // Subscriber class logic here.
  * }
  * ```
  */
-const Provider = (options = {}) => {
-    return setClassMetadata(PROVIDER_KEY, options);
+const Subscriber = (options = {}) => {
+    return setClassMetadata(SUBSCRIBER_KEY, options);
 };
+
+/**
+ * Class representing an IncomingEvent.
+ *
+ * @author Mr. Stone <evensstone@gmail.com>
+ *
+ * @extends Event
+ */
+class IncomingEvent extends Event {
+    /**
+     * INCOMING_EVENT Event name, fires on platform message.
+     *
+     * @event IncomingEvent#INCOMING_EVENT
+     */
+    static INCOMING_EVENT = 'stonejs@incoming_event';
+    /**
+     * The locale of the event.
+     */
+    locale;
+    /**
+     * Create an IncomingEvent.
+     *
+     * @param options - The options to create an IncomingEvent.
+     * @returns A new IncomingEvent instance.
+     */
+    static create(options) {
+        return new this(options);
+    }
+    /**
+     * Create an IncomingEvent.
+     *
+     * @param options - The options to create an IncomingEvent.
+     */
+    constructor({ source, locale = 'en', metadata = {}, timeStamp = Date.now(), type = IncomingEvent.INCOMING_EVENT }) {
+        super({ type, metadata, source, timeStamp });
+        this.locale = locale;
+    }
+}
 
 /**
  * Class representing the AdapterHandlerMiddleware.
@@ -2424,61 +2470,6 @@ class AdapterHandlerMiddleware {
             ? await lifecycleHandler.handle(incomingEvent)
             : await this.eventHandler(incomingEvent);
         return await next({ ...context, incomingEvent, outgoingResponse });
-    }
-}
-
-/**
- * Logging settings for all adapters.
- *
- * This object defines the global logging settings for all adapters in the application.
- * It allows configuration of the logger instance, error reporting behavior, and error class log levels.
- */
-const errorHandler = {
-    // The class type resolver used to create instances of the errorHandler.
-    resolver: defaultErrorHandlerResolver,
-    // Define error class log levels. For example: { 'warn': [TypeError] }.
-    levels: {},
-    // Error classes that should not be reported. For example: new Set([TypeError]).
-    dontReport: new Set(),
-    // Whether to report an error multiple times if it has already been reported.
-    withoutDuplicates: false
-};
-
-/**
- * Class representing an IncomingEvent.
- *
- * @author Mr. Stone <evensstone@gmail.com>
- *
- * @extends Event
- */
-class IncomingEvent extends Event {
-    /**
-     * INCOMING_EVENT Event name, fires on platform message.
-     *
-     * @event IncomingEvent#INCOMING_EVENT
-     */
-    static INCOMING_EVENT = 'stonejs@incoming_event';
-    /**
-     * The locale of the event.
-     */
-    locale;
-    /**
-     * Create an IncomingEvent.
-     *
-     * @param options - The options to create an IncomingEvent.
-     * @returns A new IncomingEvent instance.
-     */
-    static create(options) {
-        return new this(options);
-    }
-    /**
-     * Create an IncomingEvent.
-     *
-     * @param options - The options to create an IncomingEvent.
-     */
-    constructor({ source, locale = 'en', metadata = {}, timeStamp = Date.now(), type = IncomingEvent.INCOMING_EVENT }) {
-        super({ type, metadata, source, timeStamp });
-        this.locale = locale;
     }
 }
 
@@ -2567,5 +2558,22 @@ class OutgoingResponse extends Event {
         return this;
     }
 }
+
+/**
+ * Logging settings for all adapters.
+ *
+ * This object defines the global logging settings for all adapters in the application.
+ * It allows configuration of the logger instance, error reporting behavior, and error class log levels.
+ */
+const errorHandler = {
+    // The class type resolver used to create instances of the errorHandler.
+    resolver: defaultErrorHandlerResolver,
+    // Define error class log levels. For example: { 'warn': [TypeError] }.
+    levels: {},
+    // Error classes that should not be reported. For example: new Set([TypeError]).
+    dontReport: new Set(),
+    // Whether to report an error multiple times if it has already been reported.
+    withoutDuplicates: false
+};
 
 export { ADAPTER_MIDDLEWARE_KEY, Adapter, AdapterEventBuilder, AdapterHandlerMiddleware, AdapterMiddleware, AdapterMiddlewareMiddleware, BLUEPRINT_KEY, BlueprintMiddleware, CONFIGURATION_KEY, CONFIG_MIDDLEWARE_KEY, ConfigBuilder, ConfigMiddleware, Configuration, ConsoleLogger, CoreServiceProvider, EVENT_EMITTER_ALIAS, Environment, ErrorHandler, Event, EventEmitter, IncomingEvent, InitializationError, Injectable, IntegrationError, Kernel, KernelEvent, KernelHandlerMiddleware, LISTENER_KEY, Listener, ListenerMiddleware, LogLevel, MAIN_HANDLER_KEY, MIDDLEWARE_KEY, MainHandlerMiddleware, Middleware, MiddlewareMiddleware, OutgoingResponse, PROVIDER_KEY, Provider, ProviderMiddleware, RegisterProviderToOnInitHookMiddleware, RuntimeError, SERVICE_KEY, SUBSCRIBER_KEY, Service, ServiceMiddleware, SetCurrentAdapterMiddleware, SetupError, StoneApp, StoneFactory, Subscriber, SubscriberMiddleware, adapters, addBlueprint, builder, coreConfigMiddleware, defaultErrorHandlerResolver, defaultKernelResolver, defaultLoggerResolver, defineAppBlueprint, errorHandler, getAllMetadata, getBlueprint, getMetadata, hasBlueprint, hasMetadata, isConstructor, kernel, logger, mergeBlueprints, removeMetadata, setClassMetadata, setFieldMetadata, setMetadata, setMethodMetadata, stoneBlueprint };

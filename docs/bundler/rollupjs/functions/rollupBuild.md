@@ -24,4 +24,4 @@ The blueprint.
 
 ## Defined in
 
-bundler/rollupjs.ts:14
+[bundler/rollupjs.ts:16](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/bundler/rollupjs.ts#L16)

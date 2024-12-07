@@ -34,4 +34,4 @@ If the configuration file is not found and `throwException` is `true`.
 
 ## Defined in
 
-utils.ts:271
+[utils.ts:273](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/utils.ts#L273)

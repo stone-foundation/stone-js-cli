@@ -10,4 +10,4 @@
 
 ## Defined in
 
-commands/CustomCommand.ts:9
+[commands/CustomCommand.ts:9](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/CustomCommand.ts#L9)

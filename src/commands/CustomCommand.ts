@@ -7,11 +7,8 @@ import { buildApp, buildPath, shouldBuild } from '../utils'
 import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
 
 export const customCommandOptions: CommandOptions = {
-  name: 'build',
-  alias: 'b',
-  args: [],
-  desc: 'Build the Stone project.',
-  options: {}
+  name: '*',
+  desc: 'Build the Stone project.'
 }
 
 export class CustomCommand {

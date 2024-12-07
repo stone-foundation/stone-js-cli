@@ -1,10 +1,12 @@
 import { Argv } from 'yargs'
+import fsExtra from 'fs-extra'
 import { rollupConfigStub } from '../stubs'
 import { CliError } from '../errors/CliError'
 import { CommandOptions, CommandOutput } from '@stone-js/node-cli-adapter'
 import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
-import { copySync, outputFileSync, pathExistsSync, readJsonSync } from 'fs-extra'
 import { basePath, configPath, makeBootstrapFile, makeFilename, nodeModulesPath } from '../utils'
+
+const { copySync, outputFileSync, pathExistsSync, readJsonSync } = fsExtra
 
 export const exportCommandOptions: CommandOptions = {
   name: 'export',

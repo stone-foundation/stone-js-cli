@@ -15,12 +15,7 @@ const blueprint = await ConfigBuilder.create().build({ __app_module_names__ })
 /**
  * Run application.
  */
-export const stone = await StoneFactory.create(blueprint).run()
-
-/**
- * Get User defined Handler name.
- */
-const handlerName = blueprint.get('stone.handlerExportName', 'stone')
+const stone = await StoneFactory.create(blueprint).run()
 
 /**
  * Export adapter specific output.
@@ -28,7 +23,7 @@ const handlerName = blueprint.get('stone.handlerExportName', 'stone')
  * 
  * @returns {Object}
  */
-export default { [handlerName]: stone }
+export { stone }
 `
 
 /**

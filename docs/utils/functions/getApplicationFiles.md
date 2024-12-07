@@ -29,4 +29,4 @@ An array of files grouped by directory.
 
 ## Defined in
 
-utils.ts:95
+[utils.ts:97](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/utils.ts#L97)

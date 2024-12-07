@@ -34,7 +34,7 @@ If the Blueprint config or EventEmitter is not bound to the container.
 
 #### Defined in
 
-commands/TypingsCommand.ts:35
+[commands/TypingsCommand.ts:35](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/TypingsCommand.ts#L35)
 
 ## Methods
 
@@ -56,4 +56,4 @@ Handle the incoming event.
 
 #### Defined in
 
-commands/TypingsCommand.ts:44
+[commands/TypingsCommand.ts:44](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/TypingsCommand.ts#L44)

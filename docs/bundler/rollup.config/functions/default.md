@@ -20,4 +20,4 @@
 
 ## Defined in
 
-bundler/rollup.config.ts:10
+[bundler/rollup.config.ts:10](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/bundler/rollup.config.ts#L10)

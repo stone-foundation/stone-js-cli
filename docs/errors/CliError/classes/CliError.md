@@ -38,4 +38,4 @@ Custom error for AWS Lambda adapter operations.
 
 #### Defined in
 
-errors/CliError.ts:7
+[errors/CliError.ts:7](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/errors/CliError.ts#L7)

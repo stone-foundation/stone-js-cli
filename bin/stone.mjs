@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { StoneFactory } from './core.js'
 import { Config } from '@stone-js/config'
-import { stoneCliBlueprint } from '../dist/index.js'
+import { stoneCliBlueprint } from './index.js'
 
 /**
  * Make blueprint.

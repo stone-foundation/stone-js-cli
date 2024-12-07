@@ -18,7 +18,7 @@
 - [commands/TypingsCommand](commands/TypingsCommand/README.md)
 - [declarations](declarations/README.md)
 - [errors/CliError](errors/CliError/README.md)
+- [hooks](hooks/README.md)
 - [options/StoneCliBlueprint](options/StoneCliBlueprint/README.md)
-- [StoneCliServiceProvider](StoneCliServiceProvider/README.md)
 - [stubs](stubs/README.md)
 - [utils](utils/README.md)
