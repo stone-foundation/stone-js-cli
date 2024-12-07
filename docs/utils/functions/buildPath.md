@@ -1,0 +1,29 @@
+[**CLI Documentation v0.0.0**](../../README.md)
+
+***
+
+[CLI Documentation](../../modules.md) / [utils](../README.md) / buildPath
+
+# Function: buildPath()
+
+> **buildPath**(...`paths`): `string`
+
+Builds a path by appending the provided paths to a base path.
+
+## Parameters
+
+### paths
+
+...`string`[]
+
+The paths to append to the base path.
+
+## Returns
+
+`string`
+
+The constructed path.
+
+## Defined in
+
+utils.ts:42

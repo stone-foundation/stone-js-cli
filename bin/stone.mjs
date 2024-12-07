@@ -1,15 +1,14 @@
 #!/usr/bin/env node
-import { App } from '@stone-js/cli'
-import { getStoneOptions } from '@stone-js/core/config'
+import { StoneFactory } from './core.js'
+import { Config } from '@stone-js/config'
+import { stoneCliBlueprint } from '../dist/index.js'
 
 /**
- * Get stone config options.
- * 
- * @returns {Object}
+ * Make blueprint.
  */
-const stoneOptions = await getStoneOptions(false)
+const blueprint = Config.create(stoneCliBlueprint)
 
 /**
  * Execute CLI application.
  */
-App.createAndRun(stoneOptions)
+await StoneFactory.create({ blueprint }).run()

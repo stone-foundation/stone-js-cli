@@ -1,24 +1,13 @@
-import copy from 'rollup-plugin-copy'
-import json from '@rollup/plugin-json'
-import babel from '@rollup/plugin-babel'
+import del from 'rollup-plugin-delete'
+import { dts } from 'rollup-plugin-dts'
 import multi from '@rollup/plugin-multi-entry'
 import commonjs from '@rollup/plugin-commonjs'
+import typescript from '@rollup/plugin-typescript'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import nodeExternals from 'rollup-plugin-node-externals'
 
 const inputs = {
-  config: 'src/config/*.mjs',
-  decorators: 'src/decorators/*.mjs',
-  index: [
-    'src/App.mjs',
-    'src/pipes/*.mjs',
-    'src/constants.mjs',
-    'src/middleware.mjs',
-    'src/command/Router.mjs',
-    'src/NodeConsoleAdapter.mjs',
-    'src/command/AbstractCommand.mjs',
-    'src/command/CommandServiceProvider.mjs',
-  ],
+  index: 'src/**/*.ts'
 }
 
 export default Object.entries(inputs).map(([name, input]) => ({
@@ -27,20 +16,33 @@ export default Object.entries(inputs).map(([name, input]) => ({
     { format: 'es', file: `dist/${name}.js` }
   ],
   plugins: [
-    json(),
     multi(),
-    nodeExternals({
-      include: [/^@stone-js\/cli/]
-    }), // Must always be before `nodeResolve()`.
+    nodeExternals(), // Must always be before `nodeResolve()`.
     nodeResolve({
+      extensions: ['.js', '.ts', '.ts'],
       exportConditions: ['node', 'import', 'require', 'default']
     }),
-    babel({ babelHelpers: 'bundled' }),
+    typescript({
+      noEmitOnError: true,
+      tsconfig: './tsconfig.build.json',
+    }),
     commonjs(),
-    copy({
-      targets: [
-        { src: 'src/bundler/rollup.config.mjs', dest: 'dist' }
-      ]
-    })
   ]
-}))
+})).concat([
+  {
+    input: 'dist/**/*.d.ts',
+    output: [{ format: 'es' , file: 'dist/index.d.ts' }],
+    plugins: [
+      multi(),
+      nodeExternals(), // Must always be before `nodeResolve()`.
+      dts(),
+      del({
+        targets: [
+          'dist/**/*.d.ts',
+          '!dist/index.d.ts'
+        ],
+        hook: 'buildEnd'
+      })
+    ],
+  },
+])
