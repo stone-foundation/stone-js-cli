@@ -1,10 +1,10 @@
-[**CLI Documentation v0.0.0**](../README.md)
+[**CLI Documentation v0.0.0**](../../README.md)
 
 ***
 
-[CLI Documentation](../modules.md) / declarations
+[CLI Documentation](../../modules.md) / options/DotenvConfig
 
-# declarations
+# options/DotenvConfig
 
 ## Index
 
@@ -14,4 +14,7 @@
 - [DotenvFiles](interfaces/DotenvFiles.md)
 - [DotenvOptions](interfaces/DotenvOptions.md)
 - [DotenvReplaceOptions](interfaces/DotenvReplaceOptions.md)
-- [StoneRollupOptions](interfaces/StoneRollupOptions.md)
+
+### Variables
+
+- [dotenv](variables/dotenv.md)

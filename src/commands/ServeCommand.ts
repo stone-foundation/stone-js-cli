@@ -1,10 +1,10 @@
 import spawn from 'cross-spawn'
 import { watch } from 'chokidar'
 import { argv } from 'node:process'
-import { buildPipes } from './BuildCommand'
 import { CliError } from '../errors/CliError'
 import { ChildProcess } from 'node:child_process'
 import { basePath, buildApp, buildPath } from '../utils'
+import { buildPipes } from '../middleware/buildMiddleware'
 import { CommandOptions, CommandOutput } from '@stone-js/node-cli-adapter'
 import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
 
@@ -38,6 +38,7 @@ export class ServeCommand {
    */
   constructor ({ blueprint, commandOutput }: { blueprint: IBlueprint, commandOutput: CommandOutput }) {
     if (blueprint === undefined) { throw new CliError('Blueprint is required to create a ServeCommand instance.') }
+    if (commandOutput === undefined) { throw new CliError('CommandOutput is required to create a ServeCommand instance.') }
 
     this.blueprint = blueprint
     this.commandOutput = commandOutput
@@ -49,13 +50,13 @@ export class ServeCommand {
   async handle (_event: IncomingEvent): Promise<OutgoingResponse> {
     // Build and run app.
     await buildApp(this.blueprint, buildPipes, (blueprint) => {
-      this.serverProcess = this.startProcess(this.serverProcess)
+      this.startProcess()
       return blueprint
     })
 
     // Rebuild and restart app on files changed.
     this.appWatcher(async () => await buildApp(this.blueprint, buildPipes, (blueprint) => {
-      this.serverProcess = this.startProcess(this.serverProcess)
+      this.startProcess()
       return blueprint
     }))
 
@@ -91,8 +92,8 @@ export class ServeCommand {
   /**
    * Start Process.
    */
-  private startProcess (serverProcess?: ChildProcess): ChildProcess {
-    serverProcess?.kill()
-    return spawn('node', [buildPath('app.bootstrap.mjs'), ...argv.slice(2)], { stdio: 'inherit' })
+  private startProcess (): void {
+    this.serverProcess?.kill()
+    this.serverProcess = spawn('node', [buildPath('app.bootstrap.mjs'), ...argv.slice(2)], { stdio: 'inherit' })
   }
 }

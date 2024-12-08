@@ -8,14 +8,14 @@ import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
 export const typingsCommandOptions: CommandOptions = {
   name: 'typings',
   alias: 't',
-  desc: 'Check code typings for typescript or flow project.',
+  desc: 'Check code typings for typescript',
   options: (yargs: Argv) => {
     return yargs
       .option('watch', {
         alias: 'w',
         type: 'boolean',
         default: false,
-        desc: 'Launch checker in watch mode. Only for Typescript.'
+        desc: 'Launch checker in watch mode for Typescript'
       })
   }
 }
@@ -42,15 +42,15 @@ export class TypingsCommand {
    * Handle the incoming event.
    */
   async handle (event: IncomingEvent): Promise<OutgoingResponse> {
-    this.typeCheckerProcess(event.getMetadataValue('watch', false) as boolean)
+    this.typeCheckerProcess(event.getMetadataValue<boolean>('watch', false))
     return OutgoingResponse.create({ statusCode: 0 })
   }
 
   /**
    * Type checker watcher Process.
    */
-  private typeCheckerProcess (watch: boolean): void {
-    if (watch) {
+  private typeCheckerProcess (watch?: boolean): void {
+    if (watch === true) {
       if (this.blueprint.get('stone.autoload.type') === 'typescript') {
         spawn('node', [nodeModulesPath('.bin/tsc'), '--noEmit', '--watch'], { stdio: 'inherit' })
       }

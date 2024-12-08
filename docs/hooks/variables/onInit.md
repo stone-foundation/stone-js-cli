@@ -26,4 +26,4 @@ This StoneCliServiceProvider instance for chaining.
 
 ## Defined in
 
-hooks.ts:35
+[src/hooks.ts:48](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/hooks.ts#L48)

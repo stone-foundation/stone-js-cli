@@ -36,6 +36,7 @@ export class InitCommand {
    */
   async handle (event: IncomingEvent): Promise<OutgoingResponse> {
     await this.launchStarter(event)
+
     return OutgoingResponse.create({ statusCode: 0 })
   }
 
@@ -44,8 +45,10 @@ export class InitCommand {
    */
   private async launchStarter (event: IncomingEvent): Promise<void> {
     const args = [event.getMetadataValue('project-name'), '--'] as string[]
+
     event.getMetadataValue('yes') !== undefined && args.push('--yes', event.getMetadataValue('yes') as string)
     event.getMetadataValue('force') !== undefined && args.push('--force', event.getMetadataValue('force') as string)
+
     spawn('npm', ['create', '@stone-js@latest'].concat(args), { stdio: 'inherit' })
   }
 }

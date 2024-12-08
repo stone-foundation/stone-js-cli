@@ -38,7 +38,7 @@ If the Blueprint config or EventEmitter is not bound to the container.
 
 #### Defined in
 
-[commands/ExportCommand.ts:49](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/ExportCommand.ts#L49)
+[src/commands/ExportCommand.ts:49](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/ExportCommand.ts#L49)
 
 ## Methods
 
@@ -60,4 +60,4 @@ Handle the incoming event.
 
 #### Defined in
 
-[commands/ExportCommand.ts:59](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/ExportCommand.ts#L59)
+[src/commands/ExportCommand.ts:60](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/ExportCommand.ts#L60)

@@ -10,4 +10,4 @@
 
 ## Defined in
 
-[commands/BuildCommand.ts:10](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/BuildCommand.ts#L10)
+[src/commands/BuildCommand.ts:7](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/BuildCommand.ts#L7)

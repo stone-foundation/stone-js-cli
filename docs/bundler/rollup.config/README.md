@@ -8,6 +8,10 @@
 
 ## Index
 
+### Interfaces
+
+- [StoneRollupOptions](interfaces/StoneRollupOptions.md)
+
 ### Functions
 
 - [default](functions/default.md)

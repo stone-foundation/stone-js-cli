@@ -8,9 +8,10 @@ import { createHash } from 'node:crypto'
 import DotenvExpand from 'dotenv-expand'
 import { IBlueprint } from '@stone-js/core'
 import { CliError } from './errors/CliError'
-import { DotenvOptions } from './declarations'
 import Dotenv, { DotenvPopulateInput } from 'dotenv'
+import { DotenvOptions } from './options/DotenvConfig'
 import { NextPipe, Pipe, Pipeline } from '@stone-js/pipeline'
+import { StoneCliAppConfig } from './options/StoneCliBlueprint'
 import { appBootstrapStub, consoleBootstrapStub } from './stubs'
 
 const { readJsonSync, pathExistsSync, outputJsonSync, outputFileSync } = fsExtra
@@ -108,7 +109,7 @@ export function getApplicationFiles (blueprint: IBlueprint): Array<[string, stri
  * @returns The filename with the appropriate extension.
  */
 export function makeFilename (blueprint: IBlueprint, filename: string): string {
-  return filename.concat(blueprint.get('stone.autoload.type') === 'typescript' ? '.ts' : '.mjs')
+  return filename.concat(blueprint.get<string>('stone.autoload.type') === 'typescript' ? '.ts' : '.mjs')
 }
 
 /**
@@ -188,6 +189,8 @@ export function getEnvVariables (options: Partial<DotenvOptions>): Record<string
 
 /**
  * Check autoload module.
+ *
+ * Ensures that the module is valid by checking if the module files exists.
  *
  * @param blueprint - The configuration object.
  * @param module - The module name to check.
@@ -270,14 +273,24 @@ export async function importModule<R> (relativePath: string): Promise<R | undefi
  * @returns A promise that resolves to the configuration options if found, or `null` if not found and `throwException` is `false`.
  * @throws {TypeError} If the configuration file is not found and `throwException` is `true`.
  */
-export async function getStoneOptions (throwException: boolean = true): Promise<unknown> {
-  const options = await importModule('./stone.config.mjs') ?? await importModule('./stone.config.js') as any
+export async function getStoneOptions (throwException: boolean = true): Promise<Partial<StoneCliAppConfig>> {
+  const configPaths = ['./stone.config.mjs', './stone.config.js']
 
-  if (options === undefined && throwException) {
-    throw new TypeError('You must defined a `stone.config.mjs` file at the root of your application.')
+  for (const path of configPaths) {
+    const module = await importModule<{ [key: string]: Partial<StoneCliAppConfig> }>(path)
+    if (module != null) {
+      const options = Object.values(module).shift()
+      if (options != null) {
+        return options
+      }
+    }
   }
 
-  return Object.values(options).shift()
+  if (throwException) {
+    throw new TypeError('A `stone.config.mjs` or `stone.config.js` file must be defined at the root of your project.')
+  }
+
+  return {}
 }
 
 /**

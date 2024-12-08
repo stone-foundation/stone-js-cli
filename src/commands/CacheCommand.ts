@@ -2,8 +2,8 @@ import { Argv } from 'yargs'
 import fsExtra from 'fs-extra'
 import { buildPath } from '../utils'
 import { CliError } from '../errors/CliError'
+import { IncomingEvent, OutgoingResponse } from '@stone-js/core'
 import { CommandOptions, CommandOutput } from '@stone-js/node-cli-adapter'
-import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
 
 const { emptyDirSync } = fsExtra
 
@@ -24,11 +24,6 @@ export const cacheCommandOptions: CommandOptions = {
 
 export class CacheCommand {
   /**
-   * Blueprint configuration used to retrieve app settings.
-   */
-  private readonly blueprint: IBlueprint
-
-  /**
    * Output used to print data in console.
    */
   private readonly commandOutput: CommandOutput
@@ -39,10 +34,9 @@ export class CacheCommand {
    * @param container - The service container to manage dependencies.
    * @throws {InitializationError} If the Blueprint config or EventEmitter is not bound to the container.
    */
-  constructor ({ blueprint, commandOutput }: { blueprint: IBlueprint, commandOutput: CommandOutput }) {
-    if (blueprint === undefined) { throw new CliError('Blueprint is required to create a BuildCommand instance.') }
+  constructor ({ commandOutput }: { commandOutput: CommandOutput }) {
+    if (commandOutput === undefined) { throw new CliError('CommandOutput is required to create a CacheCommand instance.') }
 
-    this.blueprint = blueprint
     this.commandOutput = commandOutput
   }
 
@@ -50,10 +44,11 @@ export class CacheCommand {
    * Handle the incoming event.
    */
   handle (event: IncomingEvent): OutgoingResponse {
-    if (event.getMetadataValue('clear', false) === true) {
+    if (event.getMetadataValue<boolean>('clear', false) === true) {
       emptyDirSync(buildPath())
-      this.commandOutput.info('Cache deleted!')
+      this.commandOutput.info('Cache cleared!')
     }
+
     return OutgoingResponse.create({ statusCode: 0 })
   }
 }

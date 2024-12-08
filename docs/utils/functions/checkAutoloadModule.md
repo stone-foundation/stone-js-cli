@@ -10,6 +10,8 @@
 
 Check autoload module.
 
+Ensures that the module is valid by checking if the module files exists.
+
 ## Parameters
 
 ### blueprint
@@ -42,4 +44,4 @@ RuntimeError - If the module is invalid and `throwError` is true.
 
 ## Defined in
 
-[utils.ts:198](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/utils.ts#L198)
+[src/utils.ts:201](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/utils.ts#L201)

@@ -1,8 +1,7 @@
 import fsExtra from 'fs-extra'
 import { Plugin, rollup } from 'rollup'
-import rollupConfig from './rollup.config'
+import rollupConfig, { StoneRollupOptions } from './rollup.config'
 import { IBlueprint } from '@stone-js/core'
-import { StoneRollupOptions } from '../declarations.js'
 import { RollupReplaceOptions } from '@rollup/plugin-replace'
 import { checkAutoloadModule, getEnvVariables, basePath, buildPath, distPath, importModule } from '../utils.js'
 
@@ -18,8 +17,9 @@ export async function rollupBuild (blueprint: IBlueprint): Promise<void> {
 
   for (const option of options) {
     const bundle = await rollup(option)
+
     if (Array.isArray(option.output)) {
-      await Promise.all(option.output?.map(bundle.write.bind(bundle)))
+      await Promise.all(option.output.map(bundle.write.bind(bundle)))
     }
   }
 }
@@ -32,6 +32,7 @@ export async function rollupBuild (blueprint: IBlueprint): Promise<void> {
 export async function rollupBundle (blueprint: IBlueprint): Promise<void> {
   const options = await makeBundleOptions(blueprint)
   const bundle = await rollup(options)
+
   if (Array.isArray(options.output)) {
     await Promise.all(options.output.map(bundle.write.bind(bundle)))
   }
@@ -45,8 +46,10 @@ export async function rollupBundle (blueprint: IBlueprint): Promise<void> {
  */
 async function makeBuildOptions (blueprint: IBlueprint): Promise<StoneRollupOptions[]> {
   const rollupOptionsFactory = await getRollupConfig(blueprint)
+  const modulesInput = blueprint.get<Record<string, string>>('stone.autoload.modules', {})
 
-  return Object.entries(blueprint.get<Record<string, string>>('stone.autoload.modules', {}))
+  return Object
+    .entries(modulesInput)
     .filter(([name]) => checkAutoloadModule(blueprint, name))
     .map(([name, input]) =>
       rollupOptionsFactory({
@@ -70,8 +73,8 @@ async function makeBuildOptions (blueprint: IBlueprint): Promise<StoneRollupOpti
  * @returns A single RollupOptions object for bundling.
  */
 async function makeBundleOptions (blueprint: IBlueprint): Promise<StoneRollupOptions> {
+  const bundleExcludes = ['babel', 'multi-entry', 'remove-cli-decorators']
   const rollupOptionsFactory = await getRollupConfig(blueprint)
-  const bundleExcludes = ['babel', 'multi-entry']
 
   const options = rollupOptionsFactory({
     input: buildPath('app.bootstrap.mjs'),
@@ -86,6 +89,8 @@ async function makeBundleOptions (blueprint: IBlueprint): Promise<StoneRollupOpt
     replaceOptions: replaceProcessEnvVars(blueprint)
   })
 
+  // Remove excluded plugins.
+  // Because we already built the application, we don't need to include the `babel` and `multi-entry` plugins.
   if (Array.isArray(options.plugins)) {
     options.plugins = options.plugins?.filter(
       (plugin) => bundleExcludes.includes((plugin as Plugin)?.name)
@@ -96,7 +101,7 @@ async function makeBundleOptions (blueprint: IBlueprint): Promise<StoneRollupOpt
 }
 
 /**
- * Retrieve Rollup configuration.
+ * Retrieve Rollup configuration from user working directory if exists otherwise return the default built-in configuration.
  *
  * @param blueprint - The blueprint (optional for backward compatibility).
  * @returns A function to generate RollupOptions objects.
@@ -113,6 +118,11 @@ async function getRollupConfig (_blueprint?: IBlueprint): Promise<(options: Ston
 
 /**
  * Generate replace options for process environment variables.
+ *
+ * This function takes the environment variables from the `.env`
+ * file add prefixes to them, stringify them and return the with rollup replace options plugin.
+ *
+ * The prcocess is done only for the public environment variables during the bundled staged.
  *
  * @param blueprint - The blueprint.
  * @returns An object with environment variable replacement details.

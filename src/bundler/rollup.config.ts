@@ -1,11 +1,17 @@
 import json from '@rollup/plugin-json'
+import { RollupOptions } from 'rollup'
 import babel from '@rollup/plugin-babel'
-import replace from '@rollup/plugin-replace'
+import replace, { RollupReplaceOptions } from '@rollup/plugin-replace'
 import multi from '@rollup/plugin-multi-entry'
 import commonjs from '@rollup/plugin-commonjs'
-import { StoneRollupOptions } from '../declarations'
 import nodeResolve from '@rollup/plugin-node-resolve'
-import nodeExternals from 'rollup-plugin-node-externals'
+import nodeExternals, { ExternalsOptions } from 'rollup-plugin-node-externals'
+import { removeCliDecorators } from '../plugins/removeCommandDecorator'
+
+export interface StoneRollupOptions extends RollupOptions {
+  replaceOptions?: RollupReplaceOptions
+  externalsOptions?: ExternalsOptions
+}
 
 export default ({ input, output, externalsOptions = {}, replaceOptions = {} }: StoneRollupOptions): StoneRollupOptions => {
   return {
@@ -15,11 +21,12 @@ export default ({ input, output, externalsOptions = {}, replaceOptions = {} }: S
       multi(),
       nodeExternals(externalsOptions), // Must always be before `nodeResolve()`.
       nodeResolve({
-        extensions: ['.js', '.mjs', '.ts'],
+        extensions: ['.js', '.mjs', '.ts', '.json'],
         exportConditions: ['node', 'import', 'require', 'default']
       }),
       json(),
       commonjs(),
+      removeCliDecorators(),
       replace(replaceOptions),
       babel({
         babelrc: false,

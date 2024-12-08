@@ -6,7 +6,9 @@
 
 # Class: CliError
 
-Custom error for AWS Lambda adapter operations.
+Represents an error specific to the Stone CLI.
+
+Extends `RuntimeError` to provide a custom error type for handling CLI-related issues.
 
 ## Extends
 
@@ -18,15 +20,21 @@ Custom error for AWS Lambda adapter operations.
 
 > **new CliError**(`message`, `options`?): [`CliError`](CliError.md)
 
+Creates a new instance of `CliError`.
+
 #### Parameters
 
 ##### message
 
 `string`
 
+The error message describing the issue.
+
 ##### options?
 
 `ErrorOptions`
+
+Optional additional error options.
 
 #### Returns
 
@@ -38,4 +46,4 @@ Custom error for AWS Lambda adapter operations.
 
 #### Defined in
 
-[errors/CliError.ts:7](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/errors/CliError.ts#L7)
+[src/errors/CliError.ts:15](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/errors/CliError.ts#L15)

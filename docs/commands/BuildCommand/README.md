@@ -15,5 +15,3 @@
 ### Variables
 
 - [buildCommandOptions](variables/buildCommandOptions.md)
-- [buildPipes](variables/buildPipes.md)
-- [bundlePipes](variables/bundlePipes.md)

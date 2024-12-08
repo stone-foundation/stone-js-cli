@@ -34,7 +34,7 @@ If the Blueprint config or EventEmitter is not bound to the container.
 
 #### Defined in
 
-[commands/BuildCommand.ts:28](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/BuildCommand.ts#L28)
+[src/commands/BuildCommand.ts:25](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/BuildCommand.ts#L25)
 
 ## Methods
 
@@ -50,8 +50,6 @@ Handle the incoming event.
 
 `IncomingEvent`
 
-The incoming event.
-
 #### Returns
 
 `Promise`\<`OutgoingResponse`\>
@@ -60,4 +58,4 @@ The blueprint.
 
 #### Defined in
 
-[commands/BuildCommand.ts:40](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/BuildCommand.ts#L40)
+[src/commands/BuildCommand.ts:36](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/BuildCommand.ts#L36)

@@ -12,4 +12,4 @@ Console App bootstrap module stub.
 
 ## Defined in
 
-[stubs.ts:32](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/stubs.ts#L32)
+[src/stubs.ts:32](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/stubs.ts#L32)

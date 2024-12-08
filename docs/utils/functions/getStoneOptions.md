@@ -6,7 +6,7 @@
 
 # Function: getStoneOptions()
 
-> **getStoneOptions**(`throwException`): `Promise`\<`unknown`\>
+> **getStoneOptions**(`throwException`): `Promise`\<`Partial`\<[`StoneCliAppConfig`](../../options/StoneCliBlueprint/interfaces/StoneCliAppConfig.md)\>\>
 
 Asynchronously retrieves the Stone configuration options from the specified configuration files.
 
@@ -24,7 +24,7 @@ A boolean flag indicating whether to throw an exception if the configuration fil
 
 ## Returns
 
-`Promise`\<`unknown`\>
+`Promise`\<`Partial`\<[`StoneCliAppConfig`](../../options/StoneCliBlueprint/interfaces/StoneCliAppConfig.md)\>\>
 
 A promise that resolves to the configuration options if found, or `null` if not found and `throwException` is `false`.
 
@@ -34,4 +34,4 @@ If the configuration file is not found and `throwException` is `true`.
 
 ## Defined in
 
-[utils.ts:273](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/utils.ts#L273)
+[src/utils.ts:276](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/utils.ts#L276)

@@ -2,11 +2,11 @@ import { Argv } from 'yargs'
 import fsExtra from 'fs-extra'
 import { rollupConfigStub } from '../stubs'
 import { CliError } from '../errors/CliError'
+import { basePath, makeBootstrapFile } from '../utils'
 import { CommandOptions, CommandOutput } from '@stone-js/node-cli-adapter'
 import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
-import { basePath, configPath, makeBootstrapFile, makeFilename, nodeModulesPath } from '../utils'
 
-const { copySync, outputFileSync, pathExistsSync, readJsonSync } = fsExtra
+const { outputFileSync, pathExistsSync } = fsExtra
 
 export const exportCommandOptions: CommandOptions = {
   name: 'export',
@@ -18,7 +18,7 @@ export const exportCommandOptions: CommandOptions = {
       .positional('module', {
         type: 'string',
         default: 'app',
-        desc: 'module or package name to export. e.g. app, cli, rollup, @stone-js/node-adapter'
+        desc: 'module or config name to export. e.g. app, cli, rollup'
       })
       .option('force', {
         alias: 'f',
@@ -48,6 +48,7 @@ export class ExportCommand {
    */
   constructor ({ blueprint, commandOutput }: { blueprint: IBlueprint, commandOutput: CommandOutput }) {
     if (blueprint === undefined) { throw new CliError('Blueprint is required to create a BuildCommand instance.') }
+    if (commandOutput === undefined) { throw new CliError('CommandOutput is required to create a BuildCommand instance.') }
 
     this.blueprint = blueprint
     this.commandOutput = commandOutput
@@ -57,75 +58,39 @@ export class ExportCommand {
    * Handle the incoming event.
    */
   async handle (event: IncomingEvent): Promise<OutgoingResponse> {
-    const force = event.getMetadataValue('force', false) as boolean
+    const force = event.getMetadataValue<boolean>('force', false)
     const module = event.getMetadataValue('module', 'app') as ('app' | 'cli' | 'rollup')
-    const modules = {
-      app: () => makeBootstrapFile(this.blueprint, 'export', false, force),
-      cli: () => makeBootstrapFile(this.blueprint, 'export', true, force),
-      rollup: () => this.exportRollup(force)
-    }
-    const isExported = modules[module]?.()
+    const isExported = this.getModules(force)[module]?.()
 
     isExported && this.commandOutput.info(`Module(${module}) exported!`)
-    isExported === undefined && this.commandOutput.error(`This module(${module}) does not exist or does not provide export options.`)
+    !isExported && this.commandOutput.error(`This module(${module}) does not exist or does not provide export options.`)
 
     return OutgoingResponse.create({ statusCode: 0 })
   }
 
   /**
+   * Get modules to export.
+   */
+  private getModules (force?: boolean): Record<'app' | 'cli' | 'rollup', () => boolean> {
+    return {
+      app: () => makeBootstrapFile(this.blueprint, 'export', false, force),
+      cli: () => makeBootstrapFile(this.blueprint, 'export', true, force),
+      rollup: () => this.exportRollup(force)
+    }
+  }
+
+  /**
    * Export rollup config.
    */
-  private exportRollup (force: boolean): boolean {
+  private exportRollup (force?: boolean): boolean {
     const filename = 'rollup.config.mjs'
 
-    if (pathExistsSync(basePath(filename)) && !force) {
+    if (pathExistsSync(basePath(filename)) && force === true) {
       outputFileSync(basePath(filename), rollupConfigStub, { encoding: 'utf-8' })
       return true
     } else {
       this.commandOutput.error(`Cannot override your existing (${filename}) file. Use --force to override it.`)
       return false
     }
-  }
-
-  /**
-   * Export modules config/options.
-   */
-  private exportModuleConfig (module: string, force: boolean): boolean {
-    let isExported = false
-
-    if (!pathExistsSync(nodeModulesPath(module, 'package.json'))) {
-      this.commandOutput.error(`This module(${module}) does not exist or does not provide export options.`)
-      return false
-    }
-
-    const packageJson = readJsonSync(nodeModulesPath(module, 'package.json'), { throws: false })
-
-    const make = packageJson.stone?.config?.make ?? {}
-
-    Object.entries(make).forEach(([filename, optionsPath]) => {
-      if (filename === undefined) {
-        this.commandOutput.error(`No configurations maker defined for this module(${module})`)
-        return false
-      }
-
-      const originPath = nodeModulesPath(module, optionsPath as string)
-      const destPath = configPath(makeFilename(this.blueprint, filename))
-
-      if (!pathExistsSync(originPath)) {
-        this.commandOutput.error(`No options file(${filename}) found for this module(${module}).`)
-        return false
-      }
-
-      try {
-        copySync(originPath, destPath, { overwrite: force, errorOnExist: true })
-      } catch (_) {
-        this.commandOutput.error(`Cannot override an existing file(${filename}) for this module(${module}). Use --force to override it.`)
-        return false
-      }
-
-      isExported = true
-    })
-
-    return isExported
   }
 }

@@ -20,10 +20,6 @@ Create a new instance of CoreServiceProvider.
 
 The service container to manage dependencies.
 
-###### blueprint
-
-`IBlueprint`
-
 ###### commandOutput
 
 `CommandOutput`
@@ -38,7 +34,7 @@ If the Blueprint config or EventEmitter is not bound to the container.
 
 #### Defined in
 
-[commands/CacheCommand.ts:42](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/CacheCommand.ts#L42)
+[src/commands/CacheCommand.ts:37](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/CacheCommand.ts#L37)
 
 ## Methods
 
@@ -60,4 +56,4 @@ Handle the incoming event.
 
 #### Defined in
 
-[commands/CacheCommand.ts:52](https://github.com/stonemjs/cli/blob/b2251afafa869f82f017c134bddb19013c7883b6/src/commands/CacheCommand.ts#L52)
+[src/commands/CacheCommand.ts:46](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/CacheCommand.ts#L46)

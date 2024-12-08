@@ -1,11 +1,8 @@
-import fsExtra from 'fs-extra'
+import { buildApp } from '../utils'
 import { CliError } from '../errors/CliError'
 import { CommandOptions } from '@stone-js/node-cli-adapter'
-import { rollupBuild, rollupBundle } from '../bundler/rollupjs'
+import { buildPipes, bundlePipes } from '../middleware/buildMiddleware'
 import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
-import { buildApp, buildPath, distPath, makeBootstrapFile, pipeable, setCache } from '../utils'
-
-const { emptyDirSync } = fsExtra
 
 export const buildCommandOptions: CommandOptions = {
   name: 'build',
@@ -34,27 +31,11 @@ export class BuildCommand {
   /**
    * Handle the incoming event.
    *
-   * @param _event - The incoming event.
    * @returns The blueprint.
    */
   async handle (_event: IncomingEvent): Promise<OutgoingResponse> {
     await buildApp(this.blueprint, buildPipes.concat(bundlePipes), v => v)
+
     return OutgoingResponse.create({ statusCode: 0 })
   }
 }
-
-export const buildPipes = [
-  pipeable(() => console.info('Building...')),
-  pipeable(() => emptyDirSync(buildPath())),
-  pipeable(async (blueprint: IBlueprint) => await rollupBuild(blueprint)),
-  pipeable((blueprint: IBlueprint) => setCache(blueprint)),
-  pipeable((blueprint: IBlueprint) => makeBootstrapFile(blueprint, 'build')),
-  pipeable((blueprint: IBlueprint) => makeBootstrapFile(blueprint, 'build', true)),
-  pipeable(() => console.info('Build finished'))
-]
-
-export const bundlePipes = [
-  pipeable(() => console.info('Bundling...')),
-  pipeable(() => emptyDirSync(distPath())),
-  pipeable(async (blueprint: IBlueprint) => await rollupBundle(blueprint))
-]

@@ -1,6 +1,6 @@
 import spawn from 'cross-spawn'
-import { buildPipes } from './BuildCommand'
 import { CliError } from '../errors/CliError'
+import { buildPipes } from '../middleware/buildMiddleware'
 import { buildApp, buildPath, shouldBuild } from '../utils'
 import { CommandOptions } from '@stone-js/node-cli-adapter'
 import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
@@ -8,7 +8,7 @@ import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
 export const listCommandOptions: CommandOptions = {
   name: 'list',
   alias: 'ls',
-  desc: 'List all custom commands'
+  desc: 'List all user-defined commands'
 }
 
 export class ListCommand {
@@ -44,6 +44,7 @@ export class ListCommand {
     } else {
       this.startProcess()
     }
+
     return OutgoingResponse.create({ statusCode: 0 })
   }
 

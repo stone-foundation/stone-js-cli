@@ -1,14 +1,14 @@
 import spawn from 'cross-spawn'
 import { argv } from 'node:process'
-import { buildPipes } from './BuildCommand'
 import { CliError } from '../errors/CliError'
+import { buildPipes } from '../middleware/buildMiddleware'
 import { CommandOptions } from '@stone-js/node-cli-adapter'
 import { buildApp, buildPath, shouldBuild } from '../utils'
 import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
 
 export const customCommandOptions: CommandOptions = {
   name: '*',
-  desc: 'Build the Stone project.'
+  desc: 'Redirect to user-defined commands'
 }
 
 export class CustomCommand {
@@ -44,6 +44,7 @@ export class CustomCommand {
     } else {
       this.startProcess()
     }
+
     return OutgoingResponse.create({ statusCode: 0 })
   }
 

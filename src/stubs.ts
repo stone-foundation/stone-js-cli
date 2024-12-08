@@ -15,7 +15,7 @@ const blueprint = await ConfigBuilder.create().build({ __app_module_names__ })
 /**
  * Run application.
  */
-const stone = await StoneFactory.create(blueprint).run()
+const app = await StoneFactory.create(blueprint).run()
 
 /**
  * Export adapter specific output.
@@ -23,7 +23,7 @@ const stone = await StoneFactory.create(blueprint).run()
  * 
  * @returns {Object}
  */
-export { stone }
+export { app }
 `
 
 /**
@@ -55,6 +55,7 @@ import babel from '@rollup/plugin-babel';
 import replace from '@rollup/plugin-replace';
 import multi from '@rollup/plugin-multi-entry';
 import commonjs from '@rollup/plugin-commonjs';
+import { removeCliDecorators } from '@stone-js/cli';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import nodeExternals from 'rollup-plugin-node-externals';
 
@@ -71,6 +72,7 @@ export default ({ input, output, externalsOptions = {}, replaceOptions = {} }) =
       }),
       json(),
       commonjs(),
+      removeCliDecorators(),
       replace(replaceOptions),
       babel({
         babelrc: false,
