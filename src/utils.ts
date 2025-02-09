@@ -2,17 +2,17 @@ import fsExtra from 'fs-extra'
 import { globSync } from 'glob'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
-import { cwd } from 'node:process'
+import process from 'node:process'
 import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import DotenvExpand from 'dotenv-expand'
 import { IBlueprint } from '@stone-js/core'
 import { CliError } from './errors/CliError'
+import { ChildProcess } from 'node:child_process'
 import Dotenv, { DotenvPopulateInput } from 'dotenv'
 import { DotenvOptions } from './options/DotenvConfig'
-import { NextPipe, Pipe, Pipeline } from '@stone-js/pipeline'
-import { StoneCliAppConfig } from './options/StoneCliBlueprint'
 import { appBootstrapStub, consoleBootstrapStub } from './stubs'
+import { MixedPipe, NextPipe, Passable, Pipe, Pipeline } from '@stone-js/pipeline'
 
 const { readJsonSync, pathExistsSync, outputJsonSync, outputFileSync } = fsExtra
 
@@ -23,7 +23,7 @@ const { readJsonSync, pathExistsSync, outputJsonSync, outputFileSync } = fsExtra
  * @returns The resulting path after joining the current working directory with the provided paths.
  */
 export function basePath (...paths: string[]): string {
-  return join(cwd(), ...paths)
+  return join(process.cwd(), ...paths)
 }
 
 /**
@@ -87,6 +87,17 @@ export function nodeModulesPath (...paths: string[]): string {
 }
 
 /**
+ * Make filename with extension.
+ *
+ * @param blueprint - The configuration object.
+ * @param filename - The filename without extension.
+ * @returns The filename with the appropriate extension.
+ */
+export function makeFilename (blueprint: IBlueprint, filename: string): string {
+  return filename.concat(blueprint.get<string>('stone.autoload.type') === 'typescript' ? '.ts' : '.mjs')
+}
+
+/**
  * Get Application Files.
  * Returns all application files grouped by directory.
  * Configurations are set in `stone.config.mjs`
@@ -99,17 +110,6 @@ export function getApplicationFiles (blueprint: IBlueprint): Array<[string, stri
   return Object.entries(blueprint.get<Record<string, string>>('stone.autoload.modules', {}))
     .filter(([name]) => checkAutoloadModule(blueprint, name))
     .map(([name, pattern]) => [name, globSync(basePath(pattern))])
-}
-
-/**
- * Make filename with extension.
- *
- * @param blueprint - The configuration object.
- * @param filename - The filename without extension.
- * @returns The filename with the appropriate extension.
- */
-export function makeFilename (blueprint: IBlueprint, filename: string): string {
-  return filename.concat(blueprint.get<string>('stone.autoload.type') === 'typescript' ? '.ts' : '.mjs')
 }
 
 /**
@@ -167,7 +167,7 @@ export function shouldBuild (blueprint: IBlueprint): boolean {
     .reduce<string[]>((prev, [_, files]) => prev.concat(files), [])
     .reduce((prev, filePath, _, files) => {
       if (prev) return prev
-      return Object.keys(cache).filter((v) => !files.includes(v)).length > 0 || cache[filePath] !== undefined || cache[filePath] !== getFileHash(filePath)
+      return Object.keys(cache).filter((v) => !files.includes(v)).length > 0 || cache[filePath] === undefined || cache[filePath] !== getFileHash(filePath)
     }, false)
 }
 
@@ -205,7 +205,7 @@ export function checkAutoloadModule (blueprint: IBlueprint, module: string, thro
     throw new CliError(`No ${autoload} option found in 'stone.config' file.`)
   }
 
-  const pattern = blueprint.get<string>(autoload)
+  const pattern = blueprint.get<string>(autoload, '')
   const files = globSync(basePath(pattern))
 
   if (files[0] === undefined || !pathExistsSync(files[0])) {
@@ -220,19 +220,19 @@ export function checkAutoloadModule (blueprint: IBlueprint, module: string, thro
 }
 
 /**
- * Builds an application pipeline using the provided blueprint and middleware.
+ * Processes a context object through a pipeline of middleware.
  *
- * @param blueptint - The blueprint object to be processed through the pipeline.
- * @param middleware - An array of middleware functions to process the blueprint.
- * @param onComplete - A callback function to be executed once the pipeline processing is complete.
- * @returns The resulting pipeline after processing the blueprint through the middleware.
+ * @template TContext - The type of the context object that extends `Passable`.
+ * @param context - The context object to process through the pipeline.
+ * @param middleware - An array of middleware functions (pipes) to process the context.
+ * @returns A promise that resolves once the context has been processed by all middleware.
  */
-export async function buildApp (blueptint: IBlueprint, middleware: Pipe[], onComplete: NextPipe<IBlueprint>): Promise<void> {
+export async function processThroughPipeline<TContext extends Passable> (context: TContext, middleware: MixedPipe[]): Promise<void> {
   await Pipeline
-    .create<IBlueprint>()
-    .send(blueptint)
+    .create<TContext, string>()
+    .send(context)
     .through(middleware)
-    .then(async (passable) => await onComplete(passable))
+    .then(() => '')
 }
 
 /**
@@ -241,10 +241,10 @@ export async function buildApp (blueptint: IBlueprint, middleware: Pipe[], onCom
  * @param handler - The middleware handler.
  * @returns The middleware function.
  */
-export function pipeable (handler: (blueptint: IBlueprint) => Promise<unknown> | unknown): Pipe {
-  return async (blueptint: IBlueprint, next: NextPipe<IBlueprint>) => {
-    await handler(blueptint)
-    await next(blueptint)
+export function pipeable <TContext extends Passable> (handler: (context: TContext) => Promise<unknown> | unknown): Pipe {
+  return async (context: TContext, next: NextPipe<TContext>) => {
+    await handler(context)
+    await next(context)
   }
 }
 
@@ -256,41 +256,8 @@ export function pipeable (handler: (blueptint: IBlueprint) => Promise<unknown> |
  */
 export async function importModule<R> (relativePath: string): Promise<R | undefined> {
   try {
-    return await import(new URL(join(cwd(), relativePath), 'file://').href)
-  } catch (_) {
-
-  }
-}
-
-/**
- * Asynchronously retrieves the Stone configuration options from the specified configuration files.
- *
- * This function attempts to import the configuration from either `stone.config.mjs` or `stone.config.js`
- * located at the root of the application. If neither file is found and `throwException` is set to `true`,
- * a `TypeError` is thrown.
- *
- * @param throwException - A boolean flag indicating whether to throw an exception if the configuration file is not found. Defaults to `true`.
- * @returns A promise that resolves to the configuration options if found, or `null` if not found and `throwException` is `false`.
- * @throws {TypeError} If the configuration file is not found and `throwException` is `true`.
- */
-export async function getStoneOptions (throwException: boolean = true): Promise<Partial<StoneCliAppConfig>> {
-  const configPaths = ['./stone.config.mjs', './stone.config.js']
-
-  for (const path of configPaths) {
-    const module = await importModule<{ [key: string]: Partial<StoneCliAppConfig> }>(path)
-    if (module != null) {
-      const options = Object.values(module).shift()
-      if (options != null) {
-        return options
-      }
-    }
-  }
-
-  if (throwException) {
-    throw new TypeError('A `stone.config.mjs` or `stone.config.js` file must be defined at the root of your project.')
-  }
-
-  return {}
+    return await import(new URL(join(process.cwd(), relativePath), 'file://').href)
+  } catch (_) {}
 }
 
 /**
@@ -348,4 +315,15 @@ export function normalizeBootstrapStub (blueprint: IBlueprint, stub: string, act
   } else {
     return stub.trim().replaceAll('./.stone/', './')
   }
+}
+
+export function setupProcessSignalHandlers (serverProcess?: ChildProcess): void {
+  const terminate = (): void => {
+    serverProcess?.kill('SIGINT') // Gracefully terminate the child process
+    process.exit(0) // Exit the parent process
+  }
+
+  // Handle termination signals
+  process.on('SIGINT', () => terminate())
+  process.on('SIGTERM', () => terminate())
 }

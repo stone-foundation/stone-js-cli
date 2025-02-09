@@ -6,9 +6,7 @@
 
 # bundler/rollupjs
 
-## Index
-
-### Functions
+## Functions
 
 - [rollupBuild](functions/rollupBuild.md)
 - [rollupBundle](functions/rollupBundle.md)

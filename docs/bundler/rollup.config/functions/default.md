@@ -8,6 +8,8 @@
 
 > **default**(`__namedParameters`): [`StoneRollupOptions`](../interfaces/StoneRollupOptions.md)
 
+Defined in: [cli/src/bundler/rollup.config.ts:16](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/bundler/rollup.config.ts#L16)
+
 ## Parameters
 
 ### \_\_namedParameters
@@ -17,7 +19,3 @@
 ## Returns
 
 [`StoneRollupOptions`](../interfaces/StoneRollupOptions.md)
-
-## Defined in
-
-[src/bundler/rollup.config.ts:16](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/bundler/rollup.config.ts#L16)

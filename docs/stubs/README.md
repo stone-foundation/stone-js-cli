@@ -6,9 +6,7 @@
 
 # stubs
 
-## Index
-
-### Variables
+## Variables
 
 - [appBootstrapStub](variables/appBootstrapStub.md)
 - [consoleBootstrapStub](variables/consoleBootstrapStub.md)

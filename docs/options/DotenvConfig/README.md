@@ -6,15 +6,13 @@
 
 # options/DotenvConfig
 
-## Index
-
-### Interfaces
+## Interfaces
 
 - [DotenvConfig](interfaces/DotenvConfig.md)
 - [DotenvFiles](interfaces/DotenvFiles.md)
 - [DotenvOptions](interfaces/DotenvOptions.md)
 - [DotenvReplaceOptions](interfaces/DotenvReplaceOptions.md)
 
-### Variables
+## Variables
 
 - [dotenv](variables/dotenv.md)

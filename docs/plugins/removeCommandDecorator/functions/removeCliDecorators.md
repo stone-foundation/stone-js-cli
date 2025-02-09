@@ -8,6 +8,8 @@
 
 > **removeCliDecorators**(): `object`
 
+Defined in: [cli/src/plugins/removeCommandDecorator.ts:5](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/plugins/removeCommandDecorator.ts#L5)
+
 ## Returns
 
 `object`
@@ -33,7 +35,3 @@
 #### Returns
 
 `TransformResult` \| `null`
-
-## Defined in
-
-[src/plugins/removeCommandDecorator.ts:5](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/plugins/removeCommandDecorator.ts#L5)

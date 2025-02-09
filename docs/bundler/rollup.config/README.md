@@ -6,12 +6,10 @@
 
 # bundler/rollup.config
 
-## Index
-
-### Interfaces
+## Interfaces
 
 - [StoneRollupOptions](interfaces/StoneRollupOptions.md)
 
-### Functions
+## Functions
 
 - [default](functions/default.md)

@@ -8,6 +8,8 @@
 
 > **makeFilename**(`blueprint`, `filename`): `string`
 
+Defined in: [cli/src/utils.ts:96](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/utils.ts#L96)
+
 Make filename with extension.
 
 ## Parameters
@@ -29,7 +31,3 @@ The filename without extension.
 `string`
 
 The filename with the appropriate extension.
-
-## Defined in
-
-[src/utils.ts:111](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/utils.ts#L111)

@@ -6,12 +6,10 @@
 
 # options/AutoloadConfig
 
-## Index
-
-### Interfaces
+## Interfaces
 
 - [AutoloadConfig](interfaces/AutoloadConfig.md)
 
-### Variables
+## Variables
 
 - [autoload](variables/autoload.md)

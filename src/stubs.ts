@@ -15,7 +15,7 @@ const blueprint = await ConfigBuilder.create().build({ __app_module_names__ })
 /**
  * Run application.
  */
-const app = await StoneFactory.create(blueprint).run()
+const output = await StoneFactory.create({ blueprint }).run()
 
 /**
  * Export adapter specific output.
@@ -23,7 +23,7 @@ const app = await StoneFactory.create(blueprint).run()
  * 
  * @returns {Object}
  */
-export { app }
+export { output }
 `
 
 /**
@@ -31,19 +31,34 @@ export { app }
  */
 export const consoleBootstrapStub = `
 __app_modules_import__
-import { StoneFactory, ConfigBuilder } from '@stone-js/core'
+import { NODE_CONSOLE_PLATFORM } from '@stone-js/node-cli-adapter';
+import { StoneFactory, ConfigBuilder, resolveCurrentAdapter } from '@stone-js/core'
 
-/**
- * Build App Blueprint.
- * 
- * @returns {IBlueprint}
- */
-const blueprint = await ConfigBuilder.create().build({ __app_module_names__ })
+try {
+  /**
+   * Build App Blueprint.
+   * 
+   * @returns {IBlueprint}
+   */
+  const blueprint = await ConfigBuilder.create().build({ __app_module_names__ })
 
-/**
- * Run application.
- */
-StoneFactory.create(blueprint).run()
+  /**
+   * Resolve the current adapter based on the application blueprint.
+   * 
+   * This step ensures the correct adapter is selected for the Node.js CLI environment.
+   */
+  resolveCurrentAdapter(blueprint, NODE_CONSOLE_PLATFORM);
+
+  /**
+   * Execute the CLI application.
+   * 
+   * Initializes the Stone.js application using the resolved blueprint and executes the CLI commands.
+   */
+  await StoneFactory.create({ blueprint }).run()
+} catch (error) {
+  console.error('Error running Stone commands:', error)
+  process.exit(1)
+}
 `
 
 /**
@@ -55,7 +70,6 @@ import babel from '@rollup/plugin-babel';
 import replace from '@rollup/plugin-replace';
 import multi from '@rollup/plugin-multi-entry';
 import commonjs from '@rollup/plugin-commonjs';
-import { removeCliDecorators } from '@stone-js/cli';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import nodeExternals from 'rollup-plugin-node-externals';
 
@@ -72,7 +86,6 @@ export default ({ input, output, externalsOptions = {}, replaceOptions = {} }) =
       }),
       json(),
       commonjs(),
-      removeCliDecorators(),
       replace(replaceOptions),
       babel({
         babelrc: false,

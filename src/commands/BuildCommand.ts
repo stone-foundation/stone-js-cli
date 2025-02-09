@@ -1,8 +1,8 @@
-import { buildApp } from '../utils'
 import { CliError } from '../errors/CliError'
+import { processThroughPipeline } from '../utils'
 import { CommandOptions } from '@stone-js/node-cli-adapter'
-import { buildPipes, bundlePipes } from '../middleware/buildMiddleware'
-import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
+import { IncomingEvent, OutgoingResponse } from '@stone-js/core'
+import { BuildAppContext, buildMiddleware, bundleMiddleware } from '../middleware/buildMiddleware'
 
 export const buildCommandOptions: CommandOptions = {
   name: 'build',
@@ -12,9 +12,9 @@ export const buildCommandOptions: CommandOptions = {
 
 export class BuildCommand {
   /**
-   * Blueprint configuration used to retrieve app settings.
+   * Output used to print data in console.
    */
-  private readonly blueprint: IBlueprint
+  private readonly buildAppContext: BuildAppContext
 
   /**
    * Create a new instance of CoreServiceProvider.
@@ -22,10 +22,10 @@ export class BuildCommand {
    * @param container - The service container to manage dependencies.
    * @throws {InitializationError} If the Blueprint config or EventEmitter is not bound to the container.
    */
-  constructor ({ blueprint }: { blueprint: IBlueprint }) {
-    if (blueprint === undefined) { throw new CliError('Blueprint is required to create a BuildCommand instance.') }
+  constructor (container: BuildAppContext) {
+    if (container === undefined) { throw new CliError('Container is required to create a BuildCommand instance.') }
 
-    this.blueprint = blueprint
+    this.buildAppContext = container
   }
 
   /**
@@ -34,7 +34,7 @@ export class BuildCommand {
    * @returns The blueprint.
    */
   async handle (_event: IncomingEvent): Promise<OutgoingResponse> {
-    await buildApp(this.blueprint, buildPipes.concat(bundlePipes), v => v)
+    await processThroughPipeline<BuildAppContext>(this.buildAppContext, buildMiddleware.concat(bundleMiddleware))
 
     return OutgoingResponse.create({ statusCode: 0 })
   }

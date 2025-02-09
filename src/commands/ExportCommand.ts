@@ -47,8 +47,8 @@ export class ExportCommand {
    * @throws {InitializationError} If the Blueprint config or EventEmitter is not bound to the container.
    */
   constructor ({ blueprint, commandOutput }: { blueprint: IBlueprint, commandOutput: CommandOutput }) {
-    if (blueprint === undefined) { throw new CliError('Blueprint is required to create a BuildCommand instance.') }
-    if (commandOutput === undefined) { throw new CliError('CommandOutput is required to create a BuildCommand instance.') }
+    if (blueprint === undefined) { throw new CliError('Blueprint is required to create a ExportCommand instance.') }
+    if (commandOutput === undefined) { throw new CliError('CommandOutput is required to create a ExportCommand instance.') }
 
     this.blueprint = blueprint
     this.commandOutput = commandOutput
@@ -85,7 +85,7 @@ export class ExportCommand {
   private exportRollup (force?: boolean): boolean {
     const filename = 'rollup.config.mjs'
 
-    if (pathExistsSync(basePath(filename)) && force === true) {
+    if (!pathExistsSync(basePath(filename)) || force === true) {
       outputFileSync(basePath(filename), rollupConfigStub, { encoding: 'utf-8' })
       return true
     } else {

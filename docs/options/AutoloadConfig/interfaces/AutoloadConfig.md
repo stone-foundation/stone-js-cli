@@ -6,6 +6,8 @@
 
 # Interface: AutoloadConfig
 
+Defined in: [cli/src/options/AutoloadConfig.ts:6](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/options/AutoloadConfig.ts#L6)
+
 Configuration for automatically loading modules during buildtime.
 
 Specifies glob patterns to identify modules for transpilation.
@@ -16,9 +18,19 @@ Specifies glob patterns to identify modules for transpilation.
 
 > **modules**: `Record`\<`string`, `string`\>
 
+Defined in: [cli/src/options/AutoloadConfig.ts:18](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/options/AutoloadConfig.ts#L18)
+
 Glob patterns for autoloading modules.
 Keys represent module categories, and values are glob patterns to match files.
 
-#### Defined in
+***
 
-[src/options/AutoloadConfig.ts:11](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/options/AutoloadConfig.ts#L11)
+### type
+
+> **type**: `"typescript"` \| `"javascript"`
+
+Defined in: [cli/src/options/AutoloadConfig.ts:12](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/options/AutoloadConfig.ts#L12)
+
+The type of modules to autoload.
+- `typescript`: Autoload TypeScript modules.
+- `javascript`: Autoload JavaScript modules.

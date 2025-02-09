@@ -1,9 +1,11 @@
 import spawn from 'cross-spawn'
+import process from 'node:process'
 import { CliError } from '../errors/CliError'
-import { buildPipes } from '../middleware/buildMiddleware'
-import { buildApp, buildPath, shouldBuild } from '../utils'
+import { ChildProcess } from 'node:child_process'
 import { CommandOptions } from '@stone-js/node-cli-adapter'
 import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
+import { BuildAppContext, buildMiddleware } from '../middleware/buildMiddleware'
+import { processThroughPipeline, buildPath, shouldBuild, setupProcessSignalHandlers } from '../utils'
 
 export const listCommandOptions: CommandOptions = {
   name: 'list',
@@ -12,6 +14,16 @@ export const listCommandOptions: CommandOptions = {
 }
 
 export class ListCommand {
+  /**
+   * Server process.
+   */
+  private serverProcess?: ChildProcess
+
+  /**
+   * Output used to print data in console.
+   */
+  private readonly buildAppContext: BuildAppContext
+
   /**
    * Blueprint configuration used to retrieve app settings.
    */
@@ -23,10 +35,14 @@ export class ListCommand {
    * @param container - The service container to manage dependencies.
    * @throws {InitializationError} If the Blueprint config or EventEmitter is not bound to the container.
    */
-  constructor ({ blueprint }: { blueprint: IBlueprint }) {
-    if (blueprint === undefined) { throw new CliError('Blueprint is required to create a BuildCommand instance.') }
+  constructor (container: BuildAppContext) {
+    if (container === undefined) { throw new CliError('Container is required to create a ListCommand instance.') }
+    if (container.blueprint === undefined) { throw new CliError('Blueprint is required to create a ListCommand instance.') }
 
-    this.blueprint = blueprint
+    this.buildAppContext = container
+    this.blueprint = container.blueprint
+
+    setupProcessSignalHandlers(this.serverProcess)
   }
 
   /**
@@ -37,10 +53,8 @@ export class ListCommand {
    */
   async handle (_event: IncomingEvent): Promise<OutgoingResponse> {
     if (shouldBuild(this.blueprint)) {
-      await buildApp(this.blueprint, buildPipes, (blueprint) => {
-        this.startProcess()
-        return blueprint
-      })
+      await processThroughPipeline(this.buildAppContext, buildMiddleware)
+      this.startProcess()
     } else {
       this.startProcess()
     }
@@ -52,6 +66,7 @@ export class ListCommand {
    * Start Process.
    */
   private startProcess (): void {
-    spawn('node', [buildPath('cli.bootstrap.mjs'), '--help'], { stdio: 'inherit' })
+    this.serverProcess = spawn('node', [buildPath('cli.bootstrap.mjs'), '--help'], { stdio: 'inherit' })
+    this.serverProcess.on('exit', (code) => process.exit(code ?? 0))
   }
 }

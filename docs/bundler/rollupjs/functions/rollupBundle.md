@@ -8,6 +8,8 @@
 
 > **rollupBundle**(`blueprint`): `Promise`\<`void`\>
 
+Defined in: [cli/src/bundler/rollupjs.ts:32](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/bundler/rollupjs.ts#L32)
+
 Rollup bundle process.
 
 ## Parameters
@@ -21,7 +23,3 @@ The blueprint.
 ## Returns
 
 `Promise`\<`void`\>
-
-## Defined in
-
-[src/bundler/rollupjs.ts:32](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/bundler/rollupjs.ts#L32)

@@ -6,12 +6,14 @@
 
 # commands/InitCommand
 
-## Index
-
-### Classes
+## Classes
 
 - [InitCommand](classes/InitCommand.md)
 
-### Variables
+## Interfaces
+
+- [CreateAppContext](interfaces/CreateAppContext.md)
+
+## Variables
 
 - [initCommandOptions](variables/initCommandOptions.md)

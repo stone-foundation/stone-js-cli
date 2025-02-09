@@ -6,12 +6,10 @@
 
 # commands/ListCommand
 
-## Index
-
-### Classes
+## Classes
 
 - [ListCommand](classes/ListCommand.md)
 
-### Variables
+## Variables
 
 - [listCommandOptions](variables/listCommandOptions.md)

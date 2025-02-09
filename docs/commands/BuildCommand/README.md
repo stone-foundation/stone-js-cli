@@ -6,12 +6,10 @@
 
 # commands/BuildCommand
 
-## Index
-
-### Classes
+## Classes
 
 - [BuildCommand](classes/BuildCommand.md)
 
-### Variables
+## Variables
 
 - [buildCommandOptions](variables/buildCommandOptions.md)

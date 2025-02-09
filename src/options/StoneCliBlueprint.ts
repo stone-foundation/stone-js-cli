@@ -1,16 +1,10 @@
-import { onInit } from '../hooks'
 import { DotenvConfig, dotenv } from './DotenvConfig'
 import { AutoloadConfig, autoload } from './AutoloadConfig'
-import { ListCommand, listCommandOptions } from '../commands/ListCommand'
-import { InitCommand, initCommandOptions } from '../commands/InitCommand'
-import { BuildCommand, buildCommandOptions } from '../commands/BuildCommand'
-import { CacheCommand, cacheCommandOptions } from '../commands/CacheCommand'
-import { ServeCommand, serveCommandOptions } from '../commands/ServeCommand'
-import { CustomCommand, customCommandOptions } from '../commands/CustomCommand'
-import { ExportCommand, exportCommandOptions } from '../commands/ExportCommand'
-import { TypingsCommand, typingsCommandOptions } from '../commands/TypingsCommand'
+import { CreateAppConfig, createApp } from './CreateAppConfig'
+import { NODE_CONSOLE_PLATFORM } from '@stone-js/node-cli-adapter'
+import { cliConfigMiddleware } from '../middleware/configMiddleware'
+import { EnsureStoneProjectMiddleware } from '../middleware/EnsureStoneProjectMiddleware'
 import { AppConfig, IncomingEvent, OutgoingResponse, StoneBlueprint } from '@stone-js/core'
-import { NodeCliAdapterConfig, CommandRouter, NODE_CONSOLE_PLATFORM } from '@stone-js/node-cli-adapter'
 
 /**
  * App Config configuration for the Stone CLI application.
@@ -27,9 +21,9 @@ export interface StoneCliAppConfig extends Partial<AppConfig<IncomingEvent, Outg
   autoload: AutoloadConfig
 
   /**
-   * Configuration for the Node CLI adapter.
+   * Create app configuration
    */
-  adapter: Partial<NodeCliAdapterConfig>
+  createApp: CreateAppConfig
 }
 
 /**
@@ -40,31 +34,23 @@ export interface StoneCliBlueprint extends StoneBlueprint {
 }
 
 /**
- * Configuration for the Node CLI adapter, defining hooks, routing, and commands.
- */
-const adapter: Partial<NodeCliAdapterConfig> = {
-  hooks: { onInit },
-  router: CommandRouter,
-  platform: NODE_CONSOLE_PLATFORM,
-  commands: [
-    [InitCommand, initCommandOptions],
-    [ListCommand, listCommandOptions],
-    [BuildCommand, buildCommandOptions],
-    [CacheCommand, cacheCommandOptions],
-    [ServeCommand, serveCommandOptions],
-    [CustomCommand, customCommandOptions],
-    [ExportCommand, exportCommandOptions],
-    [TypingsCommand, typingsCommandOptions]
-  ]
-}
-
-/**
  * Default blueprint configuration for the Stone CLI.
  */
 export const stoneCliBlueprint: StoneCliBlueprint = {
   stone: {
     dotenv,
-    adapter,
-    autoload
+    autoload,
+    createApp,
+    adapter: {
+      platform: NODE_CONSOLE_PLATFORM
+    },
+    builder: {
+      middleware: cliConfigMiddleware
+    },
+    kernel: {
+      middleware: [
+        { priority: 0, pipe: EnsureStoneProjectMiddleware }
+      ]
+    }
   }
 }

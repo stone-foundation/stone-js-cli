@@ -6,8 +6,6 @@
 
 # errors/CliError
 
-## Index
-
-### Classes
+## Classes
 
 - [CliError](classes/CliError.md)

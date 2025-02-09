@@ -6,11 +6,15 @@
 
 # Class: ServeCommand
 
+Defined in: [cli/src/commands/ServeCommand.ts:17](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/ServeCommand.ts#L17)
+
 ## Constructors
 
 ### new ServeCommand()
 
 > **new ServeCommand**(`container`): [`ServeCommand`](ServeCommand.md)
+
+Defined in: [cli/src/commands/ServeCommand.ts:39](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/ServeCommand.ts#L39)
 
 Create a new instance of CoreServiceProvider.
 
@@ -18,15 +22,9 @@ Create a new instance of CoreServiceProvider.
 
 ##### container
 
+[`BuildAppContext`](../../../middleware/buildMiddleware/interfaces/BuildAppContext.md)
+
 The service container to manage dependencies.
-
-###### blueprint
-
-`IBlueprint`
-
-###### commandOutput
-
-`CommandOutput`
 
 #### Returns
 
@@ -36,15 +34,13 @@ The service container to manage dependencies.
 
 If the Blueprint config or EventEmitter is not bound to the container.
 
-#### Defined in
-
-[src/commands/ServeCommand.ts:39](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/ServeCommand.ts#L39)
-
 ## Methods
 
 ### handle()
 
 > **handle**(`_event`): `Promise`\<`OutgoingResponse`\>
+
+Defined in: [cli/src/commands/ServeCommand.ts:53](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/ServeCommand.ts#L53)
 
 Handle the incoming event.
 
@@ -57,7 +53,3 @@ Handle the incoming event.
 #### Returns
 
 `Promise`\<`OutgoingResponse`\>
-
-#### Defined in
-
-[src/commands/ServeCommand.ts:50](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/ServeCommand.ts#L50)

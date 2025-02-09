@@ -5,6 +5,13 @@
  */
 export interface AutoloadConfig {
   /**
+   * The type of modules to autoload.
+   * - `typescript`: Autoload TypeScript modules.
+   * - `javascript`: Autoload JavaScript modules.
+   */
+  type: 'typescript' | 'javascript'
+
+  /**
    * Glob patterns for autoloading modules.
    * Keys represent module categories, and values are glob patterns to match files.
    */
@@ -17,8 +24,9 @@ export interface AutoloadConfig {
  * - `options`: Matches all `.js`, `.mjs`, `.ts` and `.json` files in the `config` directory.
  */
 export const autoload: AutoloadConfig = {
+  type: 'javascript',
   modules: {
-    app: 'app/**/*.(js|mjs|ts|json)',
-    options: 'config/*.(js|mjs|ts|json)'
+    app: 'app/**/*.{js,mjs,ts,json}',
+    options: 'config/*.{js,mjs,ts,json}'
   }
 }

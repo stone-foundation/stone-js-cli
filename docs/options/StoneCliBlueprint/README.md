@@ -6,13 +6,11 @@
 
 # options/StoneCliBlueprint
 
-## Index
-
-### Interfaces
+## Interfaces
 
 - [StoneCliAppConfig](interfaces/StoneCliAppConfig.md)
 - [StoneCliBlueprint](interfaces/StoneCliBlueprint.md)
 
-### Variables
+## Variables
 
 - [stoneCliBlueprint](variables/stoneCliBlueprint.md)

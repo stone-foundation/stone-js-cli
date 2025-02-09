@@ -6,12 +6,10 @@
 
 # commands/ServeCommand
 
-## Index
-
-### Classes
+## Classes
 
 - [ServeCommand](classes/ServeCommand.md)
 
-### Variables
+## Variables
 
 - [serveCommandOptions](variables/serveCommandOptions.md)

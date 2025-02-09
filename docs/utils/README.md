@@ -6,13 +6,10 @@
 
 # utils
 
-## Index
-
-### Functions
+## Functions
 
 - [appPath](functions/appPath.md)
 - [basePath](functions/basePath.md)
-- [buildApp](functions/buildApp.md)
 - [buildPath](functions/buildPath.md)
 - [checkAutoloadModule](functions/checkAutoloadModule.md)
 - [configPath](functions/configPath.md)
@@ -21,13 +18,14 @@
 - [getCache](functions/getCache.md)
 - [getEnvVariables](functions/getEnvVariables.md)
 - [getFileHash](functions/getFileHash.md)
-- [getStoneOptions](functions/getStoneOptions.md)
 - [importModule](functions/importModule.md)
 - [makeBootstrapFile](functions/makeBootstrapFile.md)
 - [makeFilename](functions/makeFilename.md)
 - [nodeModulesPath](functions/nodeModulesPath.md)
 - [normalizeBootstrapStub](functions/normalizeBootstrapStub.md)
 - [pipeable](functions/pipeable.md)
+- [processThroughPipeline](functions/processThroughPipeline.md)
 - [setCache](functions/setCache.md)
+- [setupProcessSignalHandlers](functions/setupProcessSignalHandlers.md)
 - [shouldBuild](functions/shouldBuild.md)
 - [tmpPath](functions/tmpPath.md)

@@ -1,8 +1,8 @@
 import fsExtra from 'fs-extra'
 import { Plugin, rollup } from 'rollup'
-import rollupConfig, { StoneRollupOptions } from './rollup.config'
 import { IBlueprint } from '@stone-js/core'
 import { RollupReplaceOptions } from '@rollup/plugin-replace'
+import rollupConfig, { StoneRollupOptions } from './rollup.config'
 import { checkAutoloadModule, getEnvVariables, basePath, buildPath, distPath, importModule } from '../utils.js'
 
 const { pathExistsSync } = fsExtra
@@ -45,6 +45,7 @@ export async function rollupBundle (blueprint: IBlueprint): Promise<void> {
  * @returns An array of Rollup build options.
  */
 async function makeBuildOptions (blueprint: IBlueprint): Promise<StoneRollupOptions[]> {
+  // const bundleExcludes = ['remove-cli-decorators']
   const rollupOptionsFactory = await getRollupConfig(blueprint)
   const modulesInput = blueprint.get<Record<string, string>>('stone.autoload.modules', {})
 
@@ -73,7 +74,7 @@ async function makeBuildOptions (blueprint: IBlueprint): Promise<StoneRollupOpti
  * @returns A single RollupOptions object for bundling.
  */
 async function makeBundleOptions (blueprint: IBlueprint): Promise<StoneRollupOptions> {
-  const bundleExcludes = ['babel', 'multi-entry', 'remove-cli-decorators']
+  const bundleExcludes = ['babel', 'multi-entry']
   const rollupOptionsFactory = await getRollupConfig(blueprint)
 
   const options = rollupOptionsFactory({

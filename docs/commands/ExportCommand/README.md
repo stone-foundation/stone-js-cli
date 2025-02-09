@@ -6,12 +6,10 @@
 
 # commands/ExportCommand
 
-## Index
-
-### Classes
+## Classes
 
 - [ExportCommand](classes/ExportCommand.md)
 
-### Variables
+## Variables
 
 - [exportCommandOptions](variables/exportCommandOptions.md)

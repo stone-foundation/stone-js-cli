@@ -6,9 +6,11 @@
 
 # middleware/buildMiddleware
 
-## Index
+## Interfaces
 
-### Variables
+- [BuildAppContext](interfaces/BuildAppContext.md)
 
-- [buildPipes](variables/buildPipes.md)
-- [bundlePipes](variables/bundlePipes.md)
+## Variables
+
+- [buildMiddleware](variables/buildMiddleware.md)
+- [bundleMiddleware](variables/bundleMiddleware.md)

@@ -12,37 +12,43 @@
 import { Config } from '@stone-js/config';
 import { stoneCliBlueprint } from '../dist/index.js';
 import { nodeCliAdapterBlueprint } from '@stone-js/node-cli-adapter';
-import { StoneFactory, stoneBlueprint, mergeBlueprints, resolveCurrentAdapter } from '@stone-js/core';
+import { StoneFactory, ConfigBuilder, mergeBlueprints, stoneBlueprint } from '@stone-js/core';
 
-/**
- * Merge and create the application blueprint.
- * 
- * Combines multiple blueprints into a single blueprint object.
- * Blueprints include:
- * - `stoneBlueprint`: The core blueprint for Stone.js.
- * - `nodeCliAdapterBlueprint`: Adapter blueprint for Node.js CLI environment.
- * - `stoneCliBlueprint`: Stone CLI-specific configuration and commands.
- * 
- * @returns The complete application blueprint.
- */
-const blueprint = Config.create(
-  mergeBlueprints(
-    stoneBlueprint,
-    nodeCliAdapterBlueprint,
-    stoneCliBlueprint
-  )
-);
+try {
+  /**
+   * Merge and create the initial application blueprint.
+   * 
+   * Combines multiple blueprints into a single blueprint object.
+   * Blueprints include:
+   * - `stoneBlueprint`: The core blueprint for Stone.js.
+   * - `nodeCliAdapterBlueprint`: Adapter blueprint for Node.js CLI environment.
+   * - `stoneCliBlueprint`: Stone CLI-specific configuration and commands.
+   * 
+   * @returns The initial application blueprint.
+   */
+  const initialBlueprint = Config.create(
+    mergeBlueprints(
+      stoneBlueprint,
+      nodeCliAdapterBlueprint,
+      stoneCliBlueprint
+    )
+  );
 
-/**
- * Resolve the current adapter based on the application blueprint.
- * 
- * This step ensures the correct adapter is selected for the Node.js CLI environment.
- */
-resolveCurrentAdapter(blueprint);
+  /**
+   * Create the final application blueprint.
+   * Mandatory to execute config middleware and resolve the final blueprint.
+   * 
+   * @returns The complete application blueprint.
+   */
+  const blueprint = await ConfigBuilder.create(stoneCliBlueprint.stone.builder).build({}, initialBlueprint)
 
-/**
- * Execute the CLI application.
- * 
- * Initializes the Stone.js application using the resolved blueprint and executes the CLI commands.
- */
-await StoneFactory.create({ blueprint }).run();
+  /**
+   * Execute the CLI application.
+   * 
+   * Initializes the Stone.js application using the resolved blueprint and executes the CLI commands.
+   */
+  await StoneFactory.create({ blueprint }).run();
+} catch (error) {
+  console.error('Error running Stone commands:\n', error);
+  process.exit(1);
+}

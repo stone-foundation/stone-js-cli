@@ -1,8 +1,10 @@
 import { Argv } from 'yargs'
 import spawn from 'cross-spawn'
-import { nodeModulesPath } from '../utils'
+import process from 'node:process'
 import { CliError } from '../errors/CliError'
+import { ChildProcess } from 'node:child_process'
 import { CommandOptions } from '@stone-js/node-cli-adapter'
+import { nodeModulesPath, setupProcessSignalHandlers } from '../utils'
 import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
 
 export const typingsCommandOptions: CommandOptions = {
@@ -22,6 +24,11 @@ export const typingsCommandOptions: CommandOptions = {
 
 export class TypingsCommand {
   /**
+   * Server process.
+   */
+  private serverProcess?: ChildProcess
+
+  /**
    * Blueprint configuration used to retrieve app settings.
    */
   private readonly blueprint: IBlueprint
@@ -33,9 +40,11 @@ export class TypingsCommand {
    * @throws {InitializationError} If the Blueprint config or EventEmitter is not bound to the container.
    */
   constructor ({ blueprint }: { blueprint: IBlueprint }) {
-    if (blueprint === undefined) { throw new CliError('Blueprint is required to create a BuildCommand instance.') }
+    if (blueprint === undefined) { throw new CliError('Blueprint is required to create a TypingsCommand instance.') }
 
     this.blueprint = blueprint
+
+    setupProcessSignalHandlers(this.serverProcess)
   }
 
   /**
@@ -52,11 +61,13 @@ export class TypingsCommand {
   private typeCheckerProcess (watch?: boolean): void {
     if (watch === true) {
       if (this.blueprint.get('stone.autoload.type') === 'typescript') {
-        spawn('node', [nodeModulesPath('.bin/tsc'), '--noEmit', '--watch'], { stdio: 'inherit' })
+        this.serverProcess = spawn('node', [nodeModulesPath('.bin/tsc'), '--noEmit', '--watch'], { stdio: 'inherit' })
+        this.serverProcess.on('exit', (code) => process.exit(code ?? 0))
       }
     } else {
       if (this.blueprint.get('stone.autoload.type') === 'typescript') {
-        spawn('node', [nodeModulesPath('.bin/tsc'), '--noEmit'], { stdio: 'inherit' })
+        this.serverProcess = spawn('node', [nodeModulesPath('.bin/tsc'), '--noEmit'], { stdio: 'inherit' })
+        this.serverProcess.on('exit', (code) => process.exit(code ?? 0))
       }
     }
   }

@@ -6,7 +6,9 @@
 
 # Function: getApplicationFiles()
 
-> **getApplicationFiles**(`blueprint`): [`string`, `string`[]][]
+> **getApplicationFiles**(`blueprint`): \[`string`, `string`[]\][]
+
+Defined in: [cli/src/utils.ts:109](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/utils.ts#L109)
 
 Get Application Files.
 Returns all application files grouped by directory.
@@ -23,10 +25,6 @@ The configuration object.
 
 ## Returns
 
-[`string`, `string`[]][]
+\[`string`, `string`[]\][]
 
 An array of files grouped by directory.
-
-## Defined in
-
-[src/utils.ts:98](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/utils.ts#L98)

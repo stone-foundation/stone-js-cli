@@ -6,12 +6,10 @@
 
 # commands/CustomCommand
 
-## Index
-
-### Classes
+## Classes
 
 - [CustomCommand](classes/CustomCommand.md)
 
-### Variables
+## Variables
 
 - [customCommandOptions](variables/customCommandOptions.md)

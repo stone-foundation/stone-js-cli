@@ -6,6 +6,8 @@
 
 # Interface: DotenvOptions
 
+Defined in: [cli/src/options/DotenvConfig.ts:14](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/options/DotenvConfig.ts#L14)
+
 Configuration options for `dotenv` and `dotenv-expand`.
 
 ## Properties
@@ -14,11 +16,9 @@ Configuration options for `dotenv` and `dotenv-expand`.
 
 > **debug**: `boolean`
 
+Defined in: [cli/src/options/DotenvConfig.ts:18](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/options/DotenvConfig.ts#L18)
+
 Enables debug mode for logging errors.
-
-#### Defined in
-
-[src/options/DotenvConfig.ts:18](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/options/DotenvConfig.ts#L18)
 
 ***
 
@@ -26,11 +26,9 @@ Enables debug mode for logging errors.
 
 > **expand**: `boolean`
 
+Defined in: [cli/src/options/DotenvConfig.ts:23](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/options/DotenvConfig.ts#L23)
+
 Expands variables within values in the `.env` file.
-
-#### Defined in
-
-[src/options/DotenvConfig.ts:23](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/options/DotenvConfig.ts#L23)
 
 ***
 
@@ -38,11 +36,9 @@ Expands variables within values in the `.env` file.
 
 > **ignoreProcessEnv**: `boolean`
 
+Defined in: [cli/src/options/DotenvConfig.ts:33](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/options/DotenvConfig.ts#L33)
+
 Ignores the process environment variables.
-
-#### Defined in
-
-[src/options/DotenvConfig.ts:33](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/options/DotenvConfig.ts#L33)
 
 ***
 
@@ -50,8 +46,6 @@ Ignores the process environment variables.
 
 > **override**: `boolean`
 
+Defined in: [cli/src/options/DotenvConfig.ts:28](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/options/DotenvConfig.ts#L28)
+
 Overrides existing environment variables with values from the `.env` file.
-
-#### Defined in
-
-[src/options/DotenvConfig.ts:28](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/options/DotenvConfig.ts#L28)

@@ -8,6 +8,4 @@
 
 > `const` **initCommandOptions**: `CommandOptions`
 
-## Defined in
-
-[src/commands/InitCommand.ts:6](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/InitCommand.ts#L6)
+Defined in: [cli/src/commands/InitCommand.ts:9](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/InitCommand.ts#L9)

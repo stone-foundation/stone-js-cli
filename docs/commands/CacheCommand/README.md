@@ -6,12 +6,10 @@
 
 # commands/CacheCommand
 
-## Index
-
-### Classes
+## Classes
 
 - [CacheCommand](classes/CacheCommand.md)
 
-### Variables
+## Variables
 
 - [cacheCommandOptions](variables/cacheCommandOptions.md)

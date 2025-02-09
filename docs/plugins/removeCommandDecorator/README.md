@@ -6,8 +6,6 @@
 
 # plugins/removeCommandDecorator
 
-## Index
-
-### Functions
+## Functions
 
 - [removeCliDecorators](functions/removeCliDecorators.md)

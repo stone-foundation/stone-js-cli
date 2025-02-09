@@ -8,6 +8,8 @@
 
 > **normalizeBootstrapStub**(`blueprint`, `stub`, `action`, `exclude`): `string`
 
+Defined in: [cli/src/utils.ts:302](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/utils.ts#L302)
+
 Normalize bootstrap content by replacing module import statements.
 
 ## Parameters
@@ -41,7 +43,3 @@ Modules to exclude from import.
 `string`
 
 The normalized stub content.
-
-## Defined in
-
-[src/utils.ts:335](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/utils.ts#L335)

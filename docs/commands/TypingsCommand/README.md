@@ -6,12 +6,10 @@
 
 # commands/TypingsCommand
 
-## Index
-
-### Classes
+## Classes
 
 - [TypingsCommand](classes/TypingsCommand.md)
 
-### Variables
+## Variables
 
 - [typingsCommandOptions](variables/typingsCommandOptions.md)
