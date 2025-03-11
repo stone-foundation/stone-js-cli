@@ -6,23 +6,25 @@
 
 # Class: BuildCommand
 
-Defined in: [cli/src/commands/BuildCommand.ts:13](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/BuildCommand.ts#L13)
+Defined in: [cli/src/commands/BuildCommand.ts:43](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/BuildCommand.ts#L43)
+
+The build command class.
 
 ## Constructors
 
 ### new BuildCommand()
 
-> **new BuildCommand**(`container`): [`BuildCommand`](BuildCommand.md)
+> **new BuildCommand**(`context`): [`BuildCommand`](BuildCommand.md)
 
-Defined in: [cli/src/commands/BuildCommand.ts:25](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/BuildCommand.ts#L25)
+Defined in: [cli/src/commands/BuildCommand.ts:49](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/BuildCommand.ts#L49)
 
-Create a new instance of CoreServiceProvider.
+Create a new instance of BuildCommand.
 
 #### Parameters
 
-##### container
+##### context
 
-[`BuildAppContext`](../../../middleware/buildMiddleware/interfaces/BuildAppContext.md)
+[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
 The service container to manage dependencies.
 
@@ -30,28 +32,24 @@ The service container to manage dependencies.
 
 [`BuildCommand`](BuildCommand.md)
 
-#### Throws
-
-If the Blueprint config or EventEmitter is not bound to the container.
-
 ## Methods
 
 ### handle()
 
-> **handle**(`_event`): `Promise`\<`OutgoingResponse`\>
+> **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/commands/BuildCommand.ts:36](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/BuildCommand.ts#L36)
+Defined in: [cli/src/commands/BuildCommand.ts:56](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/BuildCommand.ts#L56)
 
 Handle the incoming event.
 
 #### Parameters
 
-##### \_event
+##### event
 
 `IncomingEvent`
 
 #### Returns
 
-`Promise`\<`OutgoingResponse`\>
+`Promise`\<`void`\>
 
 The blueprint.

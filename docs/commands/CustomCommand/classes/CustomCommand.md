@@ -6,23 +6,25 @@
 
 # Class: CustomCommand
 
-Defined in: [cli/src/commands/CustomCommand.ts:15](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/CustomCommand.ts#L15)
+Defined in: [cli/src/commands/CustomCommand.ts:23](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/CustomCommand.ts#L23)
+
+The custom command class.
 
 ## Constructors
 
 ### new CustomCommand()
 
-> **new CustomCommand**(`container`): [`CustomCommand`](CustomCommand.md)
+> **new CustomCommand**(`context`): [`CustomCommand`](CustomCommand.md)
 
-Defined in: [cli/src/commands/CustomCommand.ts:37](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/CustomCommand.ts#L37)
+Defined in: [cli/src/commands/CustomCommand.ts:31](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/CustomCommand.ts#L31)
 
-Create a new instance of CoreServiceProvider.
+Create a new instance of CustomCommand.
 
 #### Parameters
 
-##### container
+##### context
 
-[`BuildAppContext`](../../../middleware/buildMiddleware/interfaces/BuildAppContext.md)
+[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
 The service container to manage dependencies.
 
@@ -30,23 +32,19 @@ The service container to manage dependencies.
 
 [`CustomCommand`](CustomCommand.md)
 
-#### Throws
-
-If the Blueprint config or EventEmitter is not bound to the container.
-
 ## Methods
 
 ### handle()
 
-> **handle**(`_event`): `Promise`\<`OutgoingResponse`\>
+> **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/commands/CustomCommand.ts:53](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/CustomCommand.ts#L53)
+Defined in: [cli/src/commands/CustomCommand.ts:41](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/CustomCommand.ts#L41)
 
 Handle the incoming event.
 
 #### Parameters
 
-##### \_event
+##### event
 
 `IncomingEvent`
 
@@ -54,6 +52,6 @@ The incoming event.
 
 #### Returns
 
-`Promise`\<`OutgoingResponse`\>
+`Promise`\<`void`\>
 
 The blueprint.

@@ -6,20 +6,20 @@
 
 # Function: shouldBuild()
 
-> **shouldBuild**(`blueprint`): `boolean`
+> **shouldBuild**(`pattern`): `boolean`
 
-Defined in: [cli/src/utils.ts:163](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/utils.ts#L163)
+Defined in: [cli/src/utils.ts:61](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/utils.ts#L61)
 
 Should build application.
 Determines whether the application should be rebuilt.
 
 ## Parameters
 
-### blueprint
+### pattern
 
-`IBlueprint`
+`string`
 
-The container object with config.
+The glob pattern to match files.
 
 ## Returns
 

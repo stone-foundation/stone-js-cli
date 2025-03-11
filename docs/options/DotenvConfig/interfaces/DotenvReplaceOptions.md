@@ -6,7 +6,7 @@
 
 # Interface: DotenvReplaceOptions
 
-Defined in: [cli/src/options/DotenvConfig.ts:4](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/options/DotenvConfig.ts#L4)
+Defined in: [cli/src/options/DotenvConfig.ts:4](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/DotenvConfig.ts#L4)
 
 Options for the `@rollup/plugin-replace` plugin.
 
@@ -16,6 +16,6 @@ Options for the `@rollup/plugin-replace` plugin.
 
 > **preventAssignment**: `boolean`
 
-Defined in: [cli/src/options/DotenvConfig.ts:8](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/options/DotenvConfig.ts#L8)
+Defined in: [cli/src/options/DotenvConfig.ts:8](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/DotenvConfig.ts#L8)
 
 Prevents assignment expressions in replacement values.

@@ -8,6 +8,6 @@
 
 > `const` **stoneCliBlueprint**: [`StoneCliBlueprint`](../interfaces/StoneCliBlueprint.md)
 
-Defined in: [cli/src/options/StoneCliBlueprint.ts:69](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/options/StoneCliBlueprint.ts#L69)
+Defined in: [cli/src/options/StoneCliBlueprint.ts:39](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/StoneCliBlueprint.ts#L39)
 
 Default blueprint configuration for the Stone CLI.

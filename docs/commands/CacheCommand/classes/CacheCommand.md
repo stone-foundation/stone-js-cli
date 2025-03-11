@@ -6,52 +6,42 @@
 
 # Class: CacheCommand
 
-Defined in: [cli/src/commands/CacheCommand.ts:25](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/CacheCommand.ts#L25)
+Defined in: [cli/src/commands/CacheCommand.ts:20](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/CacheCommand.ts#L20)
+
+The cache command class.
 
 ## Constructors
 
 ### new CacheCommand()
 
-> **new CacheCommand**(`container`): [`CacheCommand`](CacheCommand.md)
+> **new CacheCommand**(`context`): [`CacheCommand`](CacheCommand.md)
 
-Defined in: [cli/src/commands/CacheCommand.ts:37](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/CacheCommand.ts#L37)
+Defined in: [cli/src/commands/CacheCommand.ts:26](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/CacheCommand.ts#L26)
 
-Create a new instance of CoreServiceProvider.
+Create a new instance of CacheCommand.
 
 #### Parameters
 
-##### container
+##### context
+
+[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
 The service container to manage dependencies.
-
-###### commandOutput
-
-`CommandOutput`
 
 #### Returns
 
 [`CacheCommand`](CacheCommand.md)
 
-#### Throws
-
-If the Blueprint config or EventEmitter is not bound to the container.
-
 ## Methods
 
 ### handle()
 
-> **handle**(`event`): `OutgoingResponse`
+> **handle**(): `void`
 
-Defined in: [cli/src/commands/CacheCommand.ts:46](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/CacheCommand.ts#L46)
+Defined in: [cli/src/commands/CacheCommand.ts:31](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/CacheCommand.ts#L31)
 
 Handle the incoming event.
 
-#### Parameters
-
-##### event
-
-`IncomingEvent`
-
 #### Returns
 
-`OutgoingResponse`
+`void`

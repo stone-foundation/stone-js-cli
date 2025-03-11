@@ -1,41 +1,63 @@
-import { CliError } from '../errors/CliError'
-import { processThroughPipeline } from '../utils'
+import { Argv } from 'yargs'
+import { isReactApp } from '../utils'
+import { IncomingEvent } from '@stone-js/core'
+import { ConsoleContext } from '../declarations'
+import { ReactBuilder } from '../react/ReactBuilder'
+import { ServerBuilder } from '../server/ServerBuilder'
 import { CommandOptions } from '@stone-js/node-cli-adapter'
-import { IncomingEvent, OutgoingResponse } from '@stone-js/core'
-import { BuildAppContext, buildMiddleware, bundleMiddleware } from '../middleware/buildMiddleware'
 
+/**
+ * The build command options.
+ */
 export const buildCommandOptions: CommandOptions = {
   name: 'build',
-  alias: 'b',
-  desc: 'Build project'
+  alias: 'prod',
+  args: ['[app-type]'],
+  desc: 'Build project',
+  options: (yargs: Argv) => {
+    return yargs
+      .positional('app-type', {
+        type: 'string',
+        default: 'server',
+        desc: 'app type to build',
+        choices: ['server', 'react']
+      })
+      .option('ssr', {
+        alias: 's',
+        type: 'boolean',
+        default: false,
+        desc: 'Build SSR App'
+      })
+      .option('imperative', {
+        alias: 'i',
+        type: 'boolean',
+        default: false,
+        desc: 'imperative api'
+      })
+  }
 }
 
+/**
+ * The build command class.
+ */
 export class BuildCommand {
   /**
-   * Output used to print data in console.
-   */
-  private readonly buildAppContext: BuildAppContext
-
-  /**
-   * Create a new instance of CoreServiceProvider.
+   * Create a new instance of BuildCommand.
    *
-   * @param container - The service container to manage dependencies.
-   * @throws {InitializationError} If the Blueprint config or EventEmitter is not bound to the container.
+   * @param context - The service container to manage dependencies.
    */
-  constructor (container: BuildAppContext) {
-    if (container === undefined) { throw new CliError('Container is required to create a BuildCommand instance.') }
-
-    this.buildAppContext = container
-  }
+  constructor (private readonly context: ConsoleContext) {}
 
   /**
    * Handle the incoming event.
    *
    * @returns The blueprint.
    */
-  async handle (_event: IncomingEvent): Promise<OutgoingResponse> {
-    await processThroughPipeline<BuildAppContext>(this.buildAppContext, buildMiddleware.concat(bundleMiddleware))
-
-    return OutgoingResponse.create({ statusCode: 0 })
+  async handle (event: IncomingEvent): Promise<void> {
+    if (isReactApp(this.context.blueprint, event)) {
+      await new ReactBuilder(this.context).build(event)
+    } else {
+      await new ServerBuilder(this.context).build(event)
+    }
   }
 }

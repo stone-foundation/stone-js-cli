@@ -3,14 +3,14 @@
  */
 export const appBootstrapStub = `
 __app_modules_import__
-import { StoneFactory, ConfigBuilder } from '@stone-js/core'
+import { StoneFactory, BlueprintBuilder } from '@stone-js/core'
 
 /**
  * Build Blueprint.
  * 
  * @returns {IBlueprint}
  */
-const blueprint = await ConfigBuilder.create().build({ __app_module_names__ })
+const blueprint = await BlueprintBuilder.create().build({ __app_module_names__ })
 
 /**
  * Run application.
@@ -32,7 +32,7 @@ export { output }
 export const consoleBootstrapStub = `
 __app_modules_import__
 import { NODE_CONSOLE_PLATFORM } from '@stone-js/node-cli-adapter';
-import { StoneFactory, ConfigBuilder, resolveCurrentAdapter } from '@stone-js/core'
+import { StoneFactory, BlueprintBuilder, resolveCurrentAdapter } from '@stone-js/core'
 
 try {
   /**
@@ -40,7 +40,7 @@ try {
    * 
    * @returns {IBlueprint}
    */
-  const blueprint = await ConfigBuilder.create().build({ __app_module_names__ })
+  const blueprint = await BlueprintBuilder.create().build({ __app_module_names__ })
 
   /**
    * Resolve the current adapter based on the application blueprint.

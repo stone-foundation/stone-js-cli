@@ -1,0 +1,106 @@
+import { Plugin } from 'vite'
+import { readFileSync } from 'node:fs'
+
+/**
+ * A Vite plugin that removes imports and related code from the source files.
+*/
+export function removeImportsVitePlugin (modulesToRemove: Array<string | RegExp>): Plugin {
+  return {
+    name: 'vite-plugin-remove-imports',
+    enforce: 'pre',
+    load (id) {
+      if (
+        id.includes('node_modules') ||
+        !id.includes('/StoneJS/') ||
+        (
+          !id.endsWith('.ts') &&
+          !id.endsWith('.tsx') &&
+          !id.endsWith('.js') &&
+          !id.endsWith('.mjs') &&
+          !id.endsWith('.jsx') &&
+          !id.endsWith('.mjsx')
+        )
+      ) return
+
+      const code = readFileSync(id, 'utf-8')
+      let modifiedCode = code
+
+      modulesToRemove.forEach(module => {
+        // Match import statements
+        const moduleValue = module instanceof RegExp ? module.source : module
+        const importRegex = new RegExp(`import\\s*(\\*\\s*as\\s+\\w+|{[^}]+}|\\w+)\\s+from\\s*['"]${String(moduleValue)}['"];?`, 'g')
+        const matches = [...modifiedCode.matchAll(importRegex)]
+
+        let importedIdentifiers: string[] = []
+
+        if (matches.length > 0) {
+          matches.forEach(match => {
+            const importContent = match[1]
+
+            if (importContent.includes('{')) {
+              // Handle named imports { ClassA, functionB }
+              importedIdentifiers = importContent
+                .replace(/[{}]/g, '')
+                .split(',')
+                .map(i => i.trim().split(/\s+as\s+/)[0]) // Handle aliasing
+            } else {
+              // Handle default or namespace imports
+              importedIdentifiers.push(importContent)
+            }
+
+            // Remove the entire import statement
+            modifiedCode = modifiedCode.replace(importRegex, '')
+            importedIdentifiers = [...new Set(importedIdentifiers)]
+          })
+        }
+
+        if (importedIdentifiers.length === 0) return
+
+        // Remove decorators related to the removed imports
+        modifiedCode = modifiedCode.replace(/@(\w+)\s*\([^)]*\)\s*/g, (match, decorator) =>
+          importedIdentifiers.includes(decorator) ? '' : match
+        )
+
+        // Replace new instantiations
+        importedIdentifiers.forEach(value => {
+          modifiedCode = modifiedCode.replace(new RegExp(`new\\s+${value}\\s*\\([^)]*\\)`, 'g'), '{}')
+        })
+
+        // Remove factory methods and static calls
+        importedIdentifiers.forEach(value => {
+          modifiedCode = modifiedCode.replace(new RegExp(`${value}\\.\\w+\\s*\\([^)]*\\)`, 'g'), '{}')
+        })
+
+        // Remove function calls
+        importedIdentifiers.forEach(value => {
+          modifiedCode = modifiedCode.replace(new RegExp(`\\b${value}\\s*\\([^)]*\\)`, 'g'), '{}')
+        })
+
+        // Remove namespace property access (e.g., `Http.SomeFunction()`)
+        importedIdentifiers.forEach(value => {
+          modifiedCode = modifiedCode.replace(new RegExp(`\\b${value}\\.\\w+`, 'g'), '{}')
+        })
+
+        // Remove variable assignments like `const event = IncomingHttpEvent.create()`
+        importedIdentifiers.forEach(value => {
+          modifiedCode = modifiedCode.replace(new RegExp(`\\b${value}\\b`, 'g'), '{}')
+        })
+
+        // Remove dynamic imports `import('module').then()`
+        modifiedCode = modifiedCode.replace(new RegExp(`import\\(['"]${String(moduleValue)}['"]\\)\\.then\\([^)]*\\)`, 'g'), '{}')
+
+        // Ensure no broken syntax (empty statements)
+        modifiedCode = modifiedCode.replace(/^\s*;\s*$/gm, '')
+      })
+
+      if (modifiedCode === code) return
+
+      this.addWatchFile(id)
+
+      return {
+        code: modifiedCode,
+        map: null
+      }
+    }
+  }
+}

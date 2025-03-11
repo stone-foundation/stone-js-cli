@@ -1,12 +1,15 @@
 import fsExtra from 'fs-extra'
-import { basePath } from '../utils'
 import { CliError } from '../errors/CliError'
-import { NextPipe } from '@stone-js/pipeline'
+import { basePath } from '@stone-js/filesystem'
 import { initCommandOptions } from '../commands/InitCommand'
+import { defineMiddleware, NextPipe } from '@stone-js/pipeline'
 import { IncomingEvent, OutgoingResponse } from '@stone-js/core'
 
 const { pathExistsSync, readJsonSync } = fsExtra
 
+/**
+ * Middleware to ensure the current directory is a Stone project.
+ */
 export class EnsureStoneProjectMiddleware<
   IncomingEventType extends IncomingEvent,
   OutgoingResponseType extends OutgoingResponse
@@ -36,3 +39,8 @@ export class EnsureStoneProjectMiddleware<
     return dependencies?.['@stone-js/core'] !== undefined || pathExistsSync(basePath('stone.config.js')) || pathExistsSync(basePath('stone.config.mjs'))
   }
 }
+
+/**
+ * Middleware to ensure the current directory is a Stone project.
+ */
+export const MetaEnsureStoneProjectMiddleware = defineMiddleware(EnsureStoneProjectMiddleware, { isClass: true })

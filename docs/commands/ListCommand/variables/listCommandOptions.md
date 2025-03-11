@@ -8,4 +8,6 @@
 
 > `const` **listCommandOptions**: `CommandOptions`
 
-Defined in: [cli/src/commands/ListCommand.ts:10](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/ListCommand.ts#L10)
+Defined in: [cli/src/commands/ListCommand.ts:15](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/ListCommand.ts#L15)
+
+The list command options.

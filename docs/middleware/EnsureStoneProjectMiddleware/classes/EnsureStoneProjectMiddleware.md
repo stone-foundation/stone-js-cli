@@ -6,7 +6,9 @@
 
 # Class: EnsureStoneProjectMiddleware\<IncomingEventType, OutgoingResponseType\>
 
-Defined in: cli/src/middleware/EnsureStoneProjectMiddleware.ts:10
+Defined in: [cli/src/middleware/EnsureStoneProjectMiddleware.ts:13](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/middleware/EnsureStoneProjectMiddleware.ts#L13)
+
+Middleware to ensure the current directory is a Stone project.
 
 ## Type Parameters
 
@@ -30,7 +32,7 @@ Defined in: cli/src/middleware/EnsureStoneProjectMiddleware.ts:10
 
 > **handle**(`event`, `next`): `Promise`\<`OutgoingResponseType`\>
 
-Defined in: cli/src/middleware/EnsureStoneProjectMiddleware.ts:23
+Defined in: [cli/src/middleware/EnsureStoneProjectMiddleware.ts:26](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/middleware/EnsureStoneProjectMiddleware.ts#L26)
 
 Handles the incoming event, processes it, and invokes the next middleware in the pipeline.
 

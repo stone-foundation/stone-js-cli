@@ -2,9 +2,9 @@ import { DotenvConfig, dotenv } from './DotenvConfig'
 import { AutoloadConfig, autoload } from './AutoloadConfig'
 import { CreateAppConfig, createApp } from './CreateAppConfig'
 import { NODE_CONSOLE_PLATFORM } from '@stone-js/node-cli-adapter'
-import { cliConfigMiddleware } from '../middleware/configMiddleware'
-import { EnsureStoneProjectMiddleware } from '../middleware/EnsureStoneProjectMiddleware'
+import { MetaCLIBlueprintMiddleware } from '../middleware/BlueprintMiddleware'
 import { AppConfig, IncomingEvent, OutgoingResponse, StoneBlueprint } from '@stone-js/core'
+import { MetaEnsureStoneProjectMiddleware } from '../middleware/EnsureStoneProjectMiddleware'
 
 /**
  * App Config configuration for the Stone CLI application.
@@ -45,11 +45,11 @@ export const stoneCliBlueprint: StoneCliBlueprint = {
       platform: NODE_CONSOLE_PLATFORM
     },
     builder: {
-      middleware: cliConfigMiddleware
+      middleware: MetaCLIBlueprintMiddleware
     },
     kernel: {
       middleware: [
-        { priority: 0, pipe: EnsureStoneProjectMiddleware }
+        MetaEnsureStoneProjectMiddleware
       ]
     }
   }

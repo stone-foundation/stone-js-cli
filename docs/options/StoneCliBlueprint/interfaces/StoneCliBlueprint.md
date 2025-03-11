@@ -6,7 +6,7 @@
 
 # Interface: StoneCliBlueprint
 
-Defined in: [cli/src/options/StoneCliBlueprint.ts:45](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/options/StoneCliBlueprint.ts#L45)
+Defined in: [cli/src/options/StoneCliBlueprint.ts:32](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/StoneCliBlueprint.ts#L32)
 
 Blueprint configuration for the Stone CLI application.
 
@@ -24,7 +24,7 @@ Blueprint configuration for the Stone CLI application.
 
 > **stone**: [`StoneCliAppConfig`](StoneCliAppConfig.md)
 
-Defined in: [cli/src/options/StoneCliBlueprint.ts:46](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/options/StoneCliBlueprint.ts#L46)
+Defined in: [cli/src/options/StoneCliBlueprint.ts:33](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/StoneCliBlueprint.ts#L33)
 
 Application-level settings, including environment, middleware, logging, and service registration.
 

@@ -6,43 +6,39 @@
 
 # Class: TypingsCommand
 
-Defined in: [cli/src/commands/TypingsCommand.ts:25](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/TypingsCommand.ts#L25)
+Defined in: [cli/src/commands/TypingsCommand.ts:32](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/TypingsCommand.ts#L32)
+
+The typings command class.
 
 ## Constructors
 
 ### new TypingsCommand()
 
-> **new TypingsCommand**(`container`): [`TypingsCommand`](TypingsCommand.md)
+> **new TypingsCommand**(`context`): [`TypingsCommand`](TypingsCommand.md)
 
-Defined in: [cli/src/commands/TypingsCommand.ts:42](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/TypingsCommand.ts#L42)
+Defined in: [cli/src/commands/TypingsCommand.ts:40](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/TypingsCommand.ts#L40)
 
-Create a new instance of CoreServiceProvider.
+Create a new instance of TypingsCommand.
 
 #### Parameters
 
-##### container
+##### context
+
+[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
 The service container to manage dependencies.
-
-###### blueprint
-
-`IBlueprint`
 
 #### Returns
 
 [`TypingsCommand`](TypingsCommand.md)
 
-#### Throws
-
-If the Blueprint config or EventEmitter is not bound to the container.
-
 ## Methods
 
 ### handle()
 
-> **handle**(`event`): `Promise`\<`OutgoingResponse`\>
+> **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/commands/TypingsCommand.ts:53](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/TypingsCommand.ts#L53)
+Defined in: [cli/src/commands/TypingsCommand.ts:47](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/TypingsCommand.ts#L47)
 
 Handle the incoming event.
 
@@ -54,4 +50,4 @@ Handle the incoming event.
 
 #### Returns
 
-`Promise`\<`OutgoingResponse`\>
+`Promise`\<`void`\>

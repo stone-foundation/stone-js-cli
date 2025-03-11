@@ -10,10 +10,6 @@
 
 - [InitCommand](classes/InitCommand.md)
 
-## Interfaces
-
-- [CreateAppContext](interfaces/CreateAppContext.md)
-
 ## Variables
 
 - [initCommandOptions](variables/initCommandOptions.md)

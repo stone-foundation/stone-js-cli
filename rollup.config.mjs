@@ -12,11 +12,26 @@ const inputs = {
 
 export default Object.entries(inputs).map(([name, input]) => ({
 	input,
-	output: [
-    { format: 'es', file: `dist/${name}.js` }
-  ],
+	output: {
+    dir: 'dist',
+    format: 'es',
+    chunkFileNames: '[name].js',
+    manualChunks: (id) => {
+      if (id.includes('vite.config')) {
+        return 'vite.config'
+      }
+      if (id.includes('rollup.config')) {
+        return 'rollup.config'
+      }
+      if (id.includes('rollup.bundle.config')) {
+        return 'rollup.bundle.config'
+      }
+    }
+  },
   plugins: [
-    multi(),
+    multi({
+      entryFileName: `${name}.js`
+    }),
     nodeExternals(), // Must always be before `nodeResolve()`.
     nodeResolve({
       extensions: ['.js', '.ts', '.ts'],

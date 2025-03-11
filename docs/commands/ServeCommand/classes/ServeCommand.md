@@ -6,23 +6,25 @@
 
 # Class: ServeCommand
 
-Defined in: [cli/src/commands/ServeCommand.ts:17](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/ServeCommand.ts#L17)
+Defined in: [cli/src/commands/ServeCommand.ts:40](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/ServeCommand.ts#L40)
+
+The serve command class.
 
 ## Constructors
 
 ### new ServeCommand()
 
-> **new ServeCommand**(`container`): [`ServeCommand`](ServeCommand.md)
+> **new ServeCommand**(`context`): [`ServeCommand`](ServeCommand.md)
 
-Defined in: [cli/src/commands/ServeCommand.ts:39](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/ServeCommand.ts#L39)
+Defined in: [cli/src/commands/ServeCommand.ts:48](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/ServeCommand.ts#L48)
 
-Create a new instance of CoreServiceProvider.
+Create a new instance of ServeCommand.
 
 #### Parameters
 
-##### container
+##### context
 
-[`BuildAppContext`](../../../middleware/buildMiddleware/interfaces/BuildAppContext.md)
+[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
 The service container to manage dependencies.
 
@@ -30,26 +32,24 @@ The service container to manage dependencies.
 
 [`ServeCommand`](ServeCommand.md)
 
-#### Throws
-
-If the Blueprint config or EventEmitter is not bound to the container.
-
 ## Methods
 
 ### handle()
 
-> **handle**(`_event`): `Promise`\<`OutgoingResponse`\>
+> **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/commands/ServeCommand.ts:53](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/ServeCommand.ts#L53)
+Defined in: [cli/src/commands/ServeCommand.ts:57](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/ServeCommand.ts#L57)
 
 Handle the incoming event.
 
 #### Parameters
 
-##### \_event
+##### event
 
 `IncomingEvent`
 
+The incoming event.
+
 #### Returns
 
-`Promise`\<`OutgoingResponse`\>
+`Promise`\<`void`\>

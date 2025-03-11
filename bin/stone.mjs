@@ -8,11 +8,9 @@
  * 
  * @see {@link https://stonejs.com/docs Stone.js Documentation}
  */
-
-import { Config } from '@stone-js/config';
 import { stoneCliBlueprint } from '../dist/index.js';
-import { nodeCliAdapterBlueprint } from '@stone-js/node-cli-adapter';
-import { StoneFactory, ConfigBuilder, mergeBlueprints, stoneBlueprint } from '@stone-js/core';
+import { stoneBlueprint, stoneApp } from '@stone-js/core';
+import { MetaCommandRouterEventHandler, nodeCliAdapterBlueprint } from '@stone-js/node-cli-adapter';
 
 try {
   /**
@@ -26,28 +24,20 @@ try {
    * 
    * @returns The initial application blueprint.
    */
-  const initialBlueprint = Config.create(
-    mergeBlueprints(
-      stoneBlueprint,
-      nodeCliAdapterBlueprint,
-      stoneCliBlueprint
-    )
-  );
-
-  /**
-   * Create the final application blueprint.
-   * Mandatory to execute config middleware and resolve the final blueprint.
-   * 
-   * @returns The complete application blueprint.
-   */
-  const blueprint = await ConfigBuilder.create(stoneCliBlueprint.stone.builder).build({}, initialBlueprint)
-
+  const blueprints = [stoneBlueprint, nodeCliAdapterBlueprint, stoneCliBlueprint]
+  
   /**
    * Execute the CLI application.
    * 
    * Initializes the Stone.js application using the resolved blueprint and executes the CLI commands.
    */
-  await StoneFactory.create({ blueprint }).run();
+  await stoneApp()
+    .use(...blueprints)
+    .set(
+      'stone.kernel.eventHandler',
+      MetaCommandRouterEventHandler
+    )
+    .run();
 } catch (error) {
   console.error('Error running Stone commands:\n', error);
   process.exit(1);

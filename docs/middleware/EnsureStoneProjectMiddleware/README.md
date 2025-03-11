@@ -9,3 +9,7 @@
 ## Classes
 
 - [EnsureStoneProjectMiddleware](classes/EnsureStoneProjectMiddleware.md)
+
+## Variables
+
+- [MetaEnsureStoneProjectMiddleware](variables/MetaEnsureStoneProjectMiddleware.md)

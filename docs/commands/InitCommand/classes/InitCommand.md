@@ -6,51 +6,39 @@
 
 # Class: InitCommand
 
-Defined in: [cli/src/commands/InitCommand.ts:42](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/InitCommand.ts#L42)
+Defined in: [cli/src/commands/InitCommand.ts:40](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/InitCommand.ts#L40)
+
+The init command class.
 
 ## Constructors
 
 ### new InitCommand()
 
-> **new InitCommand**(`container`): [`InitCommand`](InitCommand.md)
+> **new InitCommand**(`context`): [`InitCommand`](InitCommand.md)
 
-Defined in: [cli/src/commands/InitCommand.ts:64](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/InitCommand.ts#L64)
+Defined in: [cli/src/commands/InitCommand.ts:46](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/InitCommand.ts#L46)
 
 Create a new instance of CoreServiceProvider.
 
 #### Parameters
 
-##### container
+##### context
+
+[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
 The service container to manage dependencies.
-
-###### blueprint
-
-`IBlueprint`
-
-###### commandOutput
-
-`CommandOutput`
-
-###### container
-
-[`CreateAppContext`](../interfaces/CreateAppContext.md)
 
 #### Returns
 
 [`InitCommand`](InitCommand.md)
 
-#### Throws
-
-If the Blueprint config or EventEmitter is not bound to the container.
-
 ## Methods
 
 ### handle()
 
-> **handle**(`event`): `Promise`\<`OutgoingResponse`\>
+> **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/commands/InitCommand.ts:77](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/InitCommand.ts#L77)
+Defined in: [cli/src/commands/InitCommand.ts:51](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/InitCommand.ts#L51)
 
 Handle the incoming event.
 
@@ -62,4 +50,4 @@ Handle the incoming event.
 
 #### Returns
 
-`Promise`\<`OutgoingResponse`\>
+`Promise`\<`void`\>

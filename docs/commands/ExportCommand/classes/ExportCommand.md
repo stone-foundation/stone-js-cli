@@ -6,47 +6,39 @@
 
 # Class: ExportCommand
 
-Defined in: [cli/src/commands/ExportCommand.ts:32](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/ExportCommand.ts#L32)
+Defined in: [cli/src/commands/ExportCommand.ts:31](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/ExportCommand.ts#L31)
+
+The export command class.
 
 ## Constructors
 
 ### new ExportCommand()
 
-> **new ExportCommand**(`container`): [`ExportCommand`](ExportCommand.md)
+> **new ExportCommand**(`context`): [`ExportCommand`](ExportCommand.md)
 
-Defined in: [cli/src/commands/ExportCommand.ts:49](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/ExportCommand.ts#L49)
+Defined in: [cli/src/commands/ExportCommand.ts:37](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/ExportCommand.ts#L37)
 
-Create a new instance of CoreServiceProvider.
+Create a new instance of ExportCommand.
 
 #### Parameters
 
-##### container
+##### context
+
+[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
 The service container to manage dependencies.
-
-###### blueprint
-
-`IBlueprint`
-
-###### commandOutput
-
-`CommandOutput`
 
 #### Returns
 
 [`ExportCommand`](ExportCommand.md)
 
-#### Throws
-
-If the Blueprint config or EventEmitter is not bound to the container.
-
 ## Methods
 
 ### handle()
 
-> **handle**(`event`): `Promise`\<`OutgoingResponse`\>
+> **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/commands/ExportCommand.ts:60](https://github.com/stonemjs/cli/blob/f877eea0c25a2644820eb8dfcb0babef674d570d/src/commands/ExportCommand.ts#L60)
+Defined in: [cli/src/commands/ExportCommand.ts:42](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/ExportCommand.ts#L42)
 
 Handle the incoming event.
 
@@ -58,4 +50,4 @@ Handle the incoming event.
 
 #### Returns
 
-`Promise`\<`OutgoingResponse`\>
+`Promise`\<`void`\>
