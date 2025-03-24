@@ -1,10 +1,15 @@
+import {
+  reactHtmlEntryPointTemplate,
+  reactServerEntryPointTemplate,
+  reactClientEntryPointTemplate,
+  reactConsoleEntryPointTemplate
+} from './stubs'
+import { basePath } from '@stone-js/filesystem'
 import { ConsoleContext } from '../declarations'
+import { dirPath, isTypescriptApp } from '../utils'
 import { MetaPipe, Pipeline } from '@stone-js/pipeline'
-import { basePath, buildPath } from '@stone-js/filesystem'
 import { IBlueprint, IncomingEvent } from '@stone-js/core'
-import { CommandOutput } from '@stone-js/node-cli-adapter'
 import { ReactPreviewMiddleware } from './ReactPreviewMiddleware'
-import { reactServerTemplate, reactHtmlTemplate, reactClientTemplate } from './stubs'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { ReactConsoleMiddleware, ReactDevMiddleware } from './ReactDevMiddleware'
 import { ReactClientBuildMiddleware, ReactServerBuildMiddleware } from './ReactBuildMiddleware'
@@ -13,18 +18,12 @@ import { ReactClientBuildMiddleware, ReactServerBuildMiddleware } from './ReactB
  * The React builder class.
  */
 export class ReactBuilder {
-  private readonly blueprint: IBlueprint
-  private readonly commandOutput: CommandOutput
-
   /**
    * Creates a new React builder instance.
    *
    * @param context - The service container to manage dependencies.
    */
-  constructor (private readonly context: ConsoleContext) {
-    this.blueprint = context.blueprint
-    this.commandOutput = context.commandOutput
-  }
+  constructor (private readonly context: ConsoleContext) {}
 
   /**
    * Builds the application.
@@ -33,9 +32,10 @@ export class ReactBuilder {
    */
   async build (event: IncomingEvent): Promise<void> {
     const ssr = event.get<boolean>('ssr', false)
-    this.commandOutput.info(`Building React application with ${ssr ? 'SSR' : 'CSR'}...`)
+    this.context.commandOutput.info(`Building React application with ${ssr ? 'SSR' : 'CSR'}...`)
     await this.executeThroughPipeline(ssr ? ReactServerBuildMiddleware : ReactClientBuildMiddleware)
-    this.commandOutput.info('React application built successfully!')
+    this.context.commandOutput.show(`🎉 ${this.context.commandOutput.format.green('React application built successfully!')}`)
+    setImmediate(() => process.exit(0)).unref()
   }
 
   /**
@@ -66,98 +66,180 @@ export class ReactBuilder {
   }
 
   /**
-   * Exports the application.
+   * Exports server files.
    *
    * @param event The incoming event.
    */
-  async exportIndexHtml (event: IncomingEvent): Promise<void> {
-    const userIndexJS = basePath(this.isTypescript() ? 'index.ts' : 'index.mjs')
-    const builtIndexJS = buildPath(this.isTypescript() ? 'index.ts' : 'index.mjs')
+  async export (event: IncomingEvent): Promise<void> {
+    let isExported = false
+    const module = event.get<'app' | 'console' | 'vite' | 'vitest'>('module', 'app')
+    switch (module) {
+      case 'app':
+        await this.exportClientTemplate()
+        await this.exportServerTemplate()
+        isExported = await this.exportIndexHtml()
+        break
+      case 'console':
+        isExported = await this.exportConsoleTemplate()
+        break
+      case 'vite':
+        isExported = await this.exportViteConfig()
+        break
+      case 'vitest':
+        isExported = await this.exportVitestConfig()
+        break
+    }
 
-    writeFileSync(
-      basePath('index.html'),
-      reactHtmlTemplate(existsSync(userIndexJS) ? userIndexJS : builtIndexJS),
-      'utf-8'
-    )
+    isExported && this.context.commandOutput.info(`Module(${module}) exported!`)
   }
 
   /**
-   * Exports the development index HTML file.
+   * Exports the application index.html file.
    *
-   * @param event The incoming event.
+   * @returns The export status.
    */
-  async exportIndexDevHtml (event: IncomingEvent): Promise<void> {
-    const userIndexJS = basePath(this.isTypescript() ? 'index.dev.ts' : 'index.dev.mjs')
-    const builtIndexJS = buildPath(this.isTypescript() ? 'index.dev.ts' : 'index.dev.mjs')
+  private async exportIndexHtml (): Promise<boolean> {
+    if (await this.confirmCreation('index.html')) {
+      const content = reactHtmlEntryPointTemplate(
+        '<!--main-js-->',
+        '<!--main-css-->'
+      )
 
-    writeFileSync(
-      basePath('index.dev.html'),
-      reactHtmlTemplate(existsSync(userIndexJS) ? userIndexJS : builtIndexJS),
-      'utf-8'
-    )
+      writeFileSync(basePath('index.html'), content, 'utf-8')
+
+      return true
+    }
+    return false
   }
 
   /**
-   * Exports the index JS file.
+   * Exports the client template.
    *
-   * @param event The incoming event.
+   * @returns The export status.
    */
-  async exportIndexJs (event: IncomingEvent): Promise<void> {
-    writeFileSync(
-      basePath(this.isTypescript() ? 'index.ts' : 'index.mjs'),
-      reactClientTemplate(basePath(this.blueprint.get('stone.autoload.app', 'app/**/*.{ts,mjs,js,json}'))),
-      'utf-8'
-    )
+  private async exportClientTemplate (): Promise<boolean> {
+    const filename = this.isTypescript() ? 'client.ts' : 'client.mjs'
+
+    if (await this.confirmCreation(filename)) {
+      writeFileSync(
+        basePath(filename),
+        reactClientEntryPointTemplate('%pattern%'),
+        'utf-8'
+      )
+      return true
+    }
+    return false
   }
 
   /**
-   * Exports the development index JS file.
+   * Exports the server template.
    *
-   * @param event The incoming event.
+   * @returns The export status.
    */
-  async exportIndexDevJs (event: IncomingEvent): Promise<void> {
-    writeFileSync(
-      basePath(this.isTypescript() ? 'index.dev.ts' : 'index.dev.mjs'),
-      reactServerTemplate(basePath(this.blueprint.get('stone.autoload.app', 'app/**/*.{ts,tsx,js,mjs,jsx,mjsx,json}'))),
-      'utf-8'
-    )
+  private async exportServerTemplate (): Promise<boolean> {
+    const filename = this.isTypescript() ? 'server.ts' : 'server.mjs'
+
+    if (await this.confirmCreation(filename)) {
+      writeFileSync(
+        basePath(filename),
+        reactServerEntryPointTemplate('%pattern%', "'%printUrls%'"),
+        'utf-8'
+      )
+      return true
+    }
+    return false
+  }
+
+  /**
+   * Exports the console template.
+   *
+   * @returns The export status.
+   */
+  private async exportConsoleTemplate (): Promise<boolean> {
+    const filename = this.isTypescript() ? 'console.ts' : 'console.mjs'
+
+    if (await this.confirmCreation(filename)) {
+      writeFileSync(
+        basePath(filename),
+        reactConsoleEntryPointTemplate('%pattern%'),
+        'utf-8'
+      )
+      return true
+    }
+    return false
   }
 
   /**
    * Exports the Vite configuration file.
    *
-   * @param event The incoming event.
+   * @returns The export status.
    */
-  async exportViteConfig (event: IncomingEvent): Promise<void> {
-    writeFileSync(
-      basePath(this.isTypescript() ? 'vite.config.ts' : 'vite.config.js'),
-      readFileSync('./vite.config.ts', 'utf-8'),
-      'utf-8'
-    )
+  private async exportViteConfig (): Promise<boolean> {
+    const filename = this.isTypescript() ? 'vite.config.ts' : 'vite.config.mjs'
+
+    if (await this.confirmCreation(filename)) {
+      writeFileSync(
+        basePath(filename),
+        readFileSync(dirPath('../dist/vite.config.js'), 'utf-8'),
+        'utf-8'
+      )
+      return true
+    }
+    return false
   }
 
   /**
    * Exports the Vitest configuration file.
    *
-   * @param event The incoming event.
+   * @returns The export status.
    */
-  async exportVitestConfig (event: IncomingEvent): Promise<void> {
-    writeFileSync(
-      basePath(this.isTypescript() ? 'vitest.config.ts' : 'vitest.config.js'),
-      readFileSync('./vitest.config.ts', 'utf-8'),
-      'utf-8'
-    )
+  private async exportVitestConfig (): Promise<boolean> {
+    const filename = this.isTypescript() ? 'vitest.config.ts' : 'vitest.config.mjs'
+
+    if (await this.confirmCreation(filename)) {
+      writeFileSync(
+        basePath(filename),
+        readFileSync(dirPath('../dist/vitest.config.js'), 'utf-8'),
+        'utf-8'
+      )
+      return true
+    }
+    return false
   }
 
+  /**
+   * Confirm the creation of the file.
+   *
+   * @param path - The path of the file.
+   * @returns The confirmation status.
+  */
+  private async confirmCreation (path: string): Promise<boolean> {
+    if (existsSync(basePath(path))) {
+      return await this.context.commandInput.confirm(`This file(${path}) already exists. Do you want to overwrite it?`)
+    }
+
+    return true
+  }
+
+  /**
+   * Is the application a TypeScript application.
+   *
+   * @returns True if the application is a TypeScript application, false otherwise.
+   */
   private isTypescript (): boolean {
-    return this.blueprint.get<string>('stone.autoload.type', 'javascript') === 'typescript'
+    return isTypescriptApp(this.context.blueprint)
   }
 
-  private async executeThroughPipeline (pipes: Array<MetaPipe<IBlueprint>>): Promise<void> {
+  /**
+   * Execute the pipeline.
+   *
+   * @param pipes - The pipeline to execute.
+   */
+  private async executeThroughPipeline (pipes: Array<MetaPipe<ConsoleContext, IBlueprint>>): Promise<void> {
     await Pipeline
-      .create<IBlueprint>()
-      .send(this.blueprint)
+      .create<ConsoleContext, IBlueprint>()
+      .send(this.context)
       .through(...pipes)
-      .thenReturn()
+      .then(context => context.blueprint)
   }
 }

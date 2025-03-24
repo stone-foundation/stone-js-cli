@@ -37,62 +37,62 @@ export class Questionnaire {
   /**
    * Returns the available templates.
    */
-  private get templates (): Array<Record<'value' | 'name', string>> {
+  private get templates (): Array<Record<'value' | 'title', string>> {
     return templates({ format: this.commandOutput.format })
   }
 
   /**
    * Returns the available typing options.
    */
-  private get typings (): Array<Record<'value' | 'name', string>> {
+  private get typings (): Array<Record<'value' | 'title', string>> {
     return [
-      { value: 'vanilla', name: 'None (Vanilla)' },
-      { value: 'typescript', name: 'TypeScript' }
+      { value: 'vanilla', title: 'None (Vanilla)' },
+      { value: 'typescript', title: 'TypeScript' }
     ]
   }
 
   /**
    * Returns the available package managers.
    */
-  private get packageManagers (): Array<Record<'value' | 'name', string>> {
+  private get packageManagers (): Array<Record<'value' | 'title', string>> {
     return [
-      { value: 'npm', name: 'Npm' },
-      { value: 'yarn', name: 'Yarn' },
-      { value: 'pnpm', name: 'Pnpm' }
+      { value: 'npm', title: 'Npm' },
+      { value: 'yarn', title: 'Yarn' },
+      { value: 'pnpm', title: 'Pnpm' }
     ]
   }
 
   /**
    * Returns the available Stone.js modules.
    */
-  private get stoneModules (): Array<Record<'value' | 'name', string>> {
+  private get stoneModules (): Array<Record<'value' | 'title', string>> {
     return [
-      { value: '@stone-js/env', name: 'Stone.js Dotenv' },
-      { value: '@stone-js/router', name: 'Stone.js Router' },
-      { value: '@stone-js/aws-lambda-adapter', name: 'AWS Lambda Adapter' },
-      { value: '@stone-js/aws-lambda-http-adapter', name: 'AWS Lambda HTTP Adapter' }
+      { value: '@stone-js/env', title: 'Stone.js Dotenv' },
+      { value: '@stone-js/router', title: 'Stone.js Router' },
+      { value: '@stone-js/aws-lambda-adapter', title: 'AWS Lambda Adapter' },
+      { value: '@stone-js/aws-lambda-http-adapter', title: 'AWS Lambda HTTP Adapter' }
     ]
   }
 
   /**
    * Returns the available linting tools.
    */
-  private get lintingTools (): Array<Record<'value' | 'name', string>> {
+  private get lintingTools (): Array<Record<'value' | 'title', string>> {
     return [
-      { value: '', name: 'None' },
-      { value: 'standard', name: 'Eslint (Standard)' },
-      { value: 'prettier', name: 'Prettier' }
+      { value: '', title: 'None' },
+      { value: 'standard', title: 'Eslint (Standard)' },
+      { value: 'prettier', title: 'Prettier' }
     ]
   }
 
   /**
    * Returns the available testing frameworks.
    */
-  private get testingFrameworks (): Array<Record<'value' | 'name', string>> {
+  private get testingFrameworks (): Array<Record<'value' | 'title', string>> {
     return [
-      { value: '', name: 'None' },
-      { value: 'vitest', name: 'Vitest' },
-      { value: 'mocha', name: 'Mocha' }
+      { value: '', title: 'None' },
+      { value: 'vitest', title: 'Vitest' },
+      { value: 'mocha', title: 'Mocha' }
     ]
   }
 
@@ -119,93 +119,75 @@ export class Questionnaire {
    * @returns A promise that resolves with the user's answers.
    */
   async getAnswers (): Promise<Record<string, unknown>> {
-    return await this.commandInput.questionnaire([
-      {
-        type: 'input',
-        name: 'projectName',
-        message: this.messages.projectName,
-        default: this.blueprint.get<string>('project.projectName')
-      },
-      {
-        type: 'confirm',
-        name: 'overwrite',
-        message: (v) => this.getOverwriteMessage(v.projectName),
-        when: (v) => fsExtra.pathExistsSync(basePath(v.projectName))
-      },
-      {
-        type: 'confirm',
-        name: 'overwriteChecker',
-        message: '',
-        when: (v) => {
-          if (v.overwrite === false) {
-            throw new Error('Operation cancelled by the user.')
-          }
-          return false
-        }
-      },
-      {
-        type: 'list',
-        name: 'template',
-        default: 0,
-        choices: this.templates,
-        message: this.messages.template
-      },
-      {
-        type: 'list',
-        name: 'typing',
-        default: 0,
-        choices: this.typings,
-        message: this.messages.typing
-      },
-      {
-        type: 'list',
-        name: 'packageManager',
-        default: 0,
-        choices: this.packageManagers,
-        message: this.messages.packageManager
-      },
-      {
-        type: 'checkbox',
-        name: 'modules',
-        message: this.messages.modules,
-        choices: (v) => this.stoneModules.filter((w) => (v.template === 'api' ? w.value !== '@stone-js/router' : true))
-      },
-      {
-        type: 'list',
-        name: 'linting',
-        default: 0,
-        choices: this.lintingTools,
-        message: this.messages.linting
-      },
-      {
-        type: 'list',
-        name: 'testing',
-        default: 0,
-        choices: this.testingFrameworks,
-        message: this.messages.testing
-      },
-      {
-        type: 'confirm',
-        name: 'initGit',
-        message: this.messages.initGit
-      },
-      {
-        type: 'confirm',
-        name: 'confirmation',
-        message: (answers: Record<string, any>) => this.getConfirmationMessage(answers)
-      },
-      {
-        type: 'confirm',
-        name: 'confirmationChecker',
-        message: '',
-        when: (v) => {
-          if (v.confirmation === false) {
-            throw new Error('Operation cancelled by the user.')
-          }
-          return false
-        }
+    const answers: Record<string, string | boolean | string[]> = {}
+
+    answers.projectName = await this.commandInput.ask(
+      this.messages.projectName,
+      this.blueprint.get<string>('project.projectName')
+    )
+
+    const projectPath = basePath(answers.projectName)
+
+    if (fsExtra.pathExistsSync(projectPath)) {
+      answers.overwrite = await this.commandInput.confirm(
+        this.getOverwriteMessage(answers.projectName)
+      )
+
+      if (!answers.overwrite) {
+        throw new Error('Operation cancelled by the user.')
       }
-    ])
+    }
+
+    answers.template = await this.commandInput.choice(
+      this.messages.template,
+      this.templates,
+      [0]
+    )
+
+    answers.typing = await this.commandInput.choice(
+      this.messages.typing,
+      this.typings,
+      [0]
+    )
+
+    answers.packageManager = await this.commandInput.choice(
+      this.messages.packageManager,
+      this.packageManagers,
+      [0]
+    )
+
+    answers.modules = await this.commandInput.choice(
+      this.messages.modules,
+      this.stoneModules,
+      [],
+      true
+    )
+
+    answers.linting = await this.commandInput.choice(
+      this.messages.linting,
+      this.lintingTools,
+      [0]
+    )
+
+    answers.testing = await this.commandInput.choice(
+      this.messages.testing,
+      this.testingFrameworks,
+      [0]
+    )
+
+    answers.initGit = await this.commandInput.confirm(
+      this.messages.initGit
+    )
+
+    answers.confirmation = await this.commandInput.confirm(
+      this.getConfirmationMessage(answers)
+    )
+
+    if (!answers.confirmation) {
+      throw new Error('Operation cancelled by the user.')
+    }
+
+    return answers
   }
 
   /**

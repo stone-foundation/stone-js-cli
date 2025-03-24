@@ -1,18 +1,24 @@
 import { NODE_CONSOLE_PLATFORM } from '@stone-js/node-cli-adapter'
 
-export const reactClientTemplate = (path = './app/**/*.{ts,js,mjs,json}'): string => `
-import * as pageRoutes from './routes'
+/**
+ * The React client template.
+ * This template is used to create the client entry point for a React application.
+ */
+export const reactClientEntryPointTemplate = (
+  path = './app/**/*.{ts,js,mjs,json}'
+): string => `
 import { stoneApp } from '@stone-js/core'
 
 /**
  * Import application modules.
  */
-// @ts-expect-error
+// @ts-ignore
 const rawModules = import.meta.glob('${path}', { eager: true })
 const modules = Object
   .values(rawModules)
+  // @ts-ignore
   .flatMap((module) => Object.values(module)[0])
-  .concat(Object.values(pageRoutes))
+  // %concat%
 
 /**
  * Create and run the Stone app.
@@ -20,9 +26,13 @@ const modules = Object
 export const stone = await stoneApp({ modules }).run()
 `
 
-export const reactServerTemplate = (
-  path = './app/**/*.{ts,tsx,js,mjs,jsx,mjsx,json}',
-  printUrls: boolean = true
+/**
+ * The React server template.
+ * This template is used to create the server entry point for a React application.
+ */
+export const reactServerEntryPointTemplate = (
+  path = './app/**/*',
+  printUrls: boolean | string = true
 ): string => `
 import { stoneApp } from '@stone-js/core'
 
@@ -30,17 +40,18 @@ import { stoneApp } from '@stone-js/core'
  * Middleware to print the URLs of the server.
  */
 const PrintUrlsMiddleware = (context, next) => {
-  context.blueprint.set('stone.adapter.printUrls', Boolean(${String(printUrls)}))
+  context.blueprint.setIf('stone.adapter.printUrls', ${String(printUrls)})
   return next(context)
 }
 
 /**
  * Import application modules.
  */
-// @ts-expect-error
+// @ts-ignore
 const rawModules = import.meta.glob('${path}', { eager: true })
 const modules = Object
   .values(rawModules)
+  // @ts-ignore
   .flatMap((module) => Object.values(module)[0])
 
 /**
@@ -49,12 +60,16 @@ const modules = Object
 export const stone = await stoneApp({
   modules
 })
-.add('stone.builder.middleware', [{ module: PrintUrlsMiddleware }])
+.add('stone.blueprint.middleware', [{ module: PrintUrlsMiddleware }])
 .run()
 `
 
-export const reactConsoleTemplate = (
-  path = './app/**/*.{ts,tsx,js,mjs,jsx,mjsx,json}',
+/**
+ * The React console template.
+ * This template is used to create the console entry point for a React application.
+ */
+export const reactConsoleEntryPointTemplate = (
+  path = './app/**/*',
   platform: string = NODE_CONSOLE_PLATFORM
 ): string => `
 import { stoneApp } from '@stone-js/core'
@@ -66,6 +81,7 @@ import { stoneApp } from '@stone-js/core'
 const rawModules = import.meta.glob('${path}', { eager: true })
 const modules = Object
   .values(rawModules)
+  // @ts-ignore
   .flatMap((module) => Object.values(module)[0])
 
 /**
@@ -78,9 +94,13 @@ export const stone = await stoneApp({
 .run()
 `
 
-export const reactHtmlTemplate = (
-  script = '/.stone/index.mjs',
-  css = '/assets/css/index.css'
+/**
+ * The React template.
+ * This template is used to create the entry point for a React application.
+ */
+export const reactHtmlEntryPointTemplate = (
+  mainScript = '<script type="module" src="/.stone/index.mjs"></script>',
+  mainCSS = '<link rel="stylesheet" href="/assets/css/index.css" />'
 ): string => `
 <!doctype html>
 <html lang="en">
@@ -89,16 +109,20 @@ export const reactHtmlTemplate = (
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stone.js + React</title>
-    <link rel="stylesheet" href="${css}" />
+    ${mainCSS}
     <!--app-head-->
   </head>
   <body>
     <div id="root"><!--app-html--></div>
-    <script type="module" src="${script}"></script>
+    ${mainScript}
   </body>
 </html>
 `
 
+/**
+ * The Vite server template.
+ * This template is used to create the server entry point for a Vite application.
+ */
 export const viteServerTemplate = (serverName: string = 'runDevServer'): string => `
 import { ${serverName} } from "@stone-js/cli"
 

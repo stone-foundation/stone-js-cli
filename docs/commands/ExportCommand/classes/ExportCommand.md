@@ -6,7 +6,7 @@
 
 # Class: ExportCommand
 
-Defined in: [cli/src/commands/ExportCommand.ts:31](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/ExportCommand.ts#L31)
+Defined in: [cli/src/commands/ExportCommand.ts:31](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/ExportCommand.ts#L31)
 
 The export command class.
 
@@ -16,7 +16,7 @@ The export command class.
 
 > **new ExportCommand**(`context`): [`ExportCommand`](ExportCommand.md)
 
-Defined in: [cli/src/commands/ExportCommand.ts:37](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/ExportCommand.ts#L37)
+Defined in: [cli/src/commands/ExportCommand.ts:37](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/ExportCommand.ts#L37)
 
 Create a new instance of ExportCommand.
 
@@ -38,7 +38,7 @@ The service container to manage dependencies.
 
 > **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/commands/ExportCommand.ts:42](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/commands/ExportCommand.ts#L42)
+Defined in: [cli/src/commands/ExportCommand.ts:42](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/ExportCommand.ts#L42)
 
 Handle the incoming event.
 

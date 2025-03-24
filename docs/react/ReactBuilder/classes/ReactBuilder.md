@@ -6,7 +6,7 @@
 
 # Class: ReactBuilder
 
-Defined in: cli/src/react/ReactBuilder.ts:15
+Defined in: [cli/src/react/ReactBuilder.ts:20](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/react/ReactBuilder.ts#L20)
 
 The React builder class.
 
@@ -16,7 +16,7 @@ The React builder class.
 
 > **new ReactBuilder**(`context`): [`ReactBuilder`](ReactBuilder.md)
 
-Defined in: cli/src/react/ReactBuilder.ts:24
+Defined in: [cli/src/react/ReactBuilder.ts:26](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/react/ReactBuilder.ts#L26)
 
 Creates a new React builder instance.
 
@@ -38,7 +38,7 @@ The service container to manage dependencies.
 
 > **build**(`event`): `Promise`\<`void`\>
 
-Defined in: cli/src/react/ReactBuilder.ts:34
+Defined in: [cli/src/react/ReactBuilder.ts:33](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/react/ReactBuilder.ts#L33)
 
 Builds the application.
 
@@ -60,7 +60,7 @@ The incoming event.
 
 > **console**(`_event`): `Promise`\<`void`\>
 
-Defined in: cli/src/react/ReactBuilder.ts:64
+Defined in: [cli/src/react/ReactBuilder.ts:64](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/react/ReactBuilder.ts#L64)
 
 Runs the application in the console.
 
@@ -82,7 +82,7 @@ The incoming event.
 
 > **dev**(`_event`): `Promise`\<`void`\>
 
-Defined in: cli/src/react/ReactBuilder.ts:46
+Defined in: [cli/src/react/ReactBuilder.ts:46](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/react/ReactBuilder.ts#L46)
 
 Starts the development server.
 
@@ -100,123 +100,13 @@ The incoming event.
 
 ***
 
-### exportIndexDevHtml()
+### export()
 
-> **exportIndexDevHtml**(`event`): `Promise`\<`void`\>
+> **export**(`event`): `Promise`\<`void`\>
 
-Defined in: cli/src/react/ReactBuilder.ts:89
+Defined in: [cli/src/react/ReactBuilder.ts:73](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/react/ReactBuilder.ts#L73)
 
-Exports the development index HTML file.
-
-#### Parameters
-
-##### event
-
-`IncomingEvent`
-
-The incoming event.
-
-#### Returns
-
-`Promise`\<`void`\>
-
-***
-
-### exportIndexDevJs()
-
-> **exportIndexDevJs**(`event`): `Promise`\<`void`\>
-
-Defined in: cli/src/react/ReactBuilder.ts:118
-
-Exports the development index JS file.
-
-#### Parameters
-
-##### event
-
-`IncomingEvent`
-
-The incoming event.
-
-#### Returns
-
-`Promise`\<`void`\>
-
-***
-
-### exportIndexHtml()
-
-> **exportIndexHtml**(`event`): `Promise`\<`void`\>
-
-Defined in: cli/src/react/ReactBuilder.ts:73
-
-Exports the application.
-
-#### Parameters
-
-##### event
-
-`IncomingEvent`
-
-The incoming event.
-
-#### Returns
-
-`Promise`\<`void`\>
-
-***
-
-### exportIndexJs()
-
-> **exportIndexJs**(`event`): `Promise`\<`void`\>
-
-Defined in: cli/src/react/ReactBuilder.ts:105
-
-Exports the index JS file.
-
-#### Parameters
-
-##### event
-
-`IncomingEvent`
-
-The incoming event.
-
-#### Returns
-
-`Promise`\<`void`\>
-
-***
-
-### exportViteConfig()
-
-> **exportViteConfig**(`event`): `Promise`\<`void`\>
-
-Defined in: cli/src/react/ReactBuilder.ts:131
-
-Exports the Vite configuration file.
-
-#### Parameters
-
-##### event
-
-`IncomingEvent`
-
-The incoming event.
-
-#### Returns
-
-`Promise`\<`void`\>
-
-***
-
-### exportVitestConfig()
-
-> **exportVitestConfig**(`event`): `Promise`\<`void`\>
-
-Defined in: cli/src/react/ReactBuilder.ts:144
-
-Exports the Vitest configuration file.
+Exports server files.
 
 #### Parameters
 
@@ -236,7 +126,7 @@ The incoming event.
 
 > **preview**(`_event`): `Promise`\<`void`\>
 
-Defined in: cli/src/react/ReactBuilder.ts:55
+Defined in: [cli/src/react/ReactBuilder.ts:55](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/react/ReactBuilder.ts#L55)
 
 Previews the application.
 

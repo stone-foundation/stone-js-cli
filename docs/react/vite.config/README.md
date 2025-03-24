@@ -8,4 +8,4 @@
 
 ## Functions
 
-- [default](functions/default.md)
+- [viteConfig](functions/viteConfig.md)

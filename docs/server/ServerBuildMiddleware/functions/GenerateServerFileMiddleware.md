@@ -6,23 +6,23 @@
 
 # Function: GenerateServerFileMiddleware()
 
-> **GenerateServerFileMiddleware**(`blueprint`, `next`): `Promise`\<`IBlueprint`\>
+> **GenerateServerFileMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
 
-Defined in: cli/src/server/ServerBuildMiddleware.ts:51
+Defined in: [cli/src/server/ServerBuildMiddleware.ts:60](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/server/ServerBuildMiddleware.ts#L60)
 
 Generates a server file.
 
 ## Parameters
 
-### blueprint
+### context
 
-`IBlueprint`
+[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
-The blueprint object.
+The console context.
 
 ### next
 
-`NextPipe`\<`IBlueprint`, `IBlueprint`\>
+`NextPipe`\<[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md), `IBlueprint`\>
 
 The next pipe function.
 

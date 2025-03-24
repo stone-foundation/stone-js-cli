@@ -6,7 +6,7 @@
 
 # Class: PreviewCommand
 
-Defined in: cli/src/commands/PreviewCommand.ts:23
+Defined in: [cli/src/commands/PreviewCommand.ts:23](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/PreviewCommand.ts#L23)
 
 The preview command class.
 
@@ -16,7 +16,7 @@ The preview command class.
 
 > **new PreviewCommand**(`context`): [`PreviewCommand`](PreviewCommand.md)
 
-Defined in: cli/src/commands/PreviewCommand.ts:31
+Defined in: [cli/src/commands/PreviewCommand.ts:31](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/PreviewCommand.ts#L31)
 
 Create a new instance of PreviewCommand.
 
@@ -38,7 +38,7 @@ The service container to manage dependencies.
 
 > **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: cli/src/commands/PreviewCommand.ts:40
+Defined in: [cli/src/commands/PreviewCommand.ts:40](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/PreviewCommand.ts#L40)
 
 Handle the incoming event.
 

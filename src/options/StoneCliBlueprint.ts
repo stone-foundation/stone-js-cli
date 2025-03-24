@@ -1,8 +1,7 @@
-import { DotenvConfig, dotenv } from './DotenvConfig'
-import { AutoloadConfig, autoload } from './AutoloadConfig'
+import { BuilderConfig, builder } from './BuilderConfig'
 import { CreateAppConfig, createApp } from './CreateAppConfig'
 import { NODE_CONSOLE_PLATFORM } from '@stone-js/node-cli-adapter'
-import { MetaCLIBlueprintMiddleware } from '../middleware/BlueprintMiddleware'
+import { metaCLIBlueprintMiddleware } from '../middleware/BlueprintMiddleware'
 import { AppConfig, IncomingEvent, OutgoingResponse, StoneBlueprint } from '@stone-js/core'
 import { MetaEnsureStoneProjectMiddleware } from '../middleware/EnsureStoneProjectMiddleware'
 
@@ -11,14 +10,9 @@ import { MetaEnsureStoneProjectMiddleware } from '../middleware/EnsureStoneProje
  */
 export interface StoneCliAppConfig extends Partial<AppConfig<IncomingEvent, OutgoingResponse>> {
   /**
-   * Environment variable management configuration.
+   * Stone application builder configuration.
    */
-  dotenv: DotenvConfig
-
-  /**
-   * Module autoloading configuration.
-   */
-  autoload: AutoloadConfig
+  builder: BuilderConfig
 
   /**
    * Create app configuration
@@ -38,14 +32,13 @@ export interface StoneCliBlueprint extends StoneBlueprint {
  */
 export const stoneCliBlueprint: StoneCliBlueprint = {
   stone: {
-    dotenv,
-    autoload,
+    builder,
     createApp,
     adapter: {
       platform: NODE_CONSOLE_PLATFORM
     },
-    builder: {
-      middleware: MetaCLIBlueprintMiddleware
+    blueprint: {
+      middleware: metaCLIBlueprintMiddleware
     },
     kernel: {
       middleware: [

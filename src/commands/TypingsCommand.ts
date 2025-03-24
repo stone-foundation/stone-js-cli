@@ -45,23 +45,16 @@ export class TypingsCommand {
    * Handle the incoming event.
    */
   async handle (event: IncomingEvent): Promise<void> {
-    this.typeCheckerProcess(event.get<boolean>('watch', false))
+    if (isTypescriptApp(this.context.blueprint)) {
+      this.startProcess(event.get<boolean>('watch', false) ? ['--watch'] : [])
+    }
   }
 
   /**
-   * Type checker watcher Process.
+   * Start Process.
    */
-  private typeCheckerProcess (watch?: boolean): void {
-    if (watch === true) {
-      if (isTypescriptApp(this.context.blueprint)) {
-        this.serverProcess = spawn('node', [nodeModulesPath('.bin/tsc'), '--noEmit', '--watch'], { stdio: 'inherit' })
-        this.serverProcess.on('exit', (code) => process.exit(code ?? 0))
-      }
-    } else {
-      if (isTypescriptApp(this.context.blueprint)) {
-        this.serverProcess = spawn('node', [nodeModulesPath('.bin/tsc'), '--noEmit'], { stdio: 'inherit' })
-        this.serverProcess.on('exit', (code) => process.exit(code ?? 0))
-      }
-    }
+  private startProcess (args: string[] = []): void {
+    this.serverProcess = spawn('node', [nodeModulesPath('.bin/tsc'), '--noEmit'].concat(args), { stdio: 'inherit' })
+    this.serverProcess.on('exit', (code) => process.exit(code ?? 0))
   }
 }

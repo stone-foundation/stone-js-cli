@@ -3,6 +3,7 @@ import { rollup } from 'rollup'
 import { setCache } from '../utils'
 import { IBlueprint } from '@stone-js/core'
 import replace from '@rollup/plugin-replace'
+import { ConsoleContext } from '../declarations'
 import { getRollupConfig } from './server-utils'
 import { existsSync, readFileSync } from 'node:fs'
 import { MetaPipe, NextPipe } from '@stone-js/pipeline'
@@ -14,19 +15,19 @@ const { outputFileSync } = fsExtra
 /**
  * Builds the server application using Rollup.
  *
- * @param blueprint The blueprint object.
+ * @param context The console context.
  * @param next The next pipe function.
  * @returns The updated blueprint object.
  */
 export const BuildDevServerAppMiddleware = async (
-  blueprint: IBlueprint,
-  next: NextPipe<IBlueprint, IBlueprint>
+  context: ConsoleContext,
+  next: NextPipe<ConsoleContext, IBlueprint>
 ): Promise<IBlueprint> => {
-  const rollupConfig = await getRollupConfig()
+  const rollupConfig = await getRollupConfig(context.blueprint)
   const plugins = rollupConfig.plugins ?? []
-  const pattern = blueprint.get(
-    'stone.autoload.all',
-    'app/**/*.{ts,js,mjs,json}'
+  const pattern = context.blueprint.get(
+    'stone.builder.input.all',
+    'app/**/*.**'
   )
 
   rollupConfig.input = basePath(pattern)
@@ -39,47 +40,48 @@ export const BuildDevServerAppMiddleware = async (
     plugins.push(replace({ preventAssignment: true }))
   }
 
-  const bundle = await rollup(rollupConfig)
+  const builder = await rollup(rollupConfig)
 
-  await bundle.write(rollupConfig.output)
+  await builder.write(rollupConfig.output)
 
-  return await next(blueprint)
+  return await next(context)
 }
 
 /**
  * Generates a server file.
  *
- * @param blueprint The blueprint object.
+ * @param context The console context.
  * @param next The next pipe function.
  * @returns The updated blueprint object.
  */
 export const GenerateDevServerFileMiddleware = async (
-  blueprint: IBlueprint,
-  next: NextPipe<IBlueprint, IBlueprint>
+  context: ConsoleContext,
+  next: NextPipe<ConsoleContext, IBlueprint>
 ): Promise<IBlueprint> => {
+  const printUrls = context.blueprint.get('stone.builder.server.printUrls', false)
   const content = existsSync(basePath('server.mjs'))
-    ? readFileSync(basePath('server.mjs'), 'utf-8')
-    : serverIndexFile(blueprint.get('stone.server.printUrls', false))
+    ? readFileSync(basePath('server.mjs'), 'utf-8').replace("'%printUrls%'", String(printUrls))
+    : serverIndexFile(printUrls)
 
   outputFileSync(buildPath('server.mjs'), content, 'utf-8')
 
-  return await next(blueprint)
+  return await next(context)
 }
 
 /**
  * Generates a console file.
  *
- * @param blueprint The blueprint object.
+ * @param context The console context.
  * @param next The next pipe function.
  * @returns The updated blueprint object.
  */
 export const GenerateConsoleFileMiddleware = async (
-  blueprint: IBlueprint,
-  next: NextPipe<IBlueprint, IBlueprint>
+  context: ConsoleContext,
+  next: NextPipe<ConsoleContext, IBlueprint>
 ): Promise<IBlueprint> => {
-  const pattern = blueprint.get(
-    'stone.autoload.all',
-    'app/**/*.{ts,js,mjs,json}'
+  const pattern = context.blueprint.get(
+    'stone.builder.input.all',
+    'app/**/*.**'
   )
   const content = existsSync(basePath('console.mjs'))
     ? readFileSync(basePath('console.mjs'), 'utf-8')
@@ -88,13 +90,13 @@ export const GenerateConsoleFileMiddleware = async (
   setCache(pattern)
   outputFileSync(buildPath('console.mjs'), content, 'utf-8')
 
-  return await next(blueprint)
+  return await next(context)
 }
 
 /**
  * Middleware for building server applications.
  */
-export const ServerDevMiddleware: Array<MetaPipe<IBlueprint>> = [
+export const ServerDevMiddleware: Array<MetaPipe<ConsoleContext, IBlueprint>> = [
   { module: BuildDevServerAppMiddleware, priority: 0 },
   { module: GenerateDevServerFileMiddleware, priority: 1 }
 ]
@@ -102,7 +104,7 @@ export const ServerDevMiddleware: Array<MetaPipe<IBlueprint>> = [
 /**
  * Middleware for building server applications.
  */
-export const ConsoleDevMiddleware: Array<MetaPipe<IBlueprint>> = [
+export const ConsoleDevMiddleware: Array<MetaPipe<ConsoleContext, IBlueprint>> = [
   { module: BuildDevServerAppMiddleware, priority: 0 },
   { module: GenerateConsoleFileMiddleware, priority: 2 }
 ]

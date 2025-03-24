@@ -8,7 +8,7 @@
 
 ## Variables
 
-- [MetaCLIBlueprintMiddleware](variables/MetaCLIBlueprintMiddleware.md)
+- [metaCLIBlueprintMiddleware](variables/metaCLIBlueprintMiddleware.md)
 
 ## Functions
 

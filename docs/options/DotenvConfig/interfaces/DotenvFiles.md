@@ -6,7 +6,7 @@
 
 # Interface: DotenvFiles
 
-Defined in: [cli/src/options/DotenvConfig.ts:39](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/DotenvConfig.ts#L39)
+Defined in: [cli/src/options/DotenvConfig.ts:39](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/DotenvConfig.ts#L39)
 
 Specifies `.env` file paths and options.
 
@@ -16,7 +16,7 @@ Specifies `.env` file paths and options.
 
 > `optional` **override**: `boolean`
 
-Defined in: [cli/src/options/DotenvConfig.ts:48](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/DotenvConfig.ts#L48)
+Defined in: [cli/src/options/DotenvConfig.ts:48](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/DotenvConfig.ts#L48)
 
 Whether to override existing values.
 
@@ -26,6 +26,6 @@ Whether to override existing values.
 
 > **path**: `string`[]
 
-Defined in: [cli/src/options/DotenvConfig.ts:43](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/DotenvConfig.ts#L43)
+Defined in: [cli/src/options/DotenvConfig.ts:43](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/DotenvConfig.ts#L43)
 
 Paths to `.env` files.

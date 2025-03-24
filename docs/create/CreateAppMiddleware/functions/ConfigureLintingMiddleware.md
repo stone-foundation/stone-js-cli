@@ -8,7 +8,7 @@
 
 > **ConfigureLintingMiddleware**(`context`, `next`): `Promise`\<[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)\>
 
-Defined in: cli/src/create/CreateAppMiddleware.ts:84
+Defined in: [cli/src/create/CreateAppMiddleware.ts:84](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/create/CreateAppMiddleware.ts#L84)
 
 Configure linting.
 

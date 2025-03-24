@@ -6,23 +6,23 @@
 
 # Function: GenerateViewsIndexMiddleware()
 
-> **GenerateViewsIndexMiddleware**(`blueprint`, `next`): `Promise`\<`IBlueprint`\>
+> **GenerateViewsIndexMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
 
-Defined in: cli/src/react/ReactBuildMiddleware.ts:25
+Defined in: [cli/src/react/ReactBuildMiddleware.ts:26](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/react/ReactBuildMiddleware.ts#L26)
 
 Generates an index file for all views in the application.
 
 ## Parameters
 
-### blueprint
+### context
 
-`IBlueprint`
+[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
-The blueprint object.
+The console context.
 
 ### next
 
-`NextPipe`\<`IBlueprint`, `IBlueprint`\>
+`NextPipe`\<[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md), `IBlueprint`\>
 
 The next pipe function.
 

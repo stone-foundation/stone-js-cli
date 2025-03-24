@@ -40,8 +40,8 @@ export class CustomCommand {
    */
   async handle (event: IncomingEvent): Promise<void> {
     const pattern = this.context.blueprint.get(
-      'stone.autoload.all',
-      'app/**/*.{ts,tsx,js,mjs,mjsx,jsx,json}'
+      'stone.builder.input.all',
+      'app/**/*.**'
     )
 
     if (shouldBuild(pattern)) {

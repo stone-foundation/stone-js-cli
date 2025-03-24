@@ -6,10 +6,6 @@
 
 # react/react-utils
 
-## Variables
-
-- [removedBuiltinSSRImports](variables/removedBuiltinSSRImports.md)
-
 ## Functions
 
 - [getViteConfig](functions/getViteConfig.md)

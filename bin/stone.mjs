@@ -13,6 +13,10 @@ import { stoneBlueprint, stoneApp } from '@stone-js/core';
 import { MetaCommandRouterEventHandler, nodeCliAdapterBlueprint } from '@stone-js/node-cli-adapter';
 
 try {
+  // Handle exit signals gracefully
+  process.on('SIGINT', () => process.exit(0))
+  process.on('SIGTERM', () => process.exit(0))
+
   /**
    * Merge and create the initial application blueprint.
    * 

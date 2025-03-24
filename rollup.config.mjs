@@ -23,9 +23,6 @@ export default Object.entries(inputs).map(([name, input]) => ({
       if (id.includes('rollup.config')) {
         return 'rollup.config'
       }
-      if (id.includes('rollup.bundle.config')) {
-        return 'rollup.bundle.config'
-      }
     }
   },
   plugins: [

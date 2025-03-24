@@ -8,4 +8,5 @@
 
 ## Variables
 
-- [default](variables/default.md)
+- [rollupBuildConfig](variables/rollupBuildConfig.md)
+- [rollupBundleConfig](variables/rollupBundleConfig.md)

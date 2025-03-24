@@ -41,7 +41,7 @@ export class ExportCommand {
    */
   async handle (event: IncomingEvent): Promise<void> {
     if (isReactApp(this.context.blueprint, event)) {
-      await new ReactBuilder(this.context).build(event)
+      await new ReactBuilder(this.context).export(event)
     } else {
       await new ServerBuilder(this.context).export(event)
     }

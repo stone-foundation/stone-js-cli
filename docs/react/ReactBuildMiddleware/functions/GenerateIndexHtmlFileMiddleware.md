@@ -6,23 +6,23 @@
 
 # Function: GenerateIndexHtmlFileMiddleware()
 
-> **GenerateIndexHtmlFileMiddleware**(`blueprint`, `next`): `Promise`\<`IBlueprint`\>
+> **GenerateIndexHtmlFileMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
 
-Defined in: cli/src/react/ReactBuildMiddleware.ts:205
+Defined in: [cli/src/react/ReactBuildMiddleware.ts:233](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/react/ReactBuildMiddleware.ts#L233)
 
 Generates an index HTML file for the application.
 
 ## Parameters
 
-### blueprint
+### context
 
-`IBlueprint`
+[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
-The blueprint object.
+The console context.
 
 ### next
 
-`NextPipe`\<`IBlueprint`, `IBlueprint`\>
+`NextPipe`\<[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md), `IBlueprint`\>
 
 The next pipe function.
 

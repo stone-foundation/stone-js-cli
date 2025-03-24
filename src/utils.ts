@@ -1,16 +1,30 @@
-import { glob, globSync } from 'glob'
 import fsExtra from 'fs-extra'
+import deepmerge from 'deepmerge'
 import process from 'node:process'
+import { glob, globSync } from 'glob'
 import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
+import { fileURLToPath } from 'node:url'
 import DotenvExpand from 'dotenv-expand'
+import { dirname, join } from 'node:path'
 import { ChildProcess } from 'node:child_process'
 import Dotenv, { DotenvPopulateInput } from 'dotenv'
 import { DotenvOptions } from './options/DotenvConfig'
-import { basePath, buildPath } from '@stone-js/filesystem'
-import { IBlueprint, IncomingEvent } from '@stone-js/core'
+import { builder, BuilderConfig } from './options/BuilderConfig'
+import { IBlueprint, IncomingEvent, isNotEmpty } from '@stone-js/core'
+import { basePath, buildPath, importModule } from '@stone-js/filesystem'
 
 const { readJsonSync, pathExistsSync, outputJsonSync } = fsExtra
+
+/**
+ * Resolve path from file directory.
+ *
+ * @param   {...string} paths
+ * @returns {string}
+ */
+export function dirPath (...paths: string[]): string {
+  return join(dirname(fileURLToPath(import.meta.url)), ...paths)
+}
 
 /**
  * Get File Hash.
@@ -107,17 +121,44 @@ export function setupProcessSignalHandlers (serverProcess?: ChildProcess): void 
  * @returns True if the application is using TypeScript.
  */
 export const isTypescriptApp = (blueprint: IBlueprint): boolean => {
-  const files = glob.sync(basePath(blueprint.get('stone.autoload.all', 'app/**/*.{tsx,ts}')))
-  return blueprint.get<string>('stone.autoload.type') === 'typescript' || files.length > 0
+  const files = glob.sync(basePath(blueprint.get('stone.builder.input.all', 'app/**/*.{tsx,ts}')))
+  return blueprint.get<string>('stone.builder.type') === 'typescript' || files.length > 0
 }
 
 /**
- * Determines if the application is using TypeScript.
+ * Determines if the application is using React.
  *
  * @param blueprint The blueprint object.
- * @returns True if the application is using TypeScript.
+ * @returns True if the application is using React.
  */
 export const isReactApp = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
-  const files = glob.sync(basePath(blueprint.get('stone.autoload.all', 'app/**/*.{tsx,jsx,mjsx}')))
-  return event.get('app-type') === 'react' || blueprint.get<string>('stone.autoload.appType') === 'react' || files.length > 0
+  const files = glob.sync(basePath(blueprint.get('stone.builder.input.views', 'app/**/*.{tsx,jsx,mjsx}')))
+  return event.get('app-type') === 'react' || blueprint.get<string>('stone.builder.appType') === 'react' || files.length > 0
+}
+
+/**
+ * Define user configuration.
+ *
+ * @param config - The user configuration.
+ * @returns The user configuration.
+ */
+export const defineConfig = (config: Partial<BuilderConfig>): Partial<BuilderConfig> => config
+
+/**
+ * Get the Stone.js builder configuration.
+ *
+ * @returns The Stone.js builder configuration.
+ */
+export const getStoneBuilderConfig = async (): Promise<BuilderConfig> => {
+  const configPaths = ['./stone.config.mjs', './stone.config.js']
+
+  for (const path of configPaths) {
+    const module = await importModule<Record<string, BuilderConfig>>(path)
+    const config = Object.values(module ?? {}).shift()
+    if (isNotEmpty<BuilderConfig>(config)) {
+      return deepmerge<BuilderConfig>(builder, config)
+    }
+  }
+
+  return builder
 }

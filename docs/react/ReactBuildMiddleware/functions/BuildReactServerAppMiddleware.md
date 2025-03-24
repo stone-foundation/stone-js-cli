@@ -6,23 +6,23 @@
 
 # Function: BuildReactServerAppMiddleware()
 
-> **BuildReactServerAppMiddleware**(`blueprint`, `next`): `Promise`\<`IBlueprint`\>
+> **BuildReactServerAppMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
 
-Defined in: cli/src/react/ReactBuildMiddleware.ts:259
+Defined in: [cli/src/react/ReactBuildMiddleware.ts:296](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/react/ReactBuildMiddleware.ts#L296)
 
 Builds the server application using Vite.
 
 ## Parameters
 
-### blueprint
+### context
 
-`IBlueprint`
+[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
-The blueprint object.
+The console context.
 
 ### next
 
-`NextPipe`\<`IBlueprint`, `IBlueprint`\>
+`NextPipe`\<[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md), `IBlueprint`\>
 
 The next pipe function.
 

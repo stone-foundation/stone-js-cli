@@ -6,7 +6,10 @@
 
 # Interface: CreateAppConfig
 
-Defined in: [cli/src/options/CreateAppConfig.ts:2](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/CreateAppConfig.ts#L2)
+Defined in: [cli/src/options/CreateAppConfig.ts:5](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/CreateAppConfig.ts#L5)
+
+Configuration for creating a new Stone.js Application.
+Used internally by the `init` command.
 
 ## Properties
 
@@ -14,7 +17,7 @@ Defined in: [cli/src/options/CreateAppConfig.ts:2](https://github.com/stonemjs/c
 
 > `optional` **destDir**: `string`
 
-Defined in: [cli/src/options/CreateAppConfig.ts:13](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/CreateAppConfig.ts#L13)
+Defined in: [cli/src/options/CreateAppConfig.ts:12](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/CreateAppConfig.ts#L12)
 
 ***
 
@@ -22,7 +25,7 @@ Defined in: [cli/src/options/CreateAppConfig.ts:13](https://github.com/stonemjs/
 
 > **initGit**: `boolean`
 
-Defined in: [cli/src/options/CreateAppConfig.ts:3](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/CreateAppConfig.ts#L3)
+Defined in: [cli/src/options/CreateAppConfig.ts:10](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/CreateAppConfig.ts#L10)
 
 ***
 
@@ -30,7 +33,7 @@ Defined in: [cli/src/options/CreateAppConfig.ts:3](https://github.com/stonemjs/c
 
 > **linting**: `string`
 
-Defined in: [cli/src/options/CreateAppConfig.ts:7](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/CreateAppConfig.ts#L7)
+Defined in: [cli/src/options/CreateAppConfig.ts:8](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/CreateAppConfig.ts#L8)
 
 ***
 
@@ -38,7 +41,7 @@ Defined in: [cli/src/options/CreateAppConfig.ts:7](https://github.com/stonemjs/c
 
 > **modules**: `string`[]
 
-Defined in: [cli/src/options/CreateAppConfig.ts:8](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/CreateAppConfig.ts#L8)
+Defined in: [cli/src/options/CreateAppConfig.ts:13](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/CreateAppConfig.ts#L13)
 
 ***
 
@@ -46,7 +49,7 @@ Defined in: [cli/src/options/CreateAppConfig.ts:8](https://github.com/stonemjs/c
 
 > **overwrite**: `boolean`
 
-Defined in: [cli/src/options/CreateAppConfig.ts:10](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/CreateAppConfig.ts#L10)
+Defined in: [cli/src/options/CreateAppConfig.ts:14](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/CreateAppConfig.ts#L14)
 
 ***
 
@@ -54,7 +57,7 @@ Defined in: [cli/src/options/CreateAppConfig.ts:10](https://github.com/stonemjs/
 
 > `optional` **packageJson**: `Record`\<`string`, `unknown`\>
 
-Defined in: [cli/src/options/CreateAppConfig.ts:15](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/CreateAppConfig.ts#L15)
+Defined in: [cli/src/options/CreateAppConfig.ts:18](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/CreateAppConfig.ts#L18)
 
 ***
 
@@ -62,7 +65,7 @@ Defined in: [cli/src/options/CreateAppConfig.ts:15](https://github.com/stonemjs/
 
 > **packageManager**: `string`
 
-Defined in: [cli/src/options/CreateAppConfig.ts:9](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/CreateAppConfig.ts#L9)
+Defined in: [cli/src/options/CreateAppConfig.ts:17](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/CreateAppConfig.ts#L17)
 
 ***
 
@@ -70,7 +73,7 @@ Defined in: [cli/src/options/CreateAppConfig.ts:9](https://github.com/stonemjs/c
 
 > **projectName**: `string`
 
-Defined in: [cli/src/options/CreateAppConfig.ts:11](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/CreateAppConfig.ts#L11)
+Defined in: [cli/src/options/CreateAppConfig.ts:15](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/CreateAppConfig.ts#L15)
 
 ***
 
@@ -78,7 +81,7 @@ Defined in: [cli/src/options/CreateAppConfig.ts:11](https://github.com/stonemjs/
 
 > `optional` **srcDir**: `string`
 
-Defined in: [cli/src/options/CreateAppConfig.ts:14](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/CreateAppConfig.ts#L14)
+Defined in: [cli/src/options/CreateAppConfig.ts:9](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/CreateAppConfig.ts#L9)
 
 ***
 
@@ -86,7 +89,7 @@ Defined in: [cli/src/options/CreateAppConfig.ts:14](https://github.com/stonemjs/
 
 > **startersRepo**: `string`
 
-Defined in: [cli/src/options/CreateAppConfig.ts:12](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/CreateAppConfig.ts#L12)
+Defined in: [cli/src/options/CreateAppConfig.ts:16](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/CreateAppConfig.ts#L16)
 
 ***
 
@@ -94,7 +97,7 @@ Defined in: [cli/src/options/CreateAppConfig.ts:12](https://github.com/stonemjs/
 
 > **template**: `string`
 
-Defined in: [cli/src/options/CreateAppConfig.ts:6](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/CreateAppConfig.ts#L6)
+Defined in: [cli/src/options/CreateAppConfig.ts:11](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/CreateAppConfig.ts#L11)
 
 ***
 
@@ -102,7 +105,7 @@ Defined in: [cli/src/options/CreateAppConfig.ts:6](https://github.com/stonemjs/c
 
 > **testing**: `string`
 
-Defined in: [cli/src/options/CreateAppConfig.ts:4](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/CreateAppConfig.ts#L4)
+Defined in: [cli/src/options/CreateAppConfig.ts:7](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/CreateAppConfig.ts#L7)
 
 ***
 
@@ -110,4 +113,4 @@ Defined in: [cli/src/options/CreateAppConfig.ts:4](https://github.com/stonemjs/c
 
 > **typing**: `string`
 
-Defined in: [cli/src/options/CreateAppConfig.ts:5](https://github.com/stonemjs/cli/blob/918c4879f2a7715f30d46038936ca1a10bb41202/src/options/CreateAppConfig.ts#L5)
+Defined in: [cli/src/options/CreateAppConfig.ts:6](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/options/CreateAppConfig.ts#L6)

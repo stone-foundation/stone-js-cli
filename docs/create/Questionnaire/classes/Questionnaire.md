@@ -6,7 +6,7 @@
 
 # Class: Questionnaire
 
-Defined in: cli/src/create/Questionnaire.ts:11
+Defined in: [cli/src/create/Questionnaire.ts:11](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/create/Questionnaire.ts#L11)
 
 Represents a Questionnaire to guide users in creating a Stone.js application.
 
@@ -16,7 +16,7 @@ Represents a Questionnaire to guide users in creating a Stone.js application.
 
 > **new Questionnaire**(`options`): [`Questionnaire`](Questionnaire.md)
 
-Defined in: cli/src/create/Questionnaire.ts:31
+Defined in: [cli/src/create/Questionnaire.ts:31](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/create/Questionnaire.ts#L31)
 
 Initializes a new Questionnaire instance.
 
@@ -38,7 +38,7 @@ The options to create a Questionnaire.
 
 > **getAnswers**(): `Promise`\<`Record`\<`string`, `unknown`\>\>
 
-Defined in: cli/src/create/Questionnaire.ts:121
+Defined in: [cli/src/create/Questionnaire.ts:121](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/create/Questionnaire.ts#L121)
 
 Runs the questionnaire and collects user answers.
 
@@ -54,7 +54,7 @@ A promise that resolves with the user's answers.
 
 > `static` **create**(`options`): [`Questionnaire`](Questionnaire.md)
 
-Defined in: cli/src/create/Questionnaire.ts:22
+Defined in: [cli/src/create/Questionnaire.ts:22](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/create/Questionnaire.ts#L22)
 
 Factory method to create a new Questionnaire instance.
 

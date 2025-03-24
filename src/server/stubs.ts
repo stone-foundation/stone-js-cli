@@ -1,6 +1,6 @@
 import { NODE_CONSOLE_PLATFORM } from '@stone-js/node-cli-adapter'
 
-export const serverIndexFile = (printUrls: boolean = false): string => `
+export const serverIndexFile = (printUrls: boolean | string = false): string => `
 import { stoneApp } from '@stone-js/core'
 import * as rawModules from './modules.mjs'
 
@@ -8,7 +8,7 @@ import * as rawModules from './modules.mjs'
  * Middleware to print the URLs of the server.
  */
 const PrintUrlsMiddleware = (context, next) => {
-  context.blueprint.set('stone.adapter.printUrls', Boolean(${String(printUrls)}))
+  context.blueprint.setIf('stone.adapter.printUrls', ${String(printUrls)})
   return next(context)
 }
 
@@ -18,7 +18,7 @@ const PrintUrlsMiddleware = (context, next) => {
 export const stone = await stoneApp({
   modules: Object.values(rawModules),
 })
-.add('stone.builder.middleware', [{ module: PrintUrlsMiddleware }])
+.add('stone.blueprint.middleware', [{ module: PrintUrlsMiddleware }])
 .run()
 `
 

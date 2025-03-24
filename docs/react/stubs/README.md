@@ -8,8 +8,8 @@
 
 ## Functions
 
-- [reactClientTemplate](functions/reactClientTemplate.md)
-- [reactConsoleTemplate](functions/reactConsoleTemplate.md)
-- [reactHtmlTemplate](functions/reactHtmlTemplate.md)
-- [reactServerTemplate](functions/reactServerTemplate.md)
+- [reactClientEntryPointTemplate](functions/reactClientEntryPointTemplate.md)
+- [reactConsoleEntryPointTemplate](functions/reactConsoleEntryPointTemplate.md)
+- [reactHtmlEntryPointTemplate](functions/reactHtmlEntryPointTemplate.md)
+- [reactServerEntryPointTemplate](functions/reactServerEntryPointTemplate.md)
 - [viteServerTemplate](functions/viteServerTemplate.md)

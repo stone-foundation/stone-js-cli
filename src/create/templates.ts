@@ -8,7 +8,7 @@ export interface Template {
   value: string
 
   /** The display name of the template, with formatting applied. */
-  name: string
+  title: string
 
   /** Whether the template is disabled (optional). */
   disabled?: boolean
@@ -23,61 +23,54 @@ export interface Template {
  */
 const templates = ({ format }: { format: typeof chalk }): Template[] => [
   {
-    value: 'basic-http',
-    name: format.green('Basic HTTP starter with minimal setup and HTTP integration')
+    value: 'basic-service-declarative-api',
+    title: format.green('Basic starter with minimal setup and declarative API')
   },
   {
-    value: 'basic-aws-lambda',
-    name: format.green('Basic starter with minimal setup and AWS Lambda integration')
+    value: 'basic-service-imperative-api',
+    title: format.green('Basic starter with minimal setup and imperative API')
   },
   {
-    value: 'basic-cli',
-    name: format.green('Basic starter with minimal setup and CLI integration')
+    value: 'basic-react-declarative-api',
+    title: format.green('Basic React starter with minimal setup and declarative API')
   },
   {
-    value: 'nano-service-declarative-api',
-    name: format.blue('Http API starter with Stone router, useful to create nano service using declarative API')
+    value: 'basic-react-imperative-api',
+    title: format.green('Basic React starter with minimal setup and imperative API')
   },
   {
-    value: 'nano-service-imperative-api',
-    name: format.blue('Http API starter with Stone router, useful to create nano service using imperative API')
+    value: 'standard-service-declarative-api',
+    title: format.blue('Standard starter with common setup and declarative API')
   },
   {
-    value: 'react-spa-declarative-api',
-    name: format.gray('React SPA starter, useful to create React single page application using declarative API')
+    value: 'standard-service-imperative-api',
+    title: format.blue('Standard starter with common setup and imperative API')
   },
   {
-    value: 'react-spa-imperative-api',
-    name: format.gray('React SPA starter, useful to create React single page application using imperative API')
+    value: 'standard-react-declarative-api',
+    title: format.blue('Standard React starter with common setup and declarative API')
   },
   {
-    value: 'react-ssr-declarative-api',
-    name: format.gray('React SSR starter, useful to create React server-side rendering application using declarative API')
+    value: 'standard-react-imperative-api',
+    title: format.blue('Standard React starter with common setup and imperative API')
   },
   {
-    value: 'react-ssr-imperative-api',
-    name: format.gray('React SSR starter, useful to create React server-side rendering application using imperative API')
+    value: 'full-service-declarative-api',
+    title: format.red('Full featured starter with complete setup and declarative API')
   },
   {
-    disabled: true,
-    value: 'vuejs-spa-declarative-api',
-    name: format.gray('React SPA starter, useful to create Vuejs single page application using declarative API (Coming soon)')
+    value: 'full-service-imperative-api',
+    title: format.red('Full featured starter with complete setup and imperative API')
   },
   {
-    disabled: true,
-    value: 'vuejs-spa-imperative-api',
-    name: format.gray('React SPA starter, useful to create Vuejs single page application using imperative API (Coming soon)')
+    value: 'full-react-declarative-api',
+    title: format.red('Full featured React starter with complete setup and declarative API')
   },
   {
-    disabled: true,
-    value: 'vuejs-ssr-declarative-api',
-    name: format.gray('React SSR starter, useful to create Vuejs server-side rendering application using declarative API (Coming soon)')
-  },
-  {
-    disabled: true,
-    value: 'vuejs-ssr-imperative-api',
-    name: format.gray('React SSR starter, useful to create Vuejs server-side rendering application using imperative API (Coming soon)')
+    value: 'full-react-imperative-api',
+    title: format.red('Full featured React starter with complete setup and imperative API')
   }
 ]
 
+// Export the templates
 export default templates

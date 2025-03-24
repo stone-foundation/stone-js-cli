@@ -6,7 +6,7 @@
 
 # Class: ServerBuilder
 
-Defined in: cli/src/server/ServerBuilder.ts:17
+Defined in: [cli/src/server/ServerBuilder.ts:18](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/server/ServerBuilder.ts#L18)
 
 The Server builder class.
 
@@ -16,7 +16,7 @@ The Server builder class.
 
 > **new ServerBuilder**(`context`): [`ServerBuilder`](ServerBuilder.md)
 
-Defined in: cli/src/server/ServerBuilder.ts:23
+Defined in: [cli/src/server/ServerBuilder.ts:24](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/server/ServerBuilder.ts#L24)
 
 Creates a new Server builder instance.
 
@@ -38,7 +38,7 @@ The service container to manage dependencies.
 
 > **build**(`_event`): `Promise`\<`void`\>
 
-Defined in: cli/src/server/ServerBuilder.ts:30
+Defined in: [cli/src/server/ServerBuilder.ts:31](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/server/ServerBuilder.ts#L31)
 
 Builds the application.
 
@@ -60,7 +60,7 @@ The incoming event.
 
 > **console**(`_event`): `Promise`\<`void`\>
 
-Defined in: cli/src/server/ServerBuilder.ts:61
+Defined in: [cli/src/server/ServerBuilder.ts:63](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/server/ServerBuilder.ts#L63)
 
 Runs the application in the console.
 
@@ -82,7 +82,7 @@ The incoming event.
 
 > **dev**(`_event`, `restart`?): `Promise`\<`void`\>
 
-Defined in: cli/src/server/ServerBuilder.ts:40
+Defined in: [cli/src/server/ServerBuilder.ts:41](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/server/ServerBuilder.ts#L41)
 
 Starts the development server.
 
@@ -110,7 +110,7 @@ Whether to restart the server.
 
 > **export**(`event`): `Promise`\<`void`\>
 
-Defined in: cli/src/server/ServerBuilder.ts:70
+Defined in: [cli/src/server/ServerBuilder.ts:72](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/server/ServerBuilder.ts#L72)
 
 Exports server files.
 
@@ -132,7 +132,7 @@ The incoming event.
 
 > **preview**(`_event`): `Promise`\<`void`\>
 
-Defined in: cli/src/server/ServerBuilder.ts:50
+Defined in: [cli/src/server/ServerBuilder.ts:51](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/server/ServerBuilder.ts#L51)
 
 Previews the application.
 
@@ -154,7 +154,7 @@ The incoming event.
 
 > **watchFiles**(`cb`): `void`
 
-Defined in: cli/src/server/ServerBuilder.ts:94
+Defined in: [cli/src/server/ServerBuilder.ts:98](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/server/ServerBuilder.ts#L98)
 
 Server Files watcher.
 

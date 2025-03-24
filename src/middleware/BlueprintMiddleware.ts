@@ -1,8 +1,6 @@
-import { getEnvVariables } from '../utils'
-import { importModule } from '@stone-js/filesystem'
 import { DotenvConfig } from '../options/DotenvConfig'
 import { MetaPipe, NextPipe } from '@stone-js/pipeline'
-import { StoneCliAppConfig } from '../options/StoneCliBlueprint'
+import { getEnvVariables, getStoneBuilderConfig } from '../utils'
 import { NODE_CONSOLE_PLATFORM } from '@stone-js/node-cli-adapter'
 import { BlueprintContext, ClassType, IBlueprint } from '@stone-js/core'
 import { ListCommand, listCommandOptions } from '../commands/ListCommand'
@@ -31,23 +29,14 @@ export const LoadStoneConfigMiddleware = async (
   context: BlueprintContext<IBlueprint, ClassType>,
   next: NextPipe<BlueprintContext<IBlueprint, ClassType>, IBlueprint>
 ): Promise<IBlueprint> => {
-  const configPaths = ['./stone.config.mjs', './stone.config.js']
-
-  for (const path of configPaths) {
-    const module = await importModule<{ [key: string]: Partial<StoneCliAppConfig> }>(path)
-    const config = Object.values(module ?? {}).shift()
-    if (config !== undefined) {
-      context.blueprint.add('stone.dotenv', config.dotenv)
-      context.blueprint.add('stone.autoload', config.autoload)
-      break
-    }
-  }
+  context.blueprint.set('stone.builder', await getStoneBuilderConfig())
 
   return await next(context)
 }
 
 /**
  * Middleware to load the environment variables from the .env file.
+ * So the environment variables can be accessed using `process.env`.
  *
  * @param context - The configuration context containing modules and blueprint.
  * @param next - The next pipeline function to continue processing.
@@ -62,7 +51,7 @@ export const LoadDotenvVariablesMiddleware = async (
   context: BlueprintContext<IBlueprint, ClassType>,
   next: NextPipe<BlueprintContext<IBlueprint, ClassType>, IBlueprint>
 ): Promise<IBlueprint> => {
-  const options = context.blueprint.get<DotenvConfig>('stone.dotenv', {})
+  const options = context.blueprint.get<DotenvConfig>('stone.builder.dotenv', {})
   const publicOptions = { ...options?.options, ...options?.public }
   const privateOptions = { ...options?.options, ...options?.private }
 
@@ -113,7 +102,7 @@ export const SetCliCommandsMiddleware = async (
  * This array defines a list of middleware pipes, each with a `pipe` function and a `priority`.
  * These pipes are executed in the order of their priority values, with lower values running first.
  */
-export const MetaCLIBlueprintMiddleware: Array<MetaPipe<BlueprintContext<IBlueprint, ClassType>, IBlueprint>> = [
+export const metaCLIBlueprintMiddleware: Array<MetaPipe<BlueprintContext<IBlueprint, ClassType>, IBlueprint>> = [
   { priority: 1, module: SetCliCommandsMiddleware },
   { priority: 2, module: LoadStoneConfigMiddleware },
   { priority: 3, module: LoadDotenvVariablesMiddleware }

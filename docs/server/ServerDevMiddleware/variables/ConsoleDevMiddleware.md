@@ -6,8 +6,8 @@
 
 # Variable: ConsoleDevMiddleware
 
-> `const` **ConsoleDevMiddleware**: `MetaPipe`\<`IBlueprint`\>[]
+> `const` **ConsoleDevMiddleware**: `MetaPipe`\<[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md), `IBlueprint`\>[]
 
-Defined in: cli/src/server/ServerDevMiddleware.ts:106
+Defined in: [cli/src/server/ServerDevMiddleware.ts:107](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/server/ServerDevMiddleware.ts#L107)
 
 Middleware for building server applications.

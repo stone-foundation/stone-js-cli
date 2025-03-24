@@ -8,9 +8,10 @@
 
 > **LoadDotenvVariablesMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
 
-Defined in: cli/src/middleware/BlueprintMiddleware.ts:61
+Defined in: [cli/src/middleware/BlueprintMiddleware.ts:50](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/middleware/BlueprintMiddleware.ts#L50)
 
 Middleware to load the environment variables from the .env file.
+So the environment variables can be accessed using `process.env`.
 
 ## Parameters
 

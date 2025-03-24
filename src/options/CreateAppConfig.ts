@@ -1,24 +1,30 @@
-
+/**
+ * Configuration for creating a new Stone.js Application.
+ * Used internally by the `init` command.
+ */
 export interface CreateAppConfig {
-  initGit: boolean
-  testing: string
   typing: string
-  template: string
+  testing: string
   linting: string
+  srcDir?: string
+  initGit: boolean
+  template: string
+  destDir?: string
   modules: string[]
-  packageManager: string
   overwrite: boolean
   projectName: string
   startersRepo: string
-  destDir?: string
-  srcDir?: string
+  packageManager: string
   packageJson?: Record<string, unknown>
 }
 
+/**
+ * Default configuration for creating a new Stone.js Application.
+ */
 export const createApp: CreateAppConfig = {
   modules: [],
   initGit: true,
-  testing: 'mocha',
+  testing: 'vitest',
   overwrite: false,
   typing: 'vanilla',
   template: 'basic',

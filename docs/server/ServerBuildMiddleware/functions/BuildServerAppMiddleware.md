@@ -6,23 +6,23 @@
 
 # Function: BuildServerAppMiddleware()
 
-> **BuildServerAppMiddleware**(`blueprint`, `next`): `Promise`\<`IBlueprint`\>
+> **BuildServerAppMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
 
-Defined in: cli/src/server/ServerBuildMiddleware.ts:21
+Defined in: [cli/src/server/ServerBuildMiddleware.ts:21](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/server/ServerBuildMiddleware.ts#L21)
 
 Builds the server application using Rollup.
 
 ## Parameters
 
-### blueprint
+### context
 
-`IBlueprint`
+[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
-The blueprint object.
+The console context.
 
 ### next
 
-`NextPipe`\<`IBlueprint`, `IBlueprint`\>
+`NextPipe`\<[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md), `IBlueprint`\>
 
 The next pipe function.
 

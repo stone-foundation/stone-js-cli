@@ -1,6 +1,7 @@
 import chalk from 'chalk'
 import { watch } from 'chokidar'
 import { format } from 'date-fns'
+import { dirPath } from '../utils'
 import { CliError } from '../errors/CliError'
 import { ConsoleContext } from '../declarations'
 import { MetaPipe, Pipeline } from '@stone-js/pipeline'
@@ -38,7 +39,7 @@ export class ServerBuilder {
    * @param restart Whether to restart the server.
    */
   async dev (_event: IncomingEvent, restart?: boolean): Promise<void> {
-    this.context.blueprint.set('stone.server.printUrls', restart !== true)
+    this.context.blueprint.set('stone.builder.server.printUrls', restart !== true)
     await this.executeThroughPipeline(ServerDevMiddleware)
   }
 
@@ -48,7 +49,8 @@ export class ServerBuilder {
    * @param _event The incoming event.
    */
   async preview (_event: IncomingEvent): Promise<void> {
-    if (!existsSync(distPath('index.mjs'))) {
+    const output = this.context.blueprint.get('stone.builder.output', 'index.mjs')
+    if (!existsSync(distPath(output))) {
       throw new CliError('The application must be built before previewing.')
     }
   }
@@ -69,17 +71,19 @@ export class ServerBuilder {
    */
   async export (event: IncomingEvent): Promise<void> {
     let isExported = false
-    const module = event.get<'app' | 'console' | 'rollup'>('module', 'app')
+    const module = event.get<'app' | 'console' | 'rollup' | 'vitest'>('module', 'app')
     switch (module) {
       case 'app':
-        isExported = await this.exportServerTemplate(event)
+        isExported = await this.exportServerTemplate()
         break
       case 'console':
-        isExported = await this.exportConsoleTemplate(event)
+        isExported = await this.exportConsoleTemplate()
         break
       case 'rollup':
-        await this.exportRollupConfig(event)
-        isExported = await this.exportRollupBundleConfig(event)
+        isExported = await this.exportRollupConfig()
+        break
+      case 'vitest':
+        isExported = await this.exportVitestConfig()
         break
     }
 
@@ -93,13 +97,17 @@ export class ServerBuilder {
    */
   watchFiles (cb: () => void | Promise<void>): void {
     const filesChangedCount: Record<string, number> = {}
+    const ignored = this.context.blueprint.get(
+      'stone.builder.watcher.ignored',
+      ['node_modules/**', 'dist/**', '.stone/**']
+    )
     const watcher = watch('.', {
-      ignored: ['node_modules/**', 'dist/**', '.stone/**'],
+      ignored,
       cwd: basePath(),
       persistent: true,
+      depth: undefined,
       ignoreInitial: true,
-      followSymlinks: false,
-      depth: undefined
+      followSymlinks: false
     })
 
     const incrementCount = (path: string): number => {
@@ -127,14 +135,13 @@ export class ServerBuilder {
   /**
    * Exports the server entry point template.
    *
-   * @param _event The incoming event.
    * @returns The export status.
    */
-  private async exportServerTemplate (_event: IncomingEvent): Promise<boolean> {
+  private async exportServerTemplate (): Promise<boolean> {
     if (await this.confirmCreation('server.mjs')) {
       writeFileSync(
         basePath('server.mjs'),
-        serverIndexFile(true),
+        serverIndexFile("'%printUrls%'"),
         'utf-8'
       )
       return true
@@ -145,10 +152,9 @@ export class ServerBuilder {
   /**
    * Exports the console entry point template.
    *
-   * @param _event The incoming event.
    * @returns The export status.
    */
-  private async exportConsoleTemplate (_event: IncomingEvent): Promise<boolean> {
+  private async exportConsoleTemplate (): Promise<boolean> {
     if (await this.confirmCreation('console.mjs')) {
       writeFileSync(
         basePath('console.mjs'),
@@ -163,14 +169,13 @@ export class ServerBuilder {
   /**
    * Exports the Rollup configuration file.
    *
-   * @param _event The incoming event.
    * @returns The export status.
    */
-  private async exportRollupConfig (_event: IncomingEvent): Promise<boolean> {
+  private async exportRollupConfig (): Promise<boolean> {
     if (await this.confirmCreation('rollup.config.mjs')) {
       writeFileSync(
         basePath('rollup.config.mjs'),
-        readFileSync('./rollup.config.js', 'utf-8'),
+        readFileSync(dirPath('../dist/rollup.config.js'), 'utf-8'),
         'utf-8'
       )
       return true
@@ -179,16 +184,15 @@ export class ServerBuilder {
   }
 
   /**
-   * Exports the rollup bundle config.
+   * Exports the Vitest configuration file.
    *
-   * @param _event The incoming event.
    * @returns The export status.
    */
-  private async exportRollupBundleConfig (_event: IncomingEvent): Promise<boolean> {
-    if (await this.confirmCreation('rollup.bundle.config.mjs')) {
+  private async exportVitestConfig (): Promise<boolean> {
+    if (await this.confirmCreation('vitest.config.js')) {
       writeFileSync(
-        basePath('rollup.bundle.config.mjs'),
-        readFileSync('./rollup.bundle.config.js', 'utf-8'),
+        basePath('vitest.config.js'),
+        readFileSync(dirPath('../dist/vitest.config.js'), 'utf-8'),
         'utf-8'
       )
       return true
@@ -226,11 +230,16 @@ export class ServerBuilder {
     )
   }
 
-  private async executeThroughPipeline (pipes: Array<MetaPipe<IBlueprint>>): Promise<void> {
+  /**
+   * Execute the pipeline.
+   *
+   * @param pipes - The pipeline to execute.
+   */
+  private async executeThroughPipeline (pipes: Array<MetaPipe<ConsoleContext, IBlueprint>>): Promise<void> {
     await Pipeline
-      .create<IBlueprint>()
-      .send(this.context.blueprint)
+      .create<ConsoleContext, IBlueprint>()
+      .send(this.context)
       .through(...pipes)
-      .thenReturn()
+      .then(context => context.blueprint)
   }
 }

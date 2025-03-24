@@ -3,7 +3,7 @@ import { defineConfig } from 'vite'
 import babel from 'vite-plugin-babel'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig(() => {
+export const viteConfig = defineConfig(() => {
   return {
     plugins: [
       react({

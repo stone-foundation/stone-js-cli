@@ -8,12 +8,12 @@
 
 > **replaceProcessEnvVars**(`blueprint`): `RollupReplaceOptions`
 
-Defined in: cli/src/server/server-utils.ts:41
+Defined in: [cli/src/server/server-utils.ts:46](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/server/server-utils.ts#L46)
 
 Generate replace options for process environment variables.
 
 This function takes the environment variables from the `.env`
-file add prefixes to them, stringify them and return the with rollup replace options plugin.
+file add prefixes to them, stringify them and return them with rollup replace options plugin.
 
 The prcocess is done only for the public environment variables during the bundled staged.
 
