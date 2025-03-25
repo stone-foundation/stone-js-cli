@@ -206,7 +206,7 @@ export const FinalizeMiddleware = async (
 export const CreateAppMiddleware: Array<MetaPipe<ConsoleContext, IBlueprint>> = [
   { priority: 0, module: CloneStarterMiddleware },
   { priority: 1, module: InstallDependenciesMiddleware },
-  { priority: 2, module: ConvertToVanillaMiddleware },
+  // { priority: 2, module: ConvertToVanillaMiddleware },
   { priority: 2, module: ConfigureTestingMiddleware },
   { priority: 3, module: FinalizeMiddleware }
 ]
