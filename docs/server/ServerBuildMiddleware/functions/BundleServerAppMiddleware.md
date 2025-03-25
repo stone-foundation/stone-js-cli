@@ -1,14 +1,14 @@
-[**CLI Documentation v0.0.0**](../../../README.md)
+[**CLI Documentation**](../../../README.md)
 
 ***
 
-[CLI Documentation](../../../modules.md) / [server/ServerBuildMiddleware](../README.md) / BundleServerAppMiddleware
+[CLI Documentation](../../../README.md) / [server/ServerBuildMiddleware](../README.md) / BundleServerAppMiddleware
 
 # Function: BundleServerAppMiddleware()
 
 > **BundleServerAppMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
 
-Defined in: [cli/src/server/ServerBuildMiddleware.ts:81](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/server/ServerBuildMiddleware.ts#L81)
+Defined in: [cli/src/server/ServerBuildMiddleware.ts:81](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/server/ServerBuildMiddleware.ts#L81)
 
 Bundles the server application using Rollup.
 

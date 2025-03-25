@@ -1,11 +1,11 @@
-[**CLI Documentation v0.0.0**](../../README.md)
+[**CLI Documentation**](../../README.md)
 
 ***
 
-[CLI Documentation](../../modules.md) / react/vite.config
+[CLI Documentation](../../README.md) / react/vite.config
 
 # react/vite.config
 
-## Functions
+## Variables
 
-- [viteConfig](functions/viteConfig.md)
+- [viteConfig](variables/viteConfig.md)

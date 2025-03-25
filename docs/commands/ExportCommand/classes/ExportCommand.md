@@ -1,22 +1,22 @@
-[**CLI Documentation v0.0.0**](../../../README.md)
+[**CLI Documentation**](../../../README.md)
 
 ***
 
-[CLI Documentation](../../../modules.md) / [commands/ExportCommand](../README.md) / ExportCommand
+[CLI Documentation](../../../README.md) / [commands/ExportCommand](../README.md) / ExportCommand
 
 # Class: ExportCommand
 
-Defined in: [cli/src/commands/ExportCommand.ts:31](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/ExportCommand.ts#L31)
+Defined in: [cli/src/commands/ExportCommand.ts:31](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/ExportCommand.ts#L31)
 
 The export command class.
 
 ## Constructors
 
-### new ExportCommand()
+### Constructor
 
-> **new ExportCommand**(`context`): [`ExportCommand`](ExportCommand.md)
+> **new ExportCommand**(`context`): `ExportCommand`
 
-Defined in: [cli/src/commands/ExportCommand.ts:37](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/ExportCommand.ts#L37)
+Defined in: [cli/src/commands/ExportCommand.ts:37](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/ExportCommand.ts#L37)
 
 Create a new instance of ExportCommand.
 
@@ -30,7 +30,7 @@ The service container to manage dependencies.
 
 #### Returns
 
-[`ExportCommand`](ExportCommand.md)
+`ExportCommand`
 
 ## Methods
 
@@ -38,7 +38,7 @@ The service container to manage dependencies.
 
 > **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/commands/ExportCommand.ts:42](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/ExportCommand.ts#L42)
+Defined in: [cli/src/commands/ExportCommand.ts:42](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/ExportCommand.ts#L42)
 
 Handle the incoming event.
 

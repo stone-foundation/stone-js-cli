@@ -85,9 +85,6 @@ export class ReactBuilder {
       case 'vite':
         isExported = await this.exportViteConfig()
         break
-      case 'vitest':
-        isExported = await this.exportVitestConfig()
-        break
     }
 
     isExported && this.context.commandOutput.info(`Module(${module}) exported!`)
@@ -181,25 +178,6 @@ export class ReactBuilder {
       writeFileSync(
         basePath(filename),
         readFileSync(dirPath('../dist/vite.config.js'), 'utf-8'),
-        'utf-8'
-      )
-      return true
-    }
-    return false
-  }
-
-  /**
-   * Exports the Vitest configuration file.
-   *
-   * @returns The export status.
-   */
-  private async exportVitestConfig (): Promise<boolean> {
-    const filename = this.isTypescript() ? 'vitest.config.ts' : 'vitest.config.mjs'
-
-    if (await this.confirmCreation(filename)) {
-      writeFileSync(
-        basePath(filename),
-        readFileSync(dirPath('../dist/vitest.config.js'), 'utf-8'),
         'utf-8'
       )
       return true

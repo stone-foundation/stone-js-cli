@@ -1,22 +1,22 @@
-[**CLI Documentation v0.0.0**](../../../README.md)
+[**CLI Documentation**](../../../README.md)
 
 ***
 
-[CLI Documentation](../../../modules.md) / [commands/BuildCommand](../README.md) / BuildCommand
+[CLI Documentation](../../../README.md) / [commands/BuildCommand](../README.md) / BuildCommand
 
 # Class: BuildCommand
 
-Defined in: [cli/src/commands/BuildCommand.ts:43](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/BuildCommand.ts#L43)
+Defined in: [cli/src/commands/BuildCommand.ts:43](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/BuildCommand.ts#L43)
 
 The build command class.
 
 ## Constructors
 
-### new BuildCommand()
+### Constructor
 
-> **new BuildCommand**(`context`): [`BuildCommand`](BuildCommand.md)
+> **new BuildCommand**(`context`): `BuildCommand`
 
-Defined in: [cli/src/commands/BuildCommand.ts:49](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/BuildCommand.ts#L49)
+Defined in: [cli/src/commands/BuildCommand.ts:49](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/BuildCommand.ts#L49)
 
 Create a new instance of BuildCommand.
 
@@ -30,7 +30,7 @@ The service container to manage dependencies.
 
 #### Returns
 
-[`BuildCommand`](BuildCommand.md)
+`BuildCommand`
 
 ## Methods
 
@@ -38,7 +38,7 @@ The service container to manage dependencies.
 
 > **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/commands/BuildCommand.ts:56](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/BuildCommand.ts#L56)
+Defined in: [cli/src/commands/BuildCommand.ts:56](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/BuildCommand.ts#L56)
 
 Handle the incoming event.
 

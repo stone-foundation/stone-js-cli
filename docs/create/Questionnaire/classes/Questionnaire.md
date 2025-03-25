@@ -1,36 +1,36 @@
-[**CLI Documentation v0.0.0**](../../../README.md)
+[**CLI Documentation**](../../../README.md)
 
 ***
 
-[CLI Documentation](../../../modules.md) / [create/Questionnaire](../README.md) / Questionnaire
+[CLI Documentation](../../../README.md) / [create/Questionnaire](../README.md) / Questionnaire
 
 # Class: Questionnaire
 
-Defined in: [cli/src/create/Questionnaire.ts:11](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/create/Questionnaire.ts#L11)
+Defined in: [cli/src/create/Questionnaire.ts:12](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/create/Questionnaire.ts#L12)
 
 Represents a Questionnaire to guide users in creating a Stone.js application.
 
 ## Constructors
 
-### new Questionnaire()
+### Constructor
 
-> **new Questionnaire**(`options`): [`Questionnaire`](Questionnaire.md)
+> **new Questionnaire**(`context`): `Questionnaire`
 
-Defined in: [cli/src/create/Questionnaire.ts:31](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/create/Questionnaire.ts#L31)
+Defined in: [cli/src/create/Questionnaire.ts:28](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/create/Questionnaire.ts#L28)
 
 Initializes a new Questionnaire instance.
 
 #### Parameters
 
-##### options
+##### context
 
 [`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
-The options to create a Questionnaire.
+The service container to manage dependencies.
 
 #### Returns
 
-[`Questionnaire`](Questionnaire.md)
+`Questionnaire`
 
 ## Methods
 
@@ -38,7 +38,7 @@ The options to create a Questionnaire.
 
 > **getAnswers**(): `Promise`\<`Record`\<`string`, `unknown`\>\>
 
-Defined in: [cli/src/create/Questionnaire.ts:121](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/create/Questionnaire.ts#L121)
+Defined in: [cli/src/create/Questionnaire.ts:102](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/create/Questionnaire.ts#L102)
 
 Runs the questionnaire and collects user answers.
 
@@ -52,22 +52,22 @@ A promise that resolves with the user's answers.
 
 ### create()
 
-> `static` **create**(`options`): [`Questionnaire`](Questionnaire.md)
+> `static` **create**(`context`): `Questionnaire`
 
-Defined in: [cli/src/create/Questionnaire.ts:22](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/create/Questionnaire.ts#L22)
+Defined in: [cli/src/create/Questionnaire.ts:19](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/create/Questionnaire.ts#L19)
 
 Factory method to create a new Questionnaire instance.
 
 #### Parameters
 
-##### options
+##### context
 
 [`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
-The options to create a Questionnaire.
+The service container to manage dependencies.
 
 #### Returns
 
-[`Questionnaire`](Questionnaire.md)
+`Questionnaire`
 
 A new instance of Questionnaire.

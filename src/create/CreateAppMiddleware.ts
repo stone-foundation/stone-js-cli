@@ -1,12 +1,15 @@
 import fsExtra from 'fs-extra'
 import { join } from 'node:path'
 import simpleGit from 'simple-git'
-import { writeFileSync } from 'node:fs'
 import { CliError } from '../errors/CliError'
 import { execSync } from 'node:child_process'
-import { ConsoleContext } from '../declarations'
 import { MetaPipe, NextPipe } from '@stone-js/pipeline'
+import { IBlueprint, isNotEmpty } from '@stone-js/core'
 import { basePath, tmpPath } from '@stone-js/filesystem'
+import { CreateAppConfig } from '../options/CreateAppConfig'
+import { ConsoleContext, PackageJson } from '../declarations'
+
+const { pathExistsSync, existsSync, renameSync, removeSync, copySync, readJsonSync, writeJsonSync } = fsExtra
 
 /**
  * Clone starter from GitHub.
@@ -17,27 +20,33 @@ import { basePath, tmpPath } from '@stone-js/filesystem'
  */
 export const CloneStarterMiddleware = async (
   context: ConsoleContext,
-  next: NextPipe<ConsoleContext>
-): Promise<ConsoleContext> => {
-  const overwrite = context.blueprint.get<boolean>('stone.createApp.overwrite', false)
-  const destDir = basePath(context.blueprint.get<string>('stone.createApp.projectName', 'stone-project'))
-  const startersRepo = context.blueprint.get<string>('stone.createApp.startersRepo', 'https://github.com/stonemjs/starters.git')
-  const srcDir = tmpPath(
-    'stone-js-starters',
-    context.blueprint.get<string>('typing', 'vanilla'),
-    context.blueprint.get<string>('template', 'basic')
-  )
+  next: NextPipe<ConsoleContext, IBlueprint>
+): Promise<IBlueprint> => {
+  const {
+    overwrite = false,
+    projectName = 'stone-project',
+    template = 'basic-service-declarative',
+    startersRepo = 'https://github.com/stonemjs/starters.git'
+  } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
 
-  if (!overwrite && fsExtra.pathExistsSync(destDir)) {
+  const destDir = basePath(projectName)
+  const srcDir = tmpPath('stone-js-starters', template)
+
+  if (!overwrite && pathExistsSync(destDir)) {
     throw new CliError(`Target directory (${destDir}) is not empty. Remove existing files and continue.`)
   }
 
-  context.commandOutput.show(`Creating project in ${destDir}`)
-  fsExtra.removeSync(tmpPath('stone-js-starters'))
-  await simpleGit(tmpPath()).clone(startersRepo, 'stone-js-starters')
-  fsExtra.copySync(srcDir, destDir)
+  context.commandOutput.info(`Creating project in ${destDir}`)
 
-  const packageJson = fsExtra.readJsonSync(join(destDir, 'package.json'))
+  existsSync(destDir) && removeSync(destDir)
+  existsSync(tmpPath('stone-js-starters')) && removeSync(tmpPath('stone-js-starters'))
+
+  await simpleGit(tmpPath()).clone(startersRepo, 'stone-js-starters')
+
+  copySync(srcDir, destDir)
+
+  const packageJson = readJsonSync(join(destDir, 'package.json'))
+
   context.blueprint.add('stone.createApp', { destDir, srcDir, packageJson })
 
   return await next(context)
@@ -52,69 +61,57 @@ export const CloneStarterMiddleware = async (
  */
 export const InstallDependenciesMiddleware = async (
   context: ConsoleContext,
-  next: NextPipe<ConsoleContext>
-): Promise<ConsoleContext> => {
-  const destDir = context.blueprint.get<string>('stone.createApp.destDir')
-  const linting = context.blueprint.get<string>('stone.createApp.linting', '')
-  const testing = context.blueprint.get<string>('stone.createApp.testing', '')
-  const modules = context.blueprint.get<string[]>('stone.createApp.modules', [])
-  const manager = context.blueprint.get<string>('stone.createApp.packageManager', 'npm')
-  const installCmd = manager === 'yarn' ? 'add' : 'install'
-  const lintingDeps = linting === 'standard' ? ['@babel/eslint-parser'] : []
-  const testingDeps = testing === 'jest' ? ['cross-env'] : ['@babel/register']
+  next: NextPipe<ConsoleContext, IBlueprint>
+): Promise<IBlueprint> => {
+  const {
+    testing,
+    destDir,
+    modules = [],
+    packageManager
+  } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
 
-  context.commandOutput.show('Installing packages. This might take a while...')
-  modules
-    .concat(linting, testing, ...lintingDeps, ...testingDeps)
-    .filter(Boolean)
-    .forEach((module) => {
-      execSync(`${manager} ${installCmd} ${module}`, { cwd: destDir })
-    })
+  const installCmd = packageManager === 'yarn' ? 'add' : 'install'
+  const testingDeps = testing === 'vitest' ? ['@vitest/coverage-v8'] : []
+
+  context.commandOutput.info('Installing packages. This might take a while...')
+
+  const packages = [modules, testing, testingDeps].flat()
+
+  execSync(`${packageManager} ${installCmd} ${packages.join(' ')}`, { cwd: destDir })
 
   return await next(context)
 }
 
 /**
- * Configure linting.
+ * Convert to vanilla JavaScript.
  *
  * @param context - Input data to transform via middleware.
  * @param next - Function to pass to the next middleware.
  * @returns A promise resolving with the context object.
  */
-export const ConfigureLintingMiddleware = async (
+export const ConvertToVanillaMiddleware = async (
   context: ConsoleContext,
-  next: NextPipe<ConsoleContext>
-): Promise<ConsoleContext> => {
-  const linting = context.blueprint.get<string>('stone.createApp.linting')
-  const testing = context.blueprint.get<string>('stone.createApp.testing')
-  const destDir = context.blueprint.get<string>('stone.createApp.destDir', '')
-  const packageJson = context.blueprint.get<Record<string, any>>('stone.createApp.packageJson', {})
+  next: NextPipe<ConsoleContext, IBlueprint>
+): Promise<IBlueprint> => {
+  // const {
+  //   // typing,
+  //   // destDir = ''
+  // } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
 
-  if (linting === 'standard') {
-    packageJson.scripts = {
-      ...packageJson.scripts,
-      lint: 'standard app'
-    }
-    if (testing === 'jest') {
-      packageJson.standard = {
-        parser: '@babel/eslint-parser',
-        globals: ['it', 'jest', 'test', 'expect', 'describe', 'afterEach', 'beforeEach']
-      }
-    }
-  } else if (linting === 'prettier') {
-    packageJson.scripts = {
-      ...packageJson.scripts,
-      format: 'prettier --write "app/**/*.js"',
-      'format:check': 'prettier --check "app/**/*.js"'
-    }
-    const prettierConfig = `
-    {
-      "singleQuote": true,
-      "semi": false
-    }
-    `
-    writeFileSync(join(destDir, '.prettierrc'), prettierConfig)
-  }
+  // TODO: Implement this feature
+  // if (typing === 'vanilla') {
+  //   createAppRollupConfig.input = join(destDir, 'app/**/*.ts')
+
+  //   if (isNotEmpty<OutputOptions>(createAppRollupConfig.output)) {
+  //     process.chdir(destDir)
+  //     createAppRollupConfig.output.dir = join(destDir, '.tmp')
+  //     const builder = await rollup(createAppRollupConfig)
+  //     await builder.write(createAppRollupConfig.output)
+  //   }
+
+  //   removeSync(join(destDir, 'app'))
+  //   renameSync(join(destDir, '.tmp'), join(destDir, 'app'))
+  // }
 
   return await next(context)
 }
@@ -128,35 +125,23 @@ export const ConfigureLintingMiddleware = async (
  */
 export const ConfigureTestingMiddleware = async (
   context: ConsoleContext,
-  next: NextPipe<ConsoleContext>
-): Promise<ConsoleContext> => {
-  const testing = context.blueprint.get<string>('stone.createApp.testing')
-  const destDir = context.blueprint.get<string>('stone.createApp.destDir', '')
-  const packageJson = context.blueprint.get<Record<string, any>>('stone.createApp.packageJson', {})
+  next: NextPipe<ConsoleContext, IBlueprint>
+): Promise<IBlueprint> => {
+  const {
+    typing,
+    testing,
+    packageJson,
+    destDir = ''
+  } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
 
-  if (testing === 'jest') {
-    packageJson.scripts = {
-      ...packageJson.scripts,
-      test: 'cross-env NODE_OPTIONS=--experimental-vm-modules jest'
+  if (testing !== 'vitest') {
+    if (isNotEmpty<PackageJson>(packageJson)) {
+      delete packageJson.scripts.test
+      delete packageJson.scripts['test:cvg']
     }
-    const jestConfig = {
-      roots: ['app/', 'tests/'],
-      transform: {},
-      collectCoverageFrom: ['app/**/*.{js,mjs}'],
-      coverageThreshold: {
-        global: {
-          lines: 80,
-          branches: 80,
-          functions: 80
-        }
-      }
-    }
-    fsExtra.writeJsonSync(join(destDir, 'jest.blueprint.json'), jestConfig)
-  } else if (testing === 'mocha') {
-    packageJson.scripts = {
-      ...packageJson.scripts,
-      test: 'mocha --require @babel/register'
-    }
+    removeSync(join(destDir, 'vitest.config.ts'))
+  } else if (typing === 'vanilla') {
+    renameSync(join(destDir, 'vitest.config.ts'), join(destDir, 'vitest.config.js'))
   }
 
   return await next(context)
@@ -171,16 +156,18 @@ export const ConfigureTestingMiddleware = async (
  */
 export const FinalizeMiddleware = async (
   context: ConsoleContext,
-  next: NextPipe<ConsoleContext>
-): Promise<ConsoleContext> => {
-  const destDir = context.blueprint.get<string>('stone.createApp.destDir', '')
-  const packageJson = context.blueprint.get<Record<string, any>>('stone.createApp.packageJson', {})
-  const manager = context.blueprint.get<string>('stone.createApp.packageManager', 'npm')
-  const scriptPrefix = manager === 'yarn' ? 'yarn' : `${manager} run`
+  next: NextPipe<ConsoleContext, IBlueprint>
+): Promise<IBlueprint> => {
+  const {
+    packageJson,
+    destDir = '',
+    packageManager,
+    projectName: changeDir = ''
+  } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
   const projectName = destDir.split('/').pop()
-  const changeDir = context.blueprint.get<string>('stone.createApp.projectName')
+  const scriptPrefix = packageManager === 'yarn' ? 'yarn' : `${packageManager} run`
 
-  fsExtra.writeJsonSync(join(destDir, 'package.json'), packageJson)
+  writeJsonSync(join(destDir, 'package.json'), packageJson, { spaces: 2 })
 
   const git = simpleGit(destDir)
   await git.init()
@@ -195,11 +182,15 @@ export const FinalizeMiddleware = async (
   To get started:
 
     cd ${String(changeDir)}/
-    ${scriptPrefix} start
+    ${scriptPrefix} dev
 
   To build for production:
 
     ${scriptPrefix} build
+
+  To preview production build:
+
+    ${scriptPrefix} preview
 
   Documentation:
 
@@ -212,10 +203,10 @@ export const FinalizeMiddleware = async (
 /**
  * Array of builder pipes with their priorities.
  */
-export const CreateAppMiddleware: Array<MetaPipe<ConsoleContext>> = [
+export const CreateAppMiddleware: Array<MetaPipe<ConsoleContext, IBlueprint>> = [
   { priority: 0, module: CloneStarterMiddleware },
   { priority: 1, module: InstallDependenciesMiddleware },
-  { priority: 2, module: ConfigureLintingMiddleware },
+  { priority: 2, module: ConvertToVanillaMiddleware },
   { priority: 2, module: ConfigureTestingMiddleware },
   { priority: 3, module: FinalizeMiddleware }
 ]

@@ -9,3 +9,10 @@ export interface ConsoleContext {
   commandInput: CommandInput
   commandOutput: CommandOutput
 }
+
+/**
+ * Represents the package.json file.
+ */
+export interface PackageJson {
+  scripts: Record<string, string>
+}

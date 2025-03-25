@@ -1,12 +1,12 @@
-[**CLI Documentation v0.0.0**](../../../README.md)
+[**CLI Documentation**](../../../README.md)
 
 ***
 
-[CLI Documentation](../../../modules.md) / [options/BuilderConfig](../README.md) / RollupConfig
+[CLI Documentation](../../../README.md) / [options/BuilderConfig](../README.md) / RollupConfig
 
 # Interface: RollupConfig
 
-Defined in: cli/src/options/BuilderConfig.ts:40
+Defined in: [cli/src/options/BuilderConfig.ts:40](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/options/BuilderConfig.ts#L40)
 
 Rollup configuration for the application.
 
@@ -16,7 +16,7 @@ Rollup configuration for the application.
 
 > **build**: `Partial`\<`RollupOptions`\>
 
-Defined in: cli/src/options/BuilderConfig.ts:44
+Defined in: [cli/src/options/BuilderConfig.ts:44](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/options/BuilderConfig.ts#L44)
 
 This configuration is used for building the application.
 
@@ -26,6 +26,6 @@ This configuration is used for building the application.
 
 > **bundle**: `Partial`\<`RollupOptions`\>
 
-Defined in: cli/src/options/BuilderConfig.ts:49
+Defined in: [cli/src/options/BuilderConfig.ts:49](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/options/BuilderConfig.ts#L49)
 
 This configuration is used for bundling the application.

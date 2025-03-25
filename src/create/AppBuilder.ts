@@ -39,15 +39,20 @@ export class AppBuilder {
   }
 
   private setUserOptions (event: IncomingEvent): void {
-    this.context.blueprint.set('stone.createApp.overwrite', event.get<boolean>('force', false))
-    this.context.blueprint.set('stone.createApp.projectName', event.get<string>('project-name', 'stone-project'))
+    this.context.blueprint.set('stone.createApp.overwrite', event.get<boolean>('force'))
+    this.context.blueprint.set('stone.createApp.projectName', event.get<string>('project-name'))
   }
 
-  private async executeThroughPipeline (pipes: Array<MetaPipe<ConsoleContext>>): Promise<void> {
+  /**
+   * Execute the pipeline.
+   *
+   * @param pipes - The pipeline to execute.
+   */
+  private async executeThroughPipeline (pipes: Array<MetaPipe<ConsoleContext, IBlueprint>>): Promise<void> {
     await Pipeline
-      .create<ConsoleContext>()
+      .create<ConsoleContext, IBlueprint>()
       .send(this.context)
       .through(...pipes)
-      .thenReturn()
+      .then(context => context.blueprint)
   }
 }

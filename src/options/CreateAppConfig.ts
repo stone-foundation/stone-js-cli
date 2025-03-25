@@ -1,3 +1,5 @@
+import { PackageJson } from '../declarations'
+
 /**
  * Configuration for creating a new Stone.js Application.
  * Used internally by the `init` command.
@@ -15,7 +17,7 @@ export interface CreateAppConfig {
   projectName: string
   startersRepo: string
   packageManager: string
-  packageJson?: Record<string, unknown>
+  packageJson?: PackageJson
 }
 
 /**

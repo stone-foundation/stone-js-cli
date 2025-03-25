@@ -165,10 +165,11 @@ export const GenerateClientFileMiddleware = async (
   context: ConsoleContext,
   next: NextPipe<ConsoleContext, IBlueprint>
 ): Promise<IBlueprint> => {
-  const pattern = relative(
-    buildPath('tmp'),
-    basePath(context.blueprint.get('stone.builder.input.app', 'app/**/*.{ts,js,mjs,json}'))
-  )
+  const isNanoApp = context.blueprint.get('stone.builder.nano', false)
+  const basePattern = isNanoApp
+    ? context.blueprint.get('stone.builder.input.all', 'app/**/*.**')
+    : context.blueprint.get('stone.builder.input.app', 'app/**/*.{ts,js,mjs,json}')
+  const pattern = relative(buildPath('tmp'), basePattern)
 
   const isTypescript = isTypescriptApp(context.blueprint)
   const userFilename = isTypescript ? 'client.ts' : 'client.mjs'
@@ -178,11 +179,13 @@ export const GenerateClientFileMiddleware = async (
     ? readFileSync(basePath(userFilename), 'utf-8')
     : reactClientEntryPointTemplate(pattern)
 
-  // Add the lazy routes to the client file
-  content = `import * as pageRoutes from './routes${isTypescript ? '' : '.mjs'}';\n`
-    .concat(content)
-    .replace('%pattern%', pattern)
-    .replace('// %concat%', '.concat(Object.values(pageRoutes))')
+  // Add the lazy routes to the client file when not a Nano app
+  content = isNanoApp
+    ? content.replace('%pattern%', pattern)
+    : `import * as pageRoutes from './routes${isTypescript ? '' : '.mjs'}';\n`
+      .concat(content)
+      .replace('%pattern%', pattern)
+      .replace('// %concat%', '.concat(Object.values(pageRoutes))')
 
   outputFileSync(buildPath(filename), content, 'utf-8')
 

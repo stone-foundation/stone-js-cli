@@ -23,51 +23,51 @@ export interface Template {
  */
 const templates = ({ format }: { format: typeof chalk }): Template[] => [
   {
-    value: 'basic-service-declarative-api',
+    value: 'basic-service-declarative',
     title: format.green('Basic starter with minimal setup and declarative API')
   },
   {
-    value: 'basic-service-imperative-api',
+    value: 'basic-service-imperative',
     title: format.green('Basic starter with minimal setup and imperative API')
   },
   {
-    value: 'basic-react-declarative-api',
+    value: 'basic-react-declarative',
     title: format.green('Basic React starter with minimal setup and declarative API')
   },
   {
-    value: 'basic-react-imperative-api',
+    value: 'basic-react-imperative',
     title: format.green('Basic React starter with minimal setup and imperative API')
   },
   {
-    value: 'standard-service-declarative-api',
+    value: 'standard-service-declarative',
     title: format.blue('Standard starter with common setup and declarative API')
   },
   {
-    value: 'standard-service-imperative-api',
+    value: 'standard-service-imperative',
     title: format.blue('Standard starter with common setup and imperative API')
   },
   {
-    value: 'standard-react-declarative-api',
+    value: 'standard-react-declarative',
     title: format.blue('Standard React starter with common setup and declarative API')
   },
   {
-    value: 'standard-react-imperative-api',
+    value: 'standard-react-imperative',
     title: format.blue('Standard React starter with common setup and imperative API')
   },
   {
-    value: 'full-service-declarative-api',
+    value: 'full-service-declarative',
     title: format.red('Full featured starter with complete setup and declarative API')
   },
   {
-    value: 'full-service-imperative-api',
+    value: 'full-service-imperative',
     title: format.red('Full featured starter with complete setup and imperative API')
   },
   {
-    value: 'full-react-declarative-api',
+    value: 'full-react-declarative',
     title: format.red('Full featured React starter with complete setup and declarative API')
   },
   {
-    value: 'full-react-imperative-api',
+    value: 'full-react-imperative',
     title: format.red('Full featured React starter with complete setup and imperative API')
   }
 ]

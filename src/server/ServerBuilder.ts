@@ -71,7 +71,7 @@ export class ServerBuilder {
    */
   async export (event: IncomingEvent): Promise<void> {
     let isExported = false
-    const module = event.get<'app' | 'console' | 'rollup' | 'vitest'>('module', 'app')
+    const module = event.get<'app' | 'console' | 'rollup'>('module', 'app')
     switch (module) {
       case 'app':
         isExported = await this.exportServerTemplate()
@@ -81,9 +81,6 @@ export class ServerBuilder {
         break
       case 'rollup':
         isExported = await this.exportRollupConfig()
-        break
-      case 'vitest':
-        isExported = await this.exportVitestConfig()
         break
     }
 
@@ -176,23 +173,6 @@ export class ServerBuilder {
       writeFileSync(
         basePath('rollup.config.mjs'),
         readFileSync(dirPath('../dist/rollup.config.js'), 'utf-8'),
-        'utf-8'
-      )
-      return true
-    }
-    return false
-  }
-
-  /**
-   * Exports the Vitest configuration file.
-   *
-   * @returns The export status.
-   */
-  private async exportVitestConfig (): Promise<boolean> {
-    if (await this.confirmCreation('vitest.config.js')) {
-      writeFileSync(
-        basePath('vitest.config.js'),
-        readFileSync(dirPath('../dist/vitest.config.js'), 'utf-8'),
         'utf-8'
       )
       return true

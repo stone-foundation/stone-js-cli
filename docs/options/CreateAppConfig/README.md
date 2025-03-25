@@ -1,8 +1,8 @@
-[**CLI Documentation v0.0.0**](../../README.md)
+[**CLI Documentation**](../../README.md)
 
 ***
 
-[CLI Documentation](../../modules.md) / options/CreateAppConfig
+[CLI Documentation](../../README.md) / options/CreateAppConfig
 
 # options/CreateAppConfig
 

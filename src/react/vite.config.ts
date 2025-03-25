@@ -3,6 +3,9 @@ import { defineConfig } from 'vite'
 import babel from 'vite-plugin-babel'
 import react from '@vitejs/plugin-react'
 
+/**
+ * The Vite configuration.
+ */
 export const viteConfig = defineConfig(() => {
   return {
     plugins: [

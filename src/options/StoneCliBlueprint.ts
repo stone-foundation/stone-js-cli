@@ -1,9 +1,10 @@
 import { BuilderConfig, builder } from './BuilderConfig'
+import { ConsoleErrorHandler } from '../ConsoleErrorHandler'
 import { CreateAppConfig, createApp } from './CreateAppConfig'
 import { NODE_CONSOLE_PLATFORM } from '@stone-js/node-cli-adapter'
+import { EnsureStoneProjectHook } from '../EnsureStoneProjectHook'
 import { metaCLIBlueprintMiddleware } from '../middleware/BlueprintMiddleware'
 import { AppConfig, IncomingEvent, OutgoingResponse, StoneBlueprint } from '@stone-js/core'
-import { MetaEnsureStoneProjectMiddleware } from '../middleware/EnsureStoneProjectMiddleware'
 
 /**
  * App Config configuration for the Stone CLI application.
@@ -41,9 +42,12 @@ export const stoneCliBlueprint: StoneCliBlueprint = {
       middleware: metaCLIBlueprintMiddleware
     },
     kernel: {
-      middleware: [
-        MetaEnsureStoneProjectMiddleware
-      ]
+      errorHandlers: {
+        CliError: { module: ConsoleErrorHandler, isClass: true }
+      }
+    },
+    lifecycleHooks: {
+      onExecutingEventHandler: [EnsureStoneProjectHook]
     }
   }
 }

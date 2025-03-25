@@ -19,8 +19,8 @@ export const exportCommandOptions: CommandOptions = {
       .positional('module', {
         type: 'string',
         default: 'app',
-        choices: ['app', 'console', 'rollup', 'vite', 'vitest'],
-        desc: 'module or config name to export. e.g. app, cli, rollup'
+        choices: ['app', 'console', 'rollup', 'vite'],
+        desc: 'module or config name to export. e.g. app, console, rollup'
       })
   }
 }

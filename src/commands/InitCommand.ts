@@ -16,7 +16,6 @@ export const initCommandOptions: CommandOptions = {
     return yargs
       .positional('project-name', {
         type: 'string',
-        default: 'stone-project',
         desc: 'your project name'
       })
       .option('yes', {
@@ -28,7 +27,6 @@ export const initCommandOptions: CommandOptions = {
       .option('force', {
         alias: 'f',
         type: 'boolean',
-        default: false,
         desc: 'Force overriding'
       })
   }

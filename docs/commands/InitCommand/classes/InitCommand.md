@@ -1,22 +1,22 @@
-[**CLI Documentation v0.0.0**](../../../README.md)
+[**CLI Documentation**](../../../README.md)
 
 ***
 
-[CLI Documentation](../../../modules.md) / [commands/InitCommand](../README.md) / InitCommand
+[CLI Documentation](../../../README.md) / [commands/InitCommand](../README.md) / InitCommand
 
 # Class: InitCommand
 
-Defined in: [cli/src/commands/InitCommand.ts:40](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/InitCommand.ts#L40)
+Defined in: [cli/src/commands/InitCommand.ts:38](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/InitCommand.ts#L38)
 
 The init command class.
 
 ## Constructors
 
-### new InitCommand()
+### Constructor
 
-> **new InitCommand**(`context`): [`InitCommand`](InitCommand.md)
+> **new InitCommand**(`context`): `InitCommand`
 
-Defined in: [cli/src/commands/InitCommand.ts:46](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/InitCommand.ts#L46)
+Defined in: [cli/src/commands/InitCommand.ts:44](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/InitCommand.ts#L44)
 
 Create a new instance of CoreServiceProvider.
 
@@ -30,7 +30,7 @@ The service container to manage dependencies.
 
 #### Returns
 
-[`InitCommand`](InitCommand.md)
+`InitCommand`
 
 ## Methods
 
@@ -38,7 +38,7 @@ The service container to manage dependencies.
 
 > **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/commands/InitCommand.ts:51](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/InitCommand.ts#L51)
+Defined in: [cli/src/commands/InitCommand.ts:49](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/InitCommand.ts#L49)
 
 Handle the incoming event.
 

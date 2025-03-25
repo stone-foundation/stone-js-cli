@@ -1,8 +1,8 @@
-[**CLI Documentation v0.0.0**](../../README.md)
+[**CLI Documentation**](../../README.md)
 
 ***
 
-[CLI Documentation](../../modules.md) / server/ServerBuildMiddleware
+[CLI Documentation](../../README.md) / server/ServerBuildMiddleware
 
 # server/ServerBuildMiddleware
 

@@ -54,6 +54,11 @@ export interface RollupConfig {
  */
 export interface BuilderConfig {
   /**
+   * Whether the application is a Nano application.
+   */
+  nano?: boolean
+
+  /**
    * The type of the application modules.
    */
   type?: 'typescript' | 'javascript'

@@ -1,8 +1,8 @@
-[**CLI Documentation v0.0.0**](../../README.md)
+[**CLI Documentation**](../../README.md)
 
 ***
 
-[CLI Documentation](../../modules.md) / commands/CacheCommand
+[CLI Documentation](../../README.md) / commands/CacheCommand
 
 # commands/CacheCommand
 

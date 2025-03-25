@@ -1,22 +1,22 @@
-[**CLI Documentation v0.0.0**](../../../README.md)
+[**CLI Documentation**](../../../README.md)
 
 ***
 
-[CLI Documentation](../../../modules.md) / [commands/ServeCommand](../README.md) / ServeCommand
+[CLI Documentation](../../../README.md) / [commands/ServeCommand](../README.md) / ServeCommand
 
 # Class: ServeCommand
 
-Defined in: [cli/src/commands/ServeCommand.ts:40](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/ServeCommand.ts#L40)
+Defined in: [cli/src/commands/ServeCommand.ts:40](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/ServeCommand.ts#L40)
 
 The serve command class.
 
 ## Constructors
 
-### new ServeCommand()
+### Constructor
 
-> **new ServeCommand**(`context`): [`ServeCommand`](ServeCommand.md)
+> **new ServeCommand**(`context`): `ServeCommand`
 
-Defined in: [cli/src/commands/ServeCommand.ts:48](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/ServeCommand.ts#L48)
+Defined in: [cli/src/commands/ServeCommand.ts:48](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/ServeCommand.ts#L48)
 
 Create a new instance of ServeCommand.
 
@@ -30,7 +30,7 @@ The service container to manage dependencies.
 
 #### Returns
 
-[`ServeCommand`](ServeCommand.md)
+`ServeCommand`
 
 ## Methods
 
@@ -38,7 +38,7 @@ The service container to manage dependencies.
 
 > **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/commands/ServeCommand.ts:57](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/commands/ServeCommand.ts#L57)
+Defined in: [cli/src/commands/ServeCommand.ts:57](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/ServeCommand.ts#L57)
 
 Handle the incoming event.
 

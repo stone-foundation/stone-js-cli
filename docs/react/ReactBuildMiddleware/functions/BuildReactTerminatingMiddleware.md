@@ -1,14 +1,14 @@
-[**CLI Documentation v0.0.0**](../../../README.md)
+[**CLI Documentation**](../../../README.md)
 
 ***
 
-[CLI Documentation](../../../modules.md) / [react/ReactBuildMiddleware](../README.md) / BuildReactTerminatingMiddleware
+[CLI Documentation](../../../README.md) / [react/ReactBuildMiddleware](../README.md) / BuildReactTerminatingMiddleware
 
 # Function: BuildReactTerminatingMiddleware()
 
 > **BuildReactTerminatingMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
 
-Defined in: [cli/src/react/ReactBuildMiddleware.ts:353](https://github.com/stonemjs/cli/blob/9e518a2b8256b5ebc9e0e69a80ac84eb1fb59bf9/src/react/ReactBuildMiddleware.ts#L353)
+Defined in: [cli/src/react/ReactBuildMiddleware.ts:356](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/react/ReactBuildMiddleware.ts#L356)
 
 Build terminating middleware.
 

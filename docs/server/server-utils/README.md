@@ -1,8 +1,8 @@
-[**CLI Documentation v0.0.0**](../../README.md)
+[**CLI Documentation**](../../README.md)
 
 ***
 
-[CLI Documentation](../../modules.md) / server/server-utils
+[CLI Documentation](../../README.md) / server/server-utils
 
 # server/server-utils
 
