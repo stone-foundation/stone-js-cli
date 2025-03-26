@@ -8,6 +8,6 @@
 
 > `const` **cacheCommandOptions**: `CommandOptions`
 
-Defined in: [cli/src/commands/CacheCommand.ts:11](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/CacheCommand.ts#L11)
+Defined in: [cli/src/commands/CacheCommand.ts:11](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/commands/CacheCommand.ts#L11)
 
 The cache command options.

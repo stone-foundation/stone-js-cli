@@ -3,13 +3,13 @@ import fsExtra from 'fs-extra'
 import { relative } from 'node:path'
 import { existsSync } from 'node:fs'
 import { build, mergeConfig } from 'vite'
-import { isTypescriptApp } from '../utils'
 import { getViteConfig } from './react-utils'
 import { ConsoleContext } from '../declarations'
 import { PageRouteDefinition } from '@stone-js/router'
 import { MetaPipe, NextPipe } from '@stone-js/pipeline'
 import { removeImportsVitePlugin } from './RemoveImportsVitePlugin'
 import { basePath, buildPath, distPath } from '@stone-js/filesystem'
+import { generatePublicEnviromentsFile, isTypescriptApp } from '../utils'
 import { getMetadata, hasMetadata, isNotEmpty, IBlueprint, ClassType } from '@stone-js/core'
 import { reactHtmlEntryPointTemplate, reactClientEntryPointTemplate, reactServerEntryPointTemplate } from './stubs'
 import { REACT_ADAPTER_ERROR_HANDLER_KEY, REACT_ERROR_HANDLER_KEY, REACT_PAGE_KEY, REACT_PAGE_LAYOUT_KEY } from '@stone-js/use-react'
@@ -339,7 +339,7 @@ export const MakeServerHtmlTemplateMiddleware = async (
 ): Promise<IBlueprint> => {
   outputFileSync(
     distPath('template.mjs'),
-    `export const template = \`${readFileSync(distPath('.stone/tmp/index.html'), 'utf-8')}\`;`,
+    `export const template = \`${readFileSync(distPath('index.html'), 'utf-8')}\`;`,
     'utf-8'
   )
 
@@ -353,13 +353,43 @@ export const MakeServerHtmlTemplateMiddleware = async (
  * @param next The next pipe function.
  * @returns The updated blueprint object.
  */
-export const BuildReactTerminatingMiddleware = async (
+export const BuildReactCleaningMiddleware = async (
   context: ConsoleContext,
   next: NextPipe<ConsoleContext, IBlueprint>
 ): Promise<IBlueprint> => {
   moveSync(distPath('.stone/tmp/index.html'), distPath('index.html'))
+
   removeSync(buildPath('tmp'))
   removeSync(distPath('.stone'))
+
+  return await next(context)
+}
+
+/**
+ * Generates the public environment files.
+ *
+ * @param context The console context.
+ * @param next The next pipe function.
+ * @returns The updated blueprint object.
+ */
+export const GeneratePublicEnvFileMiddleware = async (
+  context: ConsoleContext,
+  next: NextPipe<ConsoleContext, IBlueprint>
+): Promise<IBlueprint> => {
+  const content = readFileSync(distPath('index.html'), 'utf-8')
+  const hasEnvFile = generatePublicEnviromentsFile(
+    context.blueprint,
+    distPath('env')
+  )
+
+  outputFileSync(
+    distPath('index.html'),
+    content.replace(
+      '<!--env-js-->',
+      hasEnvFile ? '<script src="/env/enviroments.js"></script>' : ''
+    ),
+    'utf-8'
+  )
 
   return await next(context)
 }
@@ -374,7 +404,8 @@ export const ReactClientBuildMiddleware: Array<MetaPipe<ConsoleContext, IBluepri
   { module: GenerateClientFileMiddleware, priority: 3 },
   { module: GenerateIndexHtmlFileMiddleware, priority: 4 },
   { module: BuildClientAppMiddleware, priority: 5 },
-  { module: BuildReactTerminatingMiddleware, priority: 6 }
+  { module: BuildReactCleaningMiddleware, priority: 6 },
+  { module: GeneratePublicEnvFileMiddleware, priority: 7 }
 ]
 
 /**
@@ -389,6 +420,7 @@ export const ReactServerBuildMiddleware: Array<MetaPipe<ConsoleContext, IBluepri
   { module: BuildClientAppMiddleware, priority: 5 },
   { module: GenerateReactServerFileMiddleware, priority: 6 },
   { module: BuildReactServerAppMiddleware, priority: 7 },
-  { module: MakeServerHtmlTemplateMiddleware, priority: 8 },
-  { module: BuildReactTerminatingMiddleware, priority: 9 }
+  { module: BuildReactCleaningMiddleware, priority: 8 },
+  { module: GeneratePublicEnvFileMiddleware, priority: 9 },
+  { module: MakeServerHtmlTemplateMiddleware, priority: 10 }
 ]

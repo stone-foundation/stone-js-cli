@@ -6,7 +6,7 @@
 
 # Interface: DotenvConfig
 
-Defined in: [cli/src/options/DotenvConfig.ts:54](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/options/DotenvConfig.ts#L54)
+Defined in: [cli/src/options/DotenvConfig.ts:41](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/DotenvConfig.ts#L41)
 
 Complete configuration for managing environment variables.
 
@@ -14,9 +14,9 @@ Complete configuration for managing environment variables.
 
 ### options?
 
-> `optional` **options**: `Partial`\<[`DotenvOptions`](DotenvOptions.md)\>
+> `optional` **options**: [`DotenvOptions`](DotenvOptions.md)
 
-Defined in: [cli/src/options/DotenvConfig.ts:63](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/options/DotenvConfig.ts#L63)
+Defined in: [cli/src/options/DotenvConfig.ts:46](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/DotenvConfig.ts#L46)
 
 Options for loading and expanding `.env` files.
 
@@ -24,9 +24,9 @@ Options for loading and expanding `.env` files.
 
 ### private?
 
-> `optional` **private**: `Partial`\<[`DotenvFiles`](DotenvFiles.md)\>
+> `optional` **private**: [`DotenvFiles`](DotenvFiles.md)
 
-Defined in: [cli/src/options/DotenvConfig.ts:68](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/options/DotenvConfig.ts#L68)
+Defined in: [cli/src/options/DotenvConfig.ts:51](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/DotenvConfig.ts#L51)
 
 Configuration for private `.env` files (not included in the bundle).
 
@@ -34,18 +34,8 @@ Configuration for private `.env` files (not included in the bundle).
 
 ### public?
 
-> `optional` **public**: `Partial`\<[`DotenvFiles`](DotenvFiles.md)\>
+> `optional` **public**: `Record`\<`string`, [`DotenvFiles`](DotenvFiles.md)\>
 
-Defined in: [cli/src/options/DotenvConfig.ts:73](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/options/DotenvConfig.ts#L73)
+Defined in: [cli/src/options/DotenvConfig.ts:56](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/DotenvConfig.ts#L56)
 
 Configuration for public `.env` files (included in the bundle).
-
-***
-
-### replace?
-
-> `optional` **replace**: `Partial`\<[`DotenvReplaceOptions`](DotenvReplaceOptions.md)\>
-
-Defined in: [cli/src/options/DotenvConfig.ts:58](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/options/DotenvConfig.ts#L58)
-
-Options for replacing variables during the build process.

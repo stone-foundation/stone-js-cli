@@ -9,4 +9,3 @@
 ## Functions
 
 - [getRollupConfig](functions/getRollupConfig.md)
-- [replaceProcessEnvVars](functions/replaceProcessEnvVars.md)

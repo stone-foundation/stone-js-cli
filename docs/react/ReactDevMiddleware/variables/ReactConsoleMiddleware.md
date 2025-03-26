@@ -8,6 +8,6 @@
 
 > `const` **ReactConsoleMiddleware**: `MetaPipe`\<[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md), `IBlueprint`\>[]
 
-Defined in: [cli/src/react/ReactDevMiddleware.ts:188](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/react/ReactDevMiddleware.ts#L188)
+Defined in: [cli/src/react/ReactDevMiddleware.ts:218](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/react/ReactDevMiddleware.ts#L218)
 
 Middleware for building server applications.

@@ -8,6 +8,6 @@
 
 > `const` **ServerBuildMiddleware**: `MetaPipe`\<[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md), `IBlueprint`\>[]
 
-Defined in: [cli/src/server/ServerBuildMiddleware.ts:129](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/server/ServerBuildMiddleware.ts#L129)
+Defined in: [cli/src/server/ServerBuildMiddleware.ts:118](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/server/ServerBuildMiddleware.ts#L118)
 
 Middleware for building Server applications.

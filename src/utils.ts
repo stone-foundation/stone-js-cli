@@ -6,15 +6,15 @@ import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { fileURLToPath } from 'node:url'
 import DotenvExpand from 'dotenv-expand'
-import { dirname, join } from 'node:path'
 import { ChildProcess } from 'node:child_process'
+import { basename, dirname, join } from 'node:path'
 import Dotenv, { DotenvPopulateInput } from 'dotenv'
-import { DotenvOptions } from './options/DotenvConfig'
 import { builder, BuilderConfig } from './options/BuilderConfig'
 import { IBlueprint, IncomingEvent, isNotEmpty } from '@stone-js/core'
 import { basePath, buildPath, importModule } from '@stone-js/filesystem'
+import { DotenvConfig, DotenvFiles, DotenvOptions } from './options/DotenvConfig'
 
-const { readJsonSync, pathExistsSync, outputJsonSync } = fsExtra
+const { readJsonSync, pathExistsSync, outputJsonSync, outputFileSync } = fsExtra
 
 /**
  * Resolve path from file directory.
@@ -88,12 +88,71 @@ export function shouldBuild (pattern: string): boolean {
  */
 export function getEnvVariables (options: Partial<DotenvOptions>): Record<string, string> | undefined {
   const processEnv = (options.ignoreProcessEnv === true ? {} : process.env) as DotenvPopulateInput
+  const output = Dotenv.config({ ...options, processEnv })
 
   if (options.expand === true) {
-    return DotenvExpand.expand(Dotenv.config({ ...options, processEnv })).parsed
+    return DotenvExpand.expand({ ...output, processEnv }).parsed
   }
 
-  return Dotenv.config({ ...options, processEnv }).parsed
+  return output.parsed
+}
+
+/**
+ * Get the public env options.
+ *
+ * @returns The public environment options.
+ */
+export function getDefaultPublicEnvOptions (): Record<string, DotenvFiles> {
+  return glob.sync(
+    [basePath('.env.public'), basePath('.env.public.*')]
+  ).reduce((prev, file) => {
+    const name = basename(file).replace(/\.env\.public\.?/, '').trim()
+    const env = name.length > 0 ? name : 'default'
+
+    return {
+      ...prev,
+      [env]: {
+        path: file,
+        override: false,
+        default: env === 'default'
+      }
+    }
+  }, {})
+}
+
+/**
+ * Generates environment files for the browser environment.
+ *
+ * @param blueprint - The blueprint object.
+ * @param baseOutputPath - The base output path.
+ * @returns True if the environment files were generated; otherwise, false.
+ */
+export function generatePublicEnviromentsFile (blueprint: IBlueprint, baseOutputPath: string): boolean {
+  let generated: boolean = false
+
+  const dotenv = blueprint.get<DotenvConfig>('stone.builder.dotenv', {})
+  const options = dotenv.options ?? {}
+
+  Object.entries(dotenv.public ?? getDefaultPublicEnvOptions()).forEach(([env, value]) => {
+    options.ignoreProcessEnv = true
+    options.path = value.path ?? '.env.public'
+    options.override = value.override ?? options.override ?? false
+
+    const content = `window.process = window.process || {}
+window.process.env = {
+  ...window.process.env,
+  ...JSON.parse('${JSON.stringify(getEnvVariables(options) ?? {})}')
+}`
+
+    outputFileSync(join(baseOutputPath, `enviroments.${env}.js`), content, 'utf-8')
+
+    if (value.default === true) {
+      generated = true
+      outputFileSync(join(baseOutputPath, 'enviroments.js'), content, 'utf-8')
+    }
+  })
+
+  return generated
 }
 
 /**

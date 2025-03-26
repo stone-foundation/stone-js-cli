@@ -6,7 +6,7 @@
 
 # Class: TypingsCommand
 
-Defined in: [cli/src/commands/TypingsCommand.ts:32](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/TypingsCommand.ts#L32)
+Defined in: [cli/src/commands/TypingsCommand.ts:32](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/commands/TypingsCommand.ts#L32)
 
 The typings command class.
 
@@ -16,7 +16,7 @@ The typings command class.
 
 > **new TypingsCommand**(`context`): `TypingsCommand`
 
-Defined in: [cli/src/commands/TypingsCommand.ts:40](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/TypingsCommand.ts#L40)
+Defined in: [cli/src/commands/TypingsCommand.ts:40](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/commands/TypingsCommand.ts#L40)
 
 Create a new instance of TypingsCommand.
 
@@ -38,7 +38,7 @@ The service container to manage dependencies.
 
 > **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/commands/TypingsCommand.ts:47](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/TypingsCommand.ts#L47)
+Defined in: [cli/src/commands/TypingsCommand.ts:47](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/commands/TypingsCommand.ts#L47)
 
 Handle the incoming event.
 

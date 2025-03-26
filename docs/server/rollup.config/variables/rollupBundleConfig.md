@@ -8,6 +8,6 @@
 
 > `const` **rollupBundleConfig**: `RollupOptions`
 
-Defined in: [cli/src/server/rollup.config.ts:52](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/server/rollup.config.ts#L52)
+Defined in: [cli/src/server/rollup.config.ts:50](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/server/rollup.config.ts#L50)
 
 Generate Rollup bundle options for the entire application.

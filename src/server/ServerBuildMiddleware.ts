@@ -2,12 +2,11 @@ import fsExtra from 'fs-extra'
 import { rollup } from 'rollup'
 import { serverIndexFile } from './stubs'
 import { IBlueprint } from '@stone-js/core'
-import replace from '@rollup/plugin-replace'
 import { ConsoleContext } from '../declarations'
+import { getRollupConfig } from './server-utils'
 import { existsSync, readFileSync } from 'node:fs'
 import { MetaPipe, NextPipe } from '@stone-js/pipeline'
 import { basePath, buildPath, distPath } from '@stone-js/filesystem'
-import { getRollupConfig, replaceProcessEnvVars } from './server-utils'
 
 const { outputFileSync, removeSync } = fsExtra
 
@@ -27,7 +26,6 @@ export const BuildServerAppMiddleware = async (
   )
 
   const rollupConfig = await getRollupConfig(context.blueprint)
-  const plugins = rollupConfig.plugins ?? []
   const pattern = context.blueprint.get(
     'stone.builder.input.all',
     'app/**/*.**'
@@ -37,10 +35,6 @@ export const BuildServerAppMiddleware = async (
   rollupConfig.output = {
     format: 'es',
     file: buildPath('tmp/modules.mjs')
-  }
-
-  if (Array.isArray(plugins)) {
-    plugins.push(replace({ preventAssignment: true }))
   }
 
   const builder = await rollup(rollupConfig)
@@ -88,16 +82,11 @@ export const BundleServerAppMiddleware = async (
 
   const output = context.blueprint.get('stone.builder.output', 'index.mjs')
   const rollupConfig = await getRollupConfig(context.blueprint, 'bundle')
-  const plugins = rollupConfig.plugins ?? []
 
   rollupConfig.input = buildPath('tmp/server.mjs')
   rollupConfig.output = {
     format: 'es',
     file: distPath(output)
-  }
-
-  if (Array.isArray(plugins)) {
-    plugins.push(replace(replaceProcessEnvVars(context.blueprint)))
   }
 
   const bundle = await rollup(rollupConfig)

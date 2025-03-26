@@ -1,12 +1,17 @@
+import { Argv } from 'yargs'
+import fsExtra from 'fs-extra'
 import spawn from 'cross-spawn'
-import { IncomingEvent } from '@stone-js/core'
+import { parse } from 'node:path'
 import { ConsoleContext } from '../declarations'
 import { ChildProcess } from 'node:child_process'
 import { ReactBuilder } from '../react/ReactBuilder'
 import { ServerBuilder } from '../server/ServerBuilder'
-import { buildPath, distPath } from '@stone-js/filesystem'
+import { IncomingEvent, isNotEmpty } from '@stone-js/core'
 import { CommandOptions } from '@stone-js/node-cli-adapter'
 import { isReactApp, setupProcessSignalHandlers } from '../utils'
+import { basePath, buildPath, distPath } from '@stone-js/filesystem'
+
+const { pathExistsSync } = fsExtra
 
 /**
  * The preview command options.
@@ -14,7 +19,15 @@ import { isReactApp, setupProcessSignalHandlers } from '../utils'
 export const previewCommandOptions: CommandOptions = {
   name: 'preview',
   alias: 'p',
-  desc: 'Run project in preview mode'
+  args: ['[filename]'],
+  desc: 'Run project in preview mode',
+  options: (yargs: Argv) => {
+    return yargs
+      .positional('filename', {
+        type: 'string',
+        desc: 'file path to preview'
+      })
+  }
 }
 
 /**
@@ -38,7 +51,12 @@ export class PreviewCommand {
    * @param event - The incoming event.
    */
   async handle (event: IncomingEvent): Promise<void> {
-    if (isReactApp(this.context.blueprint, event)) {
+    const filename = event.get<string>('filename')
+
+    if (isNotEmpty<string>(filename) && pathExistsSync(basePath(filename))) {
+      const parsed = parse(basePath(filename))
+      this.startProcess(parsed.base, parsed.dir)
+    } else if (isReactApp(this.context.blueprint, event)) {
       await new ReactBuilder(this.context).preview(event)
       this.startProcess(buildPath('preview.mjs'))
     } else {
@@ -50,8 +68,8 @@ export class PreviewCommand {
   /**
    * Start Process.
    */
-  private startProcess (path: string): void {
-    this.serverProcess = spawn('node', [path], { stdio: 'inherit' })
+  private startProcess (path: string, cwd?: string): void {
+    this.serverProcess = spawn('node', [path], { stdio: 'inherit', cwd })
     this.serverProcess.on('exit', (code) => process.exit(code ?? 0))
   }
 }

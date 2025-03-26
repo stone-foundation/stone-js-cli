@@ -10,9 +10,9 @@ import { build, mergeConfig } from 'vite'
 import { IBlueprint } from '@stone-js/core'
 import { getViteConfig } from './react-utils'
 import { ConsoleContext } from '../declarations'
-import { isTypescriptApp, setCache } from '../utils'
 import { MetaPipe, NextPipe } from '@stone-js/pipeline'
 import { basePath, buildPath } from '@stone-js/filesystem'
+import { generatePublicEnviromentsFile, isTypescriptApp, setCache } from '../utils'
 
 const { outputFileSync, existsSync, readFileSync } = fsExtra
 
@@ -100,6 +100,35 @@ export const GenerateDevServerMiddleware = async (
 }
 
 /**
+ * Generates the public environment files.
+ *
+ * @param context The console context.
+ * @param next The next pipe function.
+ * @returns The updated blueprint object.
+ */
+export const GeneratePublicEnvFileDevMiddleware = async (
+  context: ConsoleContext,
+  next: NextPipe<ConsoleContext, IBlueprint>
+): Promise<IBlueprint> => {
+  const content = readFileSync(buildPath('index.html'), 'utf-8')
+  const hasEnvFile = generatePublicEnviromentsFile(
+    context.blueprint,
+    buildPath()
+  )
+
+  outputFileSync(
+    buildPath('index.html'),
+    content.replace(
+      '<!--env-js-->',
+      hasEnvFile ? '<script src="enviroments.js"></script>' : ''
+    ),
+    'utf-8'
+  )
+
+  return await next(context)
+}
+
+/**
  * Generates console index file for all modules in the application.
  *
  * @param context The console context.
@@ -179,7 +208,8 @@ export const BuildConsoleAppMiddleware = async (
 export const ReactDevMiddleware: Array<MetaPipe<ConsoleContext, IBlueprint>> = [
   { module: GenerateEntryPointFileMiddleware, priority: 0 },
   { module: GenerateDevHtmlTemplateFileMiddleware, priority: 1 },
-  { module: GenerateDevServerMiddleware, priority: 2 }
+  { module: GeneratePublicEnvFileDevMiddleware, priority: 2 },
+  { module: GenerateDevServerMiddleware, priority: 3 }
 ]
 
 /**

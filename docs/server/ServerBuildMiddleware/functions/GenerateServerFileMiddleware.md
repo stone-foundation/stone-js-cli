@@ -8,7 +8,7 @@
 
 > **GenerateServerFileMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
 
-Defined in: [cli/src/server/ServerBuildMiddleware.ts:60](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/server/ServerBuildMiddleware.ts#L60)
+Defined in: [cli/src/server/ServerBuildMiddleware.ts:54](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/server/ServerBuildMiddleware.ts#L54)
 
 Generates a server file.
 

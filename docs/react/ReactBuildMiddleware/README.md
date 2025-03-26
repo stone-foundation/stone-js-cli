@@ -14,12 +14,13 @@
 ## Functions
 
 - [BuildClientAppMiddleware](functions/BuildClientAppMiddleware.md)
+- [BuildReactCleaningMiddleware](functions/BuildReactCleaningMiddleware.md)
 - [BuildReactServerAppMiddleware](functions/BuildReactServerAppMiddleware.md)
-- [BuildReactTerminatingMiddleware](functions/BuildReactTerminatingMiddleware.md)
 - [BuildViewsMiddleware](functions/BuildViewsMiddleware.md)
 - [GenerateClientFileMiddleware](functions/GenerateClientFileMiddleware.md)
 - [GenerateIndexHtmlFileMiddleware](functions/GenerateIndexHtmlFileMiddleware.md)
 - [GenerateLazyPageRoutesMiddleware](functions/GenerateLazyPageRoutesMiddleware.md)
+- [GeneratePublicEnvFileMiddleware](functions/GeneratePublicEnvFileMiddleware.md)
 - [GenerateReactServerFileMiddleware](functions/GenerateReactServerFileMiddleware.md)
 - [GenerateViewsIndexMiddleware](functions/GenerateViewsIndexMiddleware.md)
 - [MakeServerHtmlTemplateMiddleware](functions/MakeServerHtmlTemplateMiddleware.md)

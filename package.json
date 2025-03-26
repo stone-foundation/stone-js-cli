@@ -55,7 +55,6 @@
     "@rollup/plugin-json": "^6.0.1",
     "@rollup/plugin-multi-entry": "^6.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-replace": "^5.0.5",
     "@stone-js/config": "file:/Users/evenspierre/Projects/StoneJS/config",
     "@stone-js/core": "file:/Users/evenspierre/Projects/StoneJS/core",
     "@stone-js/filesystem": "file:/Users/evenspierre/Projects/StoneJS/filesystem",

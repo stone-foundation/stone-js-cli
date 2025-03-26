@@ -6,7 +6,7 @@
 
 # Class: InitCommand
 
-Defined in: [cli/src/commands/InitCommand.ts:38](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/InitCommand.ts#L38)
+Defined in: [cli/src/commands/InitCommand.ts:38](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/commands/InitCommand.ts#L38)
 
 The init command class.
 
@@ -16,7 +16,7 @@ The init command class.
 
 > **new InitCommand**(`context`): `InitCommand`
 
-Defined in: [cli/src/commands/InitCommand.ts:44](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/InitCommand.ts#L44)
+Defined in: [cli/src/commands/InitCommand.ts:44](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/commands/InitCommand.ts#L44)
 
 Create a new instance of CoreServiceProvider.
 
@@ -38,7 +38,7 @@ The service container to manage dependencies.
 
 > **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/commands/InitCommand.ts:49](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/commands/InitCommand.ts#L49)
+Defined in: [cli/src/commands/InitCommand.ts:49](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/commands/InitCommand.ts#L49)
 
 Handle the incoming event.
 

@@ -17,4 +17,5 @@
 - [GenerateDevHtmlTemplateFileMiddleware](functions/GenerateDevHtmlTemplateFileMiddleware.md)
 - [GenerateDevServerMiddleware](functions/GenerateDevServerMiddleware.md)
 - [GenerateEntryPointFileMiddleware](functions/GenerateEntryPointFileMiddleware.md)
+- [GeneratePublicEnvFileDevMiddleware](functions/GeneratePublicEnvFileDevMiddleware.md)
 - [GenerateReactConsoleFileMiddleware](functions/GenerateReactConsoleFileMiddleware.md)

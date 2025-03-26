@@ -110,6 +110,7 @@ export const reactHtmlEntryPointTemplate = (
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stone.js + React</title>
     ${mainCSS}
+    <!--env-js-->
     <!--app-head-->
   </head>
   <body>

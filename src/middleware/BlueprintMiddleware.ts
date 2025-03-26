@@ -37,6 +37,7 @@ export const LoadStoneConfigMiddleware = async (
 /**
  * Middleware to load the environment variables from the .env file.
  * So the environment variables can be accessed using `process.env`.
+ * Only applies server-side.
  *
  * @param context - The configuration context containing modules and blueprint.
  * @param next - The next pipeline function to continue processing.
@@ -51,12 +52,9 @@ export const LoadDotenvVariablesMiddleware = async (
   context: BlueprintContext<IBlueprint, ClassType>,
   next: NextPipe<BlueprintContext<IBlueprint, ClassType>, IBlueprint>
 ): Promise<IBlueprint> => {
-  const options = context.blueprint.get<DotenvConfig>('stone.builder.dotenv', {})
-  const publicOptions = { ...options?.options, ...options?.public }
-  const privateOptions = { ...options?.options, ...options?.private }
+  const dotenv = context.blueprint.get<DotenvConfig>('stone.builder.dotenv', {})
 
-  getEnvVariables(publicOptions)
-  getEnvVariables(privateOptions)
+  getEnvVariables({ ...dotenv?.options, ...dotenv?.private })
 
   return await next(context)
 }

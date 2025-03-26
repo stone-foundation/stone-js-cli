@@ -10,7 +10,9 @@
 
 - [defineConfig](functions/defineConfig.md)
 - [dirPath](functions/dirPath.md)
+- [generatePublicEnviromentsFile](functions/generatePublicEnviromentsFile.md)
 - [getCache](functions/getCache.md)
+- [getDefaultPublicEnvOptions](functions/getDefaultPublicEnvOptions.md)
 - [getEnvVariables](functions/getEnvVariables.md)
 - [getFileHash](functions/getFileHash.md)
 - [getStoneBuilderConfig](functions/getStoneBuilderConfig.md)

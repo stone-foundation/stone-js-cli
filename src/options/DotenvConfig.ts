@@ -1,36 +1,18 @@
-/**
- * Options for the `@rollup/plugin-replace` plugin.
- */
-export interface DotenvReplaceOptions {
-  /**
-   * Prevents assignment expressions in replacement values.
-   */
-  preventAssignment: boolean
-}
+import { DotenvConfigOptions } from 'dotenv'
 
 /**
  * Configuration options for `dotenv` and `dotenv-expand`.
  */
-export interface DotenvOptions {
-  /**
-   * Enables debug mode for logging errors.
-   */
-  debug: boolean
-
+export interface DotenvOptions extends DotenvConfigOptions {
   /**
    * Expands variables within values in the `.env` file.
    */
-  expand: boolean
-
-  /**
-   * Overrides existing environment variables with values from the `.env` file.
-   */
-  override: boolean
+  expand?: boolean
 
   /**
    * Ignores the process environment variables.
    */
-  ignoreProcessEnv: boolean
+  ignoreProcessEnv?: boolean
 }
 
 /**
@@ -40,7 +22,12 @@ export interface DotenvFiles {
   /**
    * Paths to `.env` files.
    */
-  path: string[]
+  path: string | string[]
+
+  /**
+   * Whether to use this configuration as the default.
+   */
+  default?: boolean
 
   /**
    * Whether to override existing values.
@@ -52,45 +39,31 @@ export interface DotenvFiles {
  * Complete configuration for managing environment variables.
  */
 export interface DotenvConfig {
-  /**
-   * Options for replacing variables during the build process.
-   */
-  replace?: Partial<DotenvReplaceOptions>
 
   /**
    * Options for loading and expanding `.env` files.
    */
-  options?: Partial<DotenvOptions>
+  options?: DotenvOptions
 
   /**
    * Configuration for private `.env` files (not included in the bundle).
    */
-  private?: Partial<DotenvFiles>
+  private?: DotenvFiles
 
   /**
    * Configuration for public `.env` files (included in the bundle).
    */
-  public?: Partial<DotenvFiles>
+  public?: Record<string, DotenvFiles>
 }
 
 /**
  * Default configuration for environment variable management.
  */
 export const dotenv: DotenvConfig = {
-  replace: {
-    preventAssignment: true
-  },
   options: {
     debug: false,
     expand: true,
     override: false,
     ignoreProcessEnv: false
-  },
-  private: {
-    path: ['.env']
-  },
-  public: {
-    override: true,
-    path: ['.env.public']
   }
 }

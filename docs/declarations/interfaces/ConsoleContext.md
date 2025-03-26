@@ -6,7 +6,7 @@
 
 # Interface: ConsoleContext
 
-Defined in: [cli/src/declarations.ts:7](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/declarations.ts#L7)
+Defined in: [cli/src/declarations.ts:7](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/declarations.ts#L7)
 
 Represents the context for the console.
 
@@ -16,7 +16,7 @@ Represents the context for the console.
 
 > **blueprint**: `IBlueprint`
 
-Defined in: [cli/src/declarations.ts:8](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/declarations.ts#L8)
+Defined in: [cli/src/declarations.ts:8](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/declarations.ts#L8)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [cli/src/declarations.ts:8](https://github.com/stonemjs/cli/blob/c98
 
 > **commandInput**: `CommandInput`
 
-Defined in: [cli/src/declarations.ts:9](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/declarations.ts#L9)
+Defined in: [cli/src/declarations.ts:9](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/declarations.ts#L9)
 
 ***
 
@@ -32,4 +32,4 @@ Defined in: [cli/src/declarations.ts:9](https://github.com/stonemjs/cli/blob/c98
 
 > **commandOutput**: `CommandOutput`
 
-Defined in: [cli/src/declarations.ts:10](https://github.com/stonemjs/cli/blob/c980e34c3e365606f5472998f0ccb119c79896c3/src/declarations.ts#L10)
+Defined in: [cli/src/declarations.ts:10](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/declarations.ts#L10)

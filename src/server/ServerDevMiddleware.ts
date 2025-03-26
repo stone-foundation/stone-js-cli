@@ -2,7 +2,6 @@ import fsExtra from 'fs-extra'
 import { rollup } from 'rollup'
 import { setCache } from '../utils'
 import { IBlueprint } from '@stone-js/core'
-import replace from '@rollup/plugin-replace'
 import { ConsoleContext } from '../declarations'
 import { getRollupConfig } from './server-utils'
 import { existsSync, readFileSync } from 'node:fs'
@@ -24,7 +23,6 @@ export const BuildDevServerAppMiddleware = async (
   next: NextPipe<ConsoleContext, IBlueprint>
 ): Promise<IBlueprint> => {
   const rollupConfig = await getRollupConfig(context.blueprint)
-  const plugins = rollupConfig.plugins ?? []
   const pattern = context.blueprint.get(
     'stone.builder.input.all',
     'app/**/*.**'
@@ -34,10 +32,6 @@ export const BuildDevServerAppMiddleware = async (
   rollupConfig.output = {
     format: 'es',
     file: buildPath('modules.mjs')
-  }
-
-  if (Array.isArray(plugins)) {
-    plugins.push(replace({ preventAssignment: true }))
   }
 
   const builder = await rollup(rollupConfig)
