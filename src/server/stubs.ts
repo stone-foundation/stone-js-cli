@@ -18,7 +18,9 @@ const PrintUrlsMiddleware = (context, next) => {
 export const stone = await stoneApp({
   modules: Object.values(rawModules),
 })
-.add('stone.blueprint.middleware', [{ module: PrintUrlsMiddleware }])
+.configure((blueprint) => {
+  blueprint.add('stone.blueprint.middleware', [{ module: PrintUrlsMiddleware }])
+})
 .run()
 `
 
@@ -32,6 +34,8 @@ import * as rawModules from './modules.mjs'
 await stoneApp({
   modules: Object.values(rawModules),
 })
-.set('stone.adapter.platform', '${platform}')
+.configure((blueprint) => {
+  blueprint.set('stone.adapter.platform', '${platform}')
+})
 .run()
 `

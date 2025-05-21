@@ -162,6 +162,7 @@ export const FinalizeMiddleware = async (
     packageJson,
     destDir = '',
     packageManager,
+    initGit = false,
     projectName: changeDir = ''
   } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
   const projectName = destDir.split('/').pop()
@@ -169,10 +170,12 @@ export const FinalizeMiddleware = async (
 
   writeJsonSync(join(destDir, 'package.json'), packageJson, { spaces: 2 })
 
-  const git = simpleGit(destDir)
-  await git.init()
-  await git.add('.')
-  await git.commit('Initial commit')
+  if (initGit) {
+    const git = simpleGit(destDir)
+    await git.init()
+    await git.add('.')
+    await git.commit('Initial commit')
+  }
 
   context.commandOutput.breakLine(1)
   context.commandOutput.succeed(`Successfully created Stone's project "${String(projectName)}"`)

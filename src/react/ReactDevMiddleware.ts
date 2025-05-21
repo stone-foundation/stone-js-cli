@@ -120,7 +120,7 @@ export const GeneratePublicEnvFileDevMiddleware = async (
     buildPath('index.html'),
     content.replace(
       '<!--env-js-->',
-      hasEnvFile ? '<script src="enviroments.js"></script>' : ''
+      hasEnvFile ? '<script src="environments.js"></script>' : ''
     ),
     'utf-8'
   )

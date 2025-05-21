@@ -61,28 +61,24 @@ export function removeImportsVitePlugin (modulesToRemove: Array<string | RegExp>
           importedIdentifiers.includes(decorator) ? '' : match
         )
 
-        // Replace new instantiations
         importedIdentifiers.forEach(value => {
+          // Replace new instantiations
           modifiedCode = modifiedCode.replace(new RegExp(`new\\s+${value}\\s*\\([^)]*\\)`, 'g'), '{}')
-        })
 
-        // Remove factory methods and static calls
-        importedIdentifiers.forEach(value => {
+          // Remove factory methods and static calls
           modifiedCode = modifiedCode.replace(new RegExp(`${value}\\.\\w+\\s*\\([^)]*\\)`, 'g'), '{}')
-        })
 
-        // Remove function calls
-        importedIdentifiers.forEach(value => {
+          // Remove function calls
           modifiedCode = modifiedCode.replace(new RegExp(`\\b${value}\\s*\\([^)]*\\)`, 'g'), '{}')
-        })
 
-        // Remove namespace property access (e.g., `Http.SomeFunction()`)
-        importedIdentifiers.forEach(value => {
+          // Remove namespace property access (e.g., `Http.SomeFunction()`)
           modifiedCode = modifiedCode.replace(new RegExp(`\\b${value}\\.\\w+`, 'g'), '{}')
-        })
 
-        // Remove variable assignments like `const event = IncomingHttpEvent.create()`
-        importedIdentifiers.forEach(value => {
+          // Remove variable test like `if (value === IncomingHttpEvent)`
+          modifiedCode = modifiedCode.replace(new RegExp(`!==?\\s*\\b${value}\\b`, 'g'), '!== undefined')
+          modifiedCode = modifiedCode.replace(new RegExp(`===?\\s*\\b${value}\\b`, 'g'), '=== undefined')
+
+          // Remove variable assignments like `const event = IncomingHttpEvent.create()`
           modifiedCode = modifiedCode.replace(new RegExp(`\\b${value}\\b`, 'g'), '{}')
         })
 

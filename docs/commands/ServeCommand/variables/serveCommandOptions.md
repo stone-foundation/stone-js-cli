@@ -8,6 +8,6 @@
 
 > `const` **serveCommandOptions**: `CommandOptions`
 
-Defined in: [cli/src/commands/ServeCommand.ts:15](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/commands/ServeCommand.ts#L15)
+Defined in: [cli/src/commands/ServeCommand.ts:15](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/commands/ServeCommand.ts#L15)
 
 The serve command options.

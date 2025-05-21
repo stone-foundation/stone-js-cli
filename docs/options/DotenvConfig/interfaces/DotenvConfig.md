@@ -6,7 +6,7 @@
 
 # Interface: DotenvConfig
 
-Defined in: [cli/src/options/DotenvConfig.ts:41](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/DotenvConfig.ts#L41)
+Defined in: [cli/src/options/DotenvConfig.ts:41](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/options/DotenvConfig.ts#L41)
 
 Complete configuration for managing environment variables.
 
@@ -16,7 +16,7 @@ Complete configuration for managing environment variables.
 
 > `optional` **options**: [`DotenvOptions`](DotenvOptions.md)
 
-Defined in: [cli/src/options/DotenvConfig.ts:46](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/DotenvConfig.ts#L46)
+Defined in: [cli/src/options/DotenvConfig.ts:46](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/options/DotenvConfig.ts#L46)
 
 Options for loading and expanding `.env` files.
 
@@ -26,7 +26,7 @@ Options for loading and expanding `.env` files.
 
 > `optional` **private**: [`DotenvFiles`](DotenvFiles.md)
 
-Defined in: [cli/src/options/DotenvConfig.ts:51](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/DotenvConfig.ts#L51)
+Defined in: [cli/src/options/DotenvConfig.ts:51](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/options/DotenvConfig.ts#L51)
 
 Configuration for private `.env` files (not included in the bundle).
 
@@ -36,6 +36,6 @@ Configuration for private `.env` files (not included in the bundle).
 
 > `optional` **public**: `Record`\<`string`, [`DotenvFiles`](DotenvFiles.md)\>
 
-Defined in: [cli/src/options/DotenvConfig.ts:56](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/DotenvConfig.ts#L56)
+Defined in: [cli/src/options/DotenvConfig.ts:56](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/options/DotenvConfig.ts#L56)
 
 Configuration for public `.env` files (included in the bundle).

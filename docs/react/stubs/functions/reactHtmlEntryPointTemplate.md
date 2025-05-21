@@ -8,7 +8,7 @@
 
 > **reactHtmlEntryPointTemplate**(`mainScript`, `mainCSS`): `string`
 
-Defined in: [cli/src/react/stubs.ts:101](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/react/stubs.ts#L101)
+Defined in: [cli/src/react/stubs.ts:105](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/react/stubs.ts#L105)
 
 The React template.
 This template is used to create the entry point for a React application.

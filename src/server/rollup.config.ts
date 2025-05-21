@@ -9,7 +9,7 @@ import { defineConfig, RollupLog, LoggingFunction } from 'rollup'
 /**
  * Generate Rollup build options for the entire application.
 */
-export const rollupBuildConfig = defineConfig({
+const rollupBuildConfig = defineConfig({
   input: 'app/**/*.ts',
   context: 'globalThis',
   output: {
@@ -47,7 +47,7 @@ export const rollupBuildConfig = defineConfig({
 /**
  * Generate Rollup bundle options for the entire application.
 */
-export const rollupBundleConfig = defineConfig({
+const rollupBundleConfig = defineConfig({
   input: 'app/**/*.ts',
   context: 'globalThis',
   output: {
@@ -73,3 +73,5 @@ export const rollupBundleConfig = defineConfig({
     warn(warning)
   }
 })
+
+export { rollupBuildConfig, rollupBundleConfig }

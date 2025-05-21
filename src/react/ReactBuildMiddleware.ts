@@ -12,7 +12,7 @@ import { basePath, buildPath, distPath } from '@stone-js/filesystem'
 import { generatePublicEnviromentsFile, isTypescriptApp } from '../utils'
 import { getMetadata, hasMetadata, isNotEmpty, IBlueprint, ClassType } from '@stone-js/core'
 import { reactHtmlEntryPointTemplate, reactClientEntryPointTemplate, reactServerEntryPointTemplate } from './stubs'
-import { REACT_ADAPTER_ERROR_HANDLER_KEY, REACT_ERROR_HANDLER_KEY, REACT_PAGE_KEY, REACT_PAGE_LAYOUT_KEY } from '@stone-js/use-react'
+import { REACT_ADAPTER_ERROR_PAGE_KEY, REACT_ERROR_PAGE_KEY, REACT_PAGE_KEY, REACT_PAGE_LAYOUT_KEY } from '@stone-js/use-react'
 
 const { outputFileSync, moveSync, removeSync, readFileSync } = fsExtra
 
@@ -114,8 +114,8 @@ export const GenerateLazyPageRoutesMiddleware = async (
 
     if (
       hasMetadata(module, REACT_PAGE_LAYOUT_KEY) ||
-      hasMetadata(module, REACT_ERROR_HANDLER_KEY) ||
-      hasMetadata(module, REACT_ADAPTER_ERROR_HANDLER_KEY)
+      hasMetadata(module, REACT_ERROR_PAGE_KEY) ||
+      hasMetadata(module, REACT_ADAPTER_ERROR_PAGE_KEY)
     ) {
       exported += `export * from '${path}';\n`
     }
@@ -386,7 +386,7 @@ export const GeneratePublicEnvFileMiddleware = async (
     distPath('index.html'),
     content.replace(
       '<!--env-js-->',
-      hasEnvFile ? '<script src="/env/enviroments.js"></script>' : ''
+      hasEnvFile ? '<script src="/env/environments.js"></script>' : ''
     ),
     'utf-8'
   )

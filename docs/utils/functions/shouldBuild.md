@@ -8,7 +8,7 @@
 
 > **shouldBuild**(`pattern`): `boolean`
 
-Defined in: [cli/src/utils.ts:75](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/utils.ts#L75)
+Defined in: [cli/src/utils.ts:75](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/utils.ts#L75)
 
 Should build application.
 Determines whether the application should be rebuilt.

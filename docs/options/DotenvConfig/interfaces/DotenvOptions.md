@@ -6,7 +6,7 @@
 
 # Interface: DotenvOptions
 
-Defined in: [cli/src/options/DotenvConfig.ts:6](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/DotenvConfig.ts#L6)
+Defined in: [cli/src/options/DotenvConfig.ts:6](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/options/DotenvConfig.ts#L6)
 
 Configuration options for `dotenv` and `dotenv-expand`.
 
@@ -20,7 +20,7 @@ Configuration options for `dotenv` and `dotenv-expand`.
 
 > `optional` **expand**: `boolean`
 
-Defined in: [cli/src/options/DotenvConfig.ts:10](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/DotenvConfig.ts#L10)
+Defined in: [cli/src/options/DotenvConfig.ts:10](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/options/DotenvConfig.ts#L10)
 
 Expands variables within values in the `.env` file.
 
@@ -30,6 +30,6 @@ Expands variables within values in the `.env` file.
 
 > `optional` **ignoreProcessEnv**: `boolean`
 
-Defined in: [cli/src/options/DotenvConfig.ts:15](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/DotenvConfig.ts#L15)
+Defined in: [cli/src/options/DotenvConfig.ts:15](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/options/DotenvConfig.ts#L15)
 
 Ignores the process environment variables.

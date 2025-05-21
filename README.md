@@ -1,6 +1,6 @@
 # Stone.js: CLI
 
-[![npm](https://img.shields.io/npm/l/@stone-js/cli)](https://opensource.org/licenses/Apache-2.0)
+[![npm](https://img.shields.io/npm/l/@stone-js/browser-core)](https://opensource.org/licenses/MIT)
 [![npm](https://img.shields.io/npm/v/@stone-js/cli)](https://www.npmjs.com/package/@stone-js/cli)
 [![npm](https://img.shields.io/npm/dm/@stone-js/cli)](https://www.npmjs.com/package/@stone-js/cli)
 ![Maintenance](https://img.shields.io/maintenance/yes/2025)

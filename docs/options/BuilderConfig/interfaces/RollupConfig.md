@@ -6,7 +6,7 @@
 
 # Interface: RollupConfig
 
-Defined in: [cli/src/options/BuilderConfig.ts:40](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/BuilderConfig.ts#L40)
+Defined in: [cli/src/options/BuilderConfig.ts:40](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/options/BuilderConfig.ts#L40)
 
 Rollup configuration for the application.
 
@@ -16,7 +16,7 @@ Rollup configuration for the application.
 
 > **build**: `Partial`\<`RollupOptions`\>
 
-Defined in: [cli/src/options/BuilderConfig.ts:44](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/BuilderConfig.ts#L44)
+Defined in: [cli/src/options/BuilderConfig.ts:44](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/options/BuilderConfig.ts#L44)
 
 This configuration is used for building the application.
 
@@ -26,6 +26,6 @@ This configuration is used for building the application.
 
 > **bundle**: `Partial`\<`RollupOptions`\>
 
-Defined in: [cli/src/options/BuilderConfig.ts:49](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/BuilderConfig.ts#L49)
+Defined in: [cli/src/options/BuilderConfig.ts:49](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/options/BuilderConfig.ts#L49)
 
 This configuration is used for bundling the application.

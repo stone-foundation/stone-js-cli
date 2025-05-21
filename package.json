@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Stone.js cli",
   "author": "Mr. Stone <evensstone@gmail.com>",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/stonemjs/cli.git"

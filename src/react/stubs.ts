@@ -60,7 +60,9 @@ const modules = Object
 export const stone = await stoneApp({
   modules
 })
-.add('stone.blueprint.middleware', [{ module: PrintUrlsMiddleware }])
+.configure((blueprint) => {
+  blueprint.add('stone.blueprint.middleware', [{ module: PrintUrlsMiddleware }])
+})
 .run()
 `
 
@@ -90,7 +92,9 @@ const modules = Object
 export const stone = await stoneApp({
   modules
 })
-.set('stone.adapter.platform', '${platform}')
+.configure((blueprint) => {
+  blueprint.set('stone.adapter.platform', '${platform}')
+})
 .run()
 `
 

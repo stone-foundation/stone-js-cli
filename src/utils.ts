@@ -144,11 +144,11 @@ window.process.env = {
   ...JSON.parse('${JSON.stringify(getEnvVariables(options) ?? {})}')
 }`
 
-    outputFileSync(join(baseOutputPath, `enviroments.${env}.js`), content, 'utf-8')
+    outputFileSync(join(baseOutputPath, `environments.${env}.js`), content, 'utf-8')
 
     if (value.default === true) {
       generated = true
-      outputFileSync(join(baseOutputPath, 'enviroments.js'), content, 'utf-8')
+      outputFileSync(join(baseOutputPath, 'environments.js'), content, 'utf-8')
     }
   })
 

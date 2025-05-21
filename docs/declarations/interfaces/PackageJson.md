@@ -6,7 +6,7 @@
 
 # Interface: PackageJson
 
-Defined in: [cli/src/declarations.ts:16](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/declarations.ts#L16)
+Defined in: [cli/src/declarations.ts:16](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/declarations.ts#L16)
 
 Represents the package.json file.
 
@@ -16,4 +16,4 @@ Represents the package.json file.
 
 > **scripts**: `Record`\<`string`, `string`\>
 
-Defined in: [cli/src/declarations.ts:17](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/declarations.ts#L17)
+Defined in: [cli/src/declarations.ts:17](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/declarations.ts#L17)

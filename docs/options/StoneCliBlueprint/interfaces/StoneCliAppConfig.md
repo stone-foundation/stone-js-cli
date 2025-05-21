@@ -6,7 +6,7 @@
 
 # Interface: StoneCliAppConfig
 
-Defined in: [cli/src/options/StoneCliBlueprint.ts:12](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/StoneCliBlueprint.ts#L12)
+Defined in: [cli/src/options/StoneCliBlueprint.ts:12](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/options/StoneCliBlueprint.ts#L12)
 
 App Config configuration for the Stone CLI application.
 
@@ -14,13 +14,17 @@ App Config configuration for the Stone CLI application.
 
 - `Partial`\<`AppConfig`\<`IncomingEvent`, `OutgoingResponse`\>\>
 
+## Indexable
+
+\[`key`: `string`\]: `unknown`
+
 ## Properties
 
 ### adapter?
 
 > `optional` **adapter**: `Partial`\<`AdapterConfig`\<`any`, `any`, `any`, `IncomingEvent`, `any`, `OutgoingResponse`\>\>
 
-Defined in: core/dist/index.d.ts:557
+Defined in: core/dist/index.d.ts:562
 
 Current Adapter configurations for the application.
 This key allow you to specify the current adapter with the alias key.
@@ -35,7 +39,7 @@ This key allow you to specify the current adapter with the alias key.
 
 > `optional` **adapters**: `AdapterConfig`\<`any`, `any`, `any`, `IncomingEvent`, `any`, `OutgoingResponse`\>[]
 
-Defined in: core/dist/index.d.ts:562
+Defined in: core/dist/index.d.ts:567
 
 Adapter configurations for the application.
 List of all adapters used in the application.
@@ -50,7 +54,7 @@ List of all adapters used in the application.
 
 > `optional` **aliases**: `Record`\<`string`, `any`\>
 
-Defined in: core/dist/index.d.ts:593
+Defined in: core/dist/index.d.ts:598
 
 Class aliases to be registered when the application starts.
 These aliases provide shorthand references to commonly used classes.
@@ -65,7 +69,7 @@ These aliases provide shorthand references to commonly used classes.
 
 > `optional` **blueprint**: `BlueprintConfig`\<`IBlueprint`\<`any`\>, `any`\>
 
-Defined in: core/dist/index.d.ts:552
+Defined in: core/dist/index.d.ts:557
 
 Configuration options for building the application blueprint, including middleware and pipe priorities.
 
@@ -79,7 +83,7 @@ Configuration options for building the application blueprint, including middlewa
 
 > **builder**: [`BuilderConfig`](../../BuilderConfig/interfaces/BuilderConfig.md)
 
-Defined in: [cli/src/options/StoneCliBlueprint.ts:16](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/StoneCliBlueprint.ts#L16)
+Defined in: [cli/src/options/StoneCliBlueprint.ts:16](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/options/StoneCliBlueprint.ts#L16)
 
 Stone application builder configuration.
 
@@ -89,7 +93,7 @@ Stone application builder configuration.
 
 > **createApp**: [`CreateAppConfig`](../../CreateAppConfig/interfaces/CreateAppConfig.md)
 
-Defined in: [cli/src/options/StoneCliBlueprint.ts:21](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/options/StoneCliBlueprint.ts#L21)
+Defined in: [cli/src/options/StoneCliBlueprint.ts:21](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/options/StoneCliBlueprint.ts#L21)
 
 Create app configuration
 
@@ -99,7 +103,7 @@ Create app configuration
 
 > `optional` **debug**: `boolean`
 
-Defined in: core/dist/index.d.ts:531
+Defined in: core/dist/index.d.ts:536
 
 Determines if the application is in debug mode.
 When enabled, detailed error messages with stack traces will be shown.
@@ -114,7 +118,7 @@ When enabled, detailed error messages with stack traces will be shown.
 
 > `optional` **env**: `Environment`
 
-Defined in: core/dist/index.d.ts:526
+Defined in: core/dist/index.d.ts:531
 
 The current environment in which the application is running.
 Possible values are development, production, and test.
@@ -129,7 +133,7 @@ Possible values are development, production, and test.
 
 > `optional` **fallback\_locale**: `string`
 
-Defined in: core/dist/index.d.ts:543
+Defined in: core/dist/index.d.ts:548
 
 The fallback locale used when a translation for the default locale is unavailable.
 
@@ -143,7 +147,7 @@ The fallback locale used when a translation for the default locale is unavailabl
 
 > `optional` **kernel**: `KernelConfig`\<`IncomingEvent`, `OutgoingResponse`\>
 
-Defined in: core/dist/index.d.ts:566
+Defined in: core/dist/index.d.ts:571
 
 Kernel configurations for the application.
 
@@ -157,7 +161,7 @@ Kernel configurations for the application.
 
 > `optional` **lifecycleHooks**: `LifecycleHookType`\<`IBlueprint`\<`any`\>, `any`, `any`, `IncomingEvent`, `OutgoingResponse`\>
 
-Defined in: core/dist/index.d.ts:598
+Defined in: core/dist/index.d.ts:603
 
 Lifecycle hooks for the application.
 These hooks allow you to run custom code at different stages of the application lifecycle.
@@ -170,9 +174,9 @@ These hooks allow you to run custom code at different stages of the application 
 
 ### listeners?
 
-> `optional` **listeners**: `MetaEventListener`\<`Event`\>[]
+> `optional` **listeners**: `MetaEventListener`\<`any`\>[]
 
-Defined in: core/dist/index.d.ts:579
+Defined in: core/dist/index.d.ts:584
 
 Event listeners to be automatically registered when the application starts.
 This allows you to specify functions to listen for specific events.
@@ -187,7 +191,7 @@ This allows you to specify functions to listen for specific events.
 
 > `optional` **liveConfigurations**: `MixedConfiguration`\<`any`\>[]
 
-Defined in: core/dist/index.d.ts:604
+Defined in: core/dist/index.d.ts:609
 
 Live configurations are loaded at each request.
 By default, configurations are loaded once when the application starts.
@@ -203,7 +207,7 @@ This is useful for defining dynamic configurations that do not require a restart
 
 > `optional` **locale**: `string`
 
-Defined in: core/dist/index.d.ts:539
+Defined in: core/dist/index.d.ts:544
 
 The default locale for the application.
 
@@ -217,7 +221,7 @@ The default locale for the application.
 
 > `optional` **logger**: `LoggerConfig`
 
-Defined in: core/dist/index.d.ts:570
+Defined in: core/dist/index.d.ts:575
 
 Logging settings, including the logger instance and error reporting configurations.
 
@@ -231,7 +235,7 @@ Logging settings, including the logger instance and error reporting configuratio
 
 > `optional` **name**: `string`
 
-Defined in: core/dist/index.d.ts:521
+Defined in: core/dist/index.d.ts:526
 
 The name of the application.
 
@@ -245,7 +249,7 @@ The name of the application.
 
 > `optional` **providers**: `MixedServiceProvider`[]
 
-Defined in: core/dist/index.d.ts:588
+Defined in: core/dist/index.d.ts:593
 
 Service providers to be automatically loaded for each request to the application.
 
@@ -259,7 +263,7 @@ Service providers to be automatically loaded for each request to the application
 
 > `optional` **secret**: `string`
 
-Defined in: core/dist/index.d.ts:548
+Defined in: core/dist/index.d.ts:553
 
 A secret key used for encryption purposes throughout the application.
 This key should be kept secure.
@@ -274,7 +278,7 @@ This key should be kept secure.
 
 > `optional` **services**: `MetaService`[]
 
-Defined in: core/dist/index.d.ts:574
+Defined in: core/dist/index.d.ts:579
 
 Services to be automatically registered when the application starts.
 
@@ -288,7 +292,7 @@ Services to be automatically registered when the application starts.
 
 > `optional` **subscribers**: `MixedEventSubscriber`[]
 
-Defined in: core/dist/index.d.ts:584
+Defined in: core/dist/index.d.ts:589
 
 Subscribers to be automatically registered when the application starts.
 Subscribers are used for handling and responding to events.
@@ -303,7 +307,7 @@ Subscribers are used for handling and responding to events.
 
 > `optional` **timezone**: `string`
 
-Defined in: core/dist/index.d.ts:535
+Defined in: core/dist/index.d.ts:540
 
 The default timezone for the application.
 

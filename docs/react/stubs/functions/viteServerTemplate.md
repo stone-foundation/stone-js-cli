@@ -8,7 +8,7 @@
 
 > **viteServerTemplate**(`serverName`): `string`
 
-Defined in: [cli/src/react/stubs.ts:127](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/react/stubs.ts#L127)
+Defined in: [cli/src/react/stubs.ts:131](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/react/stubs.ts#L131)
 
 The Vite server template.
 This template is used to create the server entry point for a Vite application.

@@ -8,7 +8,7 @@
 
 > **LoadStoneConfigMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
 
-Defined in: [cli/src/middleware/BlueprintMiddleware.ts:28](https://github.com/stonemjs/cli/blob/a8ddb59abbd77ddb2870c689c0c7e80297d24c5a/src/middleware/BlueprintMiddleware.ts#L28)
+Defined in: [cli/src/middleware/BlueprintMiddleware.ts:28](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/middleware/BlueprintMiddleware.ts#L28)
 
 Middleware to load the Stone configuration from the stone.config.js or stone.config.mjs file.
 

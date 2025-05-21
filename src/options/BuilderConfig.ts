@@ -55,6 +55,7 @@ export interface RollupConfig {
 export interface BuilderConfig {
   /**
    * Whether the application is a Nano application.
+   * TODO:// Replace by lazyViews or something like that.
    */
   nano?: boolean
 
@@ -127,11 +128,6 @@ export interface BuilderConfig {
    * The Vite configuration for the application.
    */
   vite?: Partial<UserConfig>
-
-  /**
-   * The Vitest configuration for the application.
-   */
-  vitest?: Partial<UserConfig>
 }
 
 /**

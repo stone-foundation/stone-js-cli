@@ -80,7 +80,7 @@ export const BundleServerAppMiddleware = async (
     context.commandOutput.format.green('🚀 Bundling application...')
   )
 
-  const output = context.blueprint.get('stone.builder.output', 'index.mjs')
+  const output = context.blueprint.get('stone.builder.output', 'server.mjs')
   const rollupConfig = await getRollupConfig(context.blueprint, 'bundle')
 
   rollupConfig.input = buildPath('tmp/server.mjs')
