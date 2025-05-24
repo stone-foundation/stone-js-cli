@@ -12,4 +12,4 @@
 - [reactConsoleEntryPointTemplate](functions/reactConsoleEntryPointTemplate.md)
 - [reactHtmlEntryPointTemplate](functions/reactHtmlEntryPointTemplate.md)
 - [reactServerEntryPointTemplate](functions/reactServerEntryPointTemplate.md)
-- [viteServerTemplate](functions/viteServerTemplate.md)
+- [viteDevServerTemplate](functions/viteDevServerTemplate.md)

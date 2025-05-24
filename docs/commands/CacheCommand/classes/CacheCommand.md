@@ -6,7 +6,7 @@
 
 # Class: CacheCommand
 
-Defined in: [cli/src/commands/CacheCommand.ts:20](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/commands/CacheCommand.ts#L20)
+Defined in: [cli/src/commands/CacheCommand.ts:20](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/commands/CacheCommand.ts#L20)
 
 The cache command class.
 
@@ -16,7 +16,7 @@ The cache command class.
 
 > **new CacheCommand**(`context`): `CacheCommand`
 
-Defined in: [cli/src/commands/CacheCommand.ts:26](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/commands/CacheCommand.ts#L26)
+Defined in: [cli/src/commands/CacheCommand.ts:26](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/commands/CacheCommand.ts#L26)
 
 Create a new instance of CacheCommand.
 
@@ -38,7 +38,7 @@ The service container to manage dependencies.
 
 > **handle**(): `void`
 
-Defined in: [cli/src/commands/CacheCommand.ts:31](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/commands/CacheCommand.ts#L31)
+Defined in: [cli/src/commands/CacheCommand.ts:31](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/commands/CacheCommand.ts#L31)
 
 Handle the incoming event.
 

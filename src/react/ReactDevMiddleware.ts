@@ -1,8 +1,8 @@
 import {
-  viteServerTemplate,
+  viteDevServerTemplate,
   reactHtmlEntryPointTemplate,
-  reactServerEntryPointTemplate,
-  reactConsoleEntryPointTemplate
+  reactConsoleEntryPointTemplate,
+  reactClientEntryPointTemplate
 } from './stubs'
 import fsExtra from 'fs-extra'
 import { relative } from 'node:path'
@@ -19,6 +19,7 @@ const { outputFileSync, existsSync, readFileSync } = fsExtra
 /**
  * Generates an index file for all modules in the application.
  * This index file is used for SSR and in development mode.
+ * Note: This entry point will be embedded in the index.html file.
  *
  * @param context The console context.
  * @param next The next pipe function.
@@ -32,18 +33,17 @@ export const GenerateEntryPointFileMiddleware = async (
     buildPath(),
     basePath(context.blueprint.get('stone.builder.input.all', 'app/**/*.**'))
   )
-  const printUrls = context.blueprint.get('stone.builder.server.printUrls', true)
 
-  const filename = isTypescriptApp(context.blueprint) ? 'index.ts' : 'index.mjs'
-  const userFilename = isTypescriptApp(context.blueprint) ? 'server.ts' : 'server.mjs'
+  const isTypescript = isTypescriptApp(context.blueprint, context.event)
+
+  const filename = isTypescript ? 'index.ts' : 'index.mjs'
+  const userFilename = isTypescript ? 'client.ts' : 'client.mjs'
 
   let content = existsSync(basePath(userFilename))
     ? readFileSync(basePath(userFilename), 'utf-8')
-    : reactServerEntryPointTemplate(pattern, printUrls)
+    : reactClientEntryPointTemplate(pattern)
 
-  content = content
-    .replace('%pattern%', pattern)
-    .replace("'%printUrls%'", String(printUrls))
+  content = content.replace('%pattern%', pattern)
 
   outputFileSync(buildPath(filename), content, 'utf-8')
 
@@ -61,7 +61,7 @@ export const GenerateDevHtmlTemplateFileMiddleware = async (
   context: ConsoleContext,
   next: NextPipe<ConsoleContext, IBlueprint>
 ): Promise<IBlueprint> => {
-  const jsEntryPoint = isTypescriptApp(context.blueprint) ? 'index.ts' : 'index.mjs'
+  const jsEntryPoint = isTypescriptApp(context.blueprint, context.event) ? 'index.ts' : 'index.mjs'
   const cssEntryPoint = context.blueprint.get('stone.builder.input.mainCSS', '/assets/css/index.css')
 
   const mainjs = `<script type="module" src="${jsEntryPoint}"></script>`
@@ -93,7 +93,7 @@ export const GenerateDevServerMiddleware = async (
 ): Promise<IBlueprint> => {
   outputFileSync(
     buildPath('server.mjs'),
-    viteServerTemplate(),
+    viteDevServerTemplate(),
     'utf-8'
   )
   return await next(context)
@@ -144,7 +144,7 @@ export const GenerateReactConsoleFileMiddleware = async (
     basePath(context.blueprint.get('stone.builder.input.all', 'app/**/*.**'))
   )
 
-  const isTypescript = isTypescriptApp(context.blueprint)
+  const isTypescript = isTypescriptApp(context.blueprint, context.event)
   const userFilename = isTypescript ? 'console.ts' : 'console.mjs'
   const filename = isTypescript ? 'index.console.ts' : 'index.console.mjs'
 
@@ -152,8 +152,7 @@ export const GenerateReactConsoleFileMiddleware = async (
     ? readFileSync(basePath(userFilename), 'utf-8')
     : reactConsoleEntryPointTemplate(pattern)
 
-  content = content
-    .replace('%pattern%', pattern)
+  content = content.replace('%pattern%', pattern)
 
   outputFileSync(buildPath(filename), content, 'utf-8')
 
@@ -179,7 +178,7 @@ export const BuildConsoleAppMiddleware = async (
 ): Promise<IBlueprint> => {
   const userConfig = await getViteConfig('build', 'production')
   const pattern = context.blueprint.get('stone.builder.input.all', 'app/**/*.**')
-  const filename = isTypescriptApp(context.blueprint) ? 'index.console.ts' : 'index.console.mjs'
+  const filename = isTypescriptApp(context.blueprint, context.event) ? 'index.console.ts' : 'index.console.mjs'
   const customInput = {
     build: {
       ssr: buildPath(filename),

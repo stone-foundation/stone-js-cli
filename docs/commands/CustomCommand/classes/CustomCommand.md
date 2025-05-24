@@ -6,7 +6,7 @@
 
 # Class: CustomCommand
 
-Defined in: [cli/src/commands/CustomCommand.ts:23](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/commands/CustomCommand.ts#L23)
+Defined in: [cli/src/commands/CustomCommand.ts:23](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/commands/CustomCommand.ts#L23)
 
 The custom command class.
 
@@ -16,7 +16,7 @@ The custom command class.
 
 > **new CustomCommand**(`context`): `CustomCommand`
 
-Defined in: [cli/src/commands/CustomCommand.ts:31](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/commands/CustomCommand.ts#L31)
+Defined in: [cli/src/commands/CustomCommand.ts:31](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/commands/CustomCommand.ts#L31)
 
 Create a new instance of CustomCommand.
 
@@ -38,7 +38,7 @@ The service container to manage dependencies.
 
 > **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/commands/CustomCommand.ts:41](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/commands/CustomCommand.ts#L41)
+Defined in: [cli/src/commands/CustomCommand.ts:41](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/commands/CustomCommand.ts#L41)
 
 Handle the incoming event.
 

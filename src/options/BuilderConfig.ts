@@ -54,20 +54,24 @@ export interface RollupConfig {
  */
 export interface BuilderConfig {
   /**
-   * Whether the application is a Nano application.
-   * TODO:// Replace by lazyViews or something like that.
+   * The language used in the application.
    */
-  nano?: boolean
+  language?: 'typescript' | 'javascript'
 
   /**
-   * The type of the application modules.
+   * The application target.
    */
-  type?: 'typescript' | 'javascript'
+  target?: 'react' | 'service'
 
   /**
-   * The type of the application.
+   * Whether the application is using lazy loading for pages, error pages and layouts.
    */
-  appType?: 'react' | 'vue' | 'service'
+  lazy?: boolean
+
+  /**
+   * Whether the application is using server-side rendering.
+   */
+  rendering?: 'csr' | 'ssr'
 
   /**
    * Whether the application is using imperative programming style.
@@ -135,7 +139,6 @@ export interface BuilderConfig {
  */
 export const builder: BuilderConfig = {
   dotenv,
-  type: 'javascript',
   rollup: {
     build: rollupBuildConfig,
     bundle: rollupBundleConfig

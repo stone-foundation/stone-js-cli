@@ -8,10 +8,11 @@
 
 > **reactConsoleEntryPointTemplate**(`path`, `platform`): `string`
 
-Defined in: [cli/src/react/stubs.ts:73](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/react/stubs.ts#L73)
+Defined in: [cli/src/react/stubs.ts:70](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/react/stubs.ts#L70)
 
 The React console template.
 This template is used to create the console entry point for a React application.
+Note: This file is used to create the console server to run the application.
 
 ## Parameters
 

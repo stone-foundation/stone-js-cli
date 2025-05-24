@@ -1,6 +1,6 @@
 import fsExtra from 'fs-extra'
 import { IBlueprint } from '@stone-js/core'
-import { viteServerTemplate } from './stubs'
+import { viteDevServerTemplate } from './stubs'
 import { buildPath } from '@stone-js/filesystem'
 import { ConsoleContext } from '../declarations'
 import { MetaPipe, NextPipe } from '@stone-js/pipeline'
@@ -20,7 +20,7 @@ export const GeneratePreviewServerMiddleware = async (
 ): Promise<IBlueprint> => {
   outputFileSync(
     buildPath('preview.mjs'),
-    viteServerTemplate('runPreviewServer'),
+    viteDevServerTemplate('runPreviewServer'),
     'utf-8'
   )
   return await next(context)

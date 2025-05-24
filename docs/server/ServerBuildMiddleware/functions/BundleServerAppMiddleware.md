@@ -8,7 +8,7 @@
 
 > **BundleServerAppMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
 
-Defined in: [cli/src/server/ServerBuildMiddleware.ts:75](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/server/ServerBuildMiddleware.ts#L75)
+Defined in: [cli/src/server/ServerBuildMiddleware.ts:75](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/server/ServerBuildMiddleware.ts#L75)
 
 Bundles the server application using Rollup.
 

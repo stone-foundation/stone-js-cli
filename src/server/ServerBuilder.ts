@@ -49,7 +49,7 @@ export class ServerBuilder {
    * @param _event The incoming event.
    */
   async preview (_event: IncomingEvent): Promise<void> {
-    const output = this.context.blueprint.get('stone.builder.output', 'server.mjs')
+    const output = this.context.blueprint.get('stone.builder.output', 'index.mjs')
     if (!existsSync(distPath(output))) {
       throw new CliError('The application must be built before previewing.')
     }

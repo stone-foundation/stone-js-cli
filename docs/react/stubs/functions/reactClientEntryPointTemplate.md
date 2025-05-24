@@ -8,10 +8,11 @@
 
 > **reactClientEntryPointTemplate**(`path`): `string`
 
-Defined in: [cli/src/react/stubs.ts:7](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/react/stubs.ts#L7)
+Defined in: [cli/src/react/stubs.ts:8](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/react/stubs.ts#L8)
 
 The React client template.
 This template is used to create the client entry point for a React application.
+Note: This file is embedded in the index.html file.
 
 ## Parameters
 

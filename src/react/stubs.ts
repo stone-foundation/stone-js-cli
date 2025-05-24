@@ -3,6 +3,7 @@ import { NODE_CONSOLE_PLATFORM } from '@stone-js/node-cli-adapter'
 /**
  * The React client template.
  * This template is used to create the client entry point for a React application.
+ * Note: This file is embedded in the index.html file.
  */
 export const reactClientEntryPointTemplate = (
   path = './app/**/*.{ts,js,mjs,json}'
@@ -17,7 +18,7 @@ const rawModules = import.meta.glob('${path}', { eager: true })
 const modules = Object
   .values(rawModules)
   // @ts-ignore
-  .flatMap((module) => Object.values(module)[0])
+  .flatMap(Object.values)
   // %concat%
 
 /**
@@ -29,20 +30,13 @@ export const stone = await stoneApp({ modules }).run()
 /**
  * The React server template.
  * This template is used to create the server entry point for a React application.
+ * Note: This file is used to create th SSR server to run the application.
  */
 export const reactServerEntryPointTemplate = (
   path = './app/**/*',
   printUrls: boolean | string = true
 ): string => `
 import { stoneApp } from '@stone-js/core'
-
-/**
- * Middleware to print the URLs of the server.
- */
-const PrintUrlsMiddleware = (context, next) => {
-  context.blueprint.setIf('stone.adapter.printUrls', ${String(printUrls)})
-  return next(context)
-}
 
 /**
  * Import application modules.
@@ -52,7 +46,7 @@ const rawModules = import.meta.glob('${path}', { eager: true })
 const modules = Object
   .values(rawModules)
   // @ts-ignore
-  .flatMap((module) => Object.values(module)[0])
+  .flatMap(Object.values)
 
 /**
  * Create and run the Stone app.
@@ -60,8 +54,10 @@ const modules = Object
 export const stone = await stoneApp({
   modules
 })
-.configure((blueprint) => {
-  blueprint.add('stone.blueprint.middleware', [{ module: PrintUrlsMiddleware }])
+.configure({
+  afterConfigure (blueprint) {
+    blueprint.setIf('stone.adapter.printUrls', ${String(printUrls)})
+  }
 })
 .run()
 `
@@ -69,6 +65,7 @@ export const stone = await stoneApp({
 /**
  * The React console template.
  * This template is used to create the console entry point for a React application.
+ * Note: This file is used to create the console server to run the application.
  */
 export const reactConsoleEntryPointTemplate = (
   path = './app/**/*',
@@ -84,7 +81,7 @@ const rawModules = import.meta.glob('${path}', { eager: true })
 const modules = Object
   .values(rawModules)
   // @ts-ignore
-  .flatMap((module) => Object.values(module)[0])
+  .flatMap(Object.values)
 
 /**
  * Create and run the Stone app.
@@ -128,8 +125,8 @@ export const reactHtmlEntryPointTemplate = (
  * The Vite server template.
  * This template is used to create the server entry point for a Vite application.
  */
-export const viteServerTemplate = (serverName: string = 'runDevServer'): string => `
-import { ${serverName} } from "@stone-js/cli"
+export const viteDevServerTemplate = (serverName: string = 'runDevServer'): string => `
+import { ${serverName} } from '@stone-js/cli'
 
 const server = await ${serverName}()
 

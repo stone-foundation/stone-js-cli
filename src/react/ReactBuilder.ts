@@ -4,15 +4,16 @@ import {
   reactClientEntryPointTemplate,
   reactConsoleEntryPointTemplate
 } from './stubs'
+import { CliError } from '../errors/CliError'
 import { basePath } from '@stone-js/filesystem'
 import { ConsoleContext } from '../declarations'
-import { dirPath, isTypescriptApp } from '../utils'
 import { MetaPipe, Pipeline } from '@stone-js/pipeline'
 import { IBlueprint, IncomingEvent } from '@stone-js/core'
 import { ReactPreviewMiddleware } from './ReactPreviewMiddleware'
+import { dirPath, isCSR, isSSR, isTypescriptApp } from '../utils'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { ReactConsoleMiddleware, ReactDevMiddleware } from './ReactDevMiddleware'
-import { ReactClientBuildMiddleware, ReactServerBuildMiddleware } from './ReactBuildMiddleware'
+import { ReactCSRBuildMiddleware, ReactSSRBuildMiddleware } from './ReactBuildMiddleware'
 
 /**
  * The React builder class.
@@ -31,9 +32,9 @@ export class ReactBuilder {
    * @param event The incoming event.
    */
   async build (event: IncomingEvent): Promise<void> {
-    const ssr = event.get<boolean>('ssr', false)
-    this.context.commandOutput.info(`Building React application with ${ssr ? 'SSR' : 'CSR'}...`)
-    await this.executeThroughPipeline(ssr ? ReactServerBuildMiddleware : ReactClientBuildMiddleware)
+    const [rendering, buildMiddleware] = this.getBuildMiddleware(event)
+    this.context.commandOutput.info(`Building React application with ${rendering}...`)
+    await this.executeThroughPipeline(buildMiddleware)
     this.context.commandOutput.show(`🎉 ${this.context.commandOutput.format.green('React application built successfully!')}`)
     setImmediate(() => process.exit(0)).unref()
   }
@@ -205,7 +206,7 @@ export class ReactBuilder {
    * @returns True if the application is a TypeScript application, false otherwise.
    */
   private isTypescript (): boolean {
-    return isTypescriptApp(this.context.blueprint)
+    return isTypescriptApp(this.context.blueprint, this.context.event)
   }
 
   /**
@@ -219,5 +220,23 @@ export class ReactBuilder {
       .send(this.context)
       .through(...pipes)
       .then(context => context.blueprint)
+  }
+
+  /**
+   * Get the build middleware.
+   *
+   * @param event - The incoming event.
+   * @returns The build middleware.
+   */
+  private getBuildMiddleware (
+    event: IncomingEvent
+  ): [string, typeof ReactCSRBuildMiddleware | typeof ReactSSRBuildMiddleware] {
+    if (isCSR(this.context.blueprint, event)) {
+      return ['CSR', ReactCSRBuildMiddleware]
+    } else if (isSSR(this.context.blueprint, event)) {
+      return ['SSR', ReactSSRBuildMiddleware]
+    } else {
+      throw new CliError('Invalid build type. Please use "csr" or "ssr".')
+    }
   }
 }

@@ -27,6 +27,12 @@ export const previewCommandOptions: CommandOptions = {
         type: 'string',
         desc: 'file path to preview'
       })
+      .option('target', {
+        alias: 't',
+        type: 'string',
+        desc: 'app target to preview',
+        choices: ['server', 'react']
+      })
   }
 }
 

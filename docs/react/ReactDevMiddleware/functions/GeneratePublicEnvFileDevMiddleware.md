@@ -8,7 +8,7 @@
 
 > **GeneratePublicEnvFileDevMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
 
-Defined in: [cli/src/react/ReactDevMiddleware.ts:109](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/react/ReactDevMiddleware.ts#L109)
+Defined in: [cli/src/react/ReactDevMiddleware.ts:109](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/react/ReactDevMiddleware.ts#L109)
 
 Generates the public environment files.
 

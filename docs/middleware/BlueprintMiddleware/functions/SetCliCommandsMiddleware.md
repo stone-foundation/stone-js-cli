@@ -8,7 +8,7 @@
 
 > **SetCliCommandsMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
 
-Defined in: [cli/src/middleware/BlueprintMiddleware.ts:74](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/middleware/BlueprintMiddleware.ts#L74)
+Defined in: [cli/src/middleware/BlueprintMiddleware.ts:74](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/middleware/BlueprintMiddleware.ts#L74)
 
 Middleware to set cli commands for Node CLI adapters.
 

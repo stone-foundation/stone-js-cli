@@ -8,10 +8,11 @@
 
 > **GenerateEntryPointFileMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
 
-Defined in: [cli/src/react/ReactDevMiddleware.ts:27](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/react/ReactDevMiddleware.ts#L27)
+Defined in: [cli/src/react/ReactDevMiddleware.ts:28](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/react/ReactDevMiddleware.ts#L28)
 
 Generates an index file for all modules in the application.
 This index file is used for SSR and in development mode.
+Note: This entry point will be embedded in the index.html file.
 
 ## Parameters
 

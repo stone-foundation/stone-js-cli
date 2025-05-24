@@ -174,28 +174,6 @@ export function setupProcessSignalHandlers (serverProcess?: ChildProcess): void 
 }
 
 /**
- * Determines if the application is using TypeScript.
- *
- * @param blueprint The blueprint object.
- * @returns True if the application is using TypeScript.
- */
-export const isTypescriptApp = (blueprint: IBlueprint): boolean => {
-  const files = glob.sync(basePath(blueprint.get('stone.builder.input.all', 'app/**/*.{tsx,ts}')))
-  return blueprint.get<string>('stone.builder.type') === 'typescript' || files.length > 0
-}
-
-/**
- * Determines if the application is using React.
- *
- * @param blueprint The blueprint object.
- * @returns True if the application is using React.
- */
-export const isReactApp = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
-  const files = glob.sync(basePath(blueprint.get('stone.builder.input.views', 'app/**/*.{tsx,jsx,mjsx}')))
-  return event.get('app-type') === 'react' || blueprint.get<string>('stone.builder.appType') === 'react' || files.length > 0
-}
-
-/**
  * Define user configuration.
  *
  * @param config - The user configuration.
@@ -220,4 +198,101 @@ export const getStoneBuilderConfig = async (): Promise<BuilderConfig> => {
   }
 
   return builder
+}
+
+/**
+ * Determines if the application is using TypeScript.
+ *
+ * @param blueprint The blueprint object.
+ * @param event The incoming event.
+ * @returns True if the application is using TypeScript.
+ */
+export const isTypescriptApp = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
+  const files = glob.sync(basePath(blueprint.get('stone.builder.input.all', 'app/**/*.{tsx,ts}')))
+  return event.is('language', 'typescript') || blueprint.is('stone.builder.language', 'typescript') || files.length > 0
+}
+
+/**
+ * Determines if the application is using React.
+ *
+ * @param blueprint The blueprint object.
+ * @param event The incoming event.
+ * @returns True if the application is using React.
+ */
+export const isReactApp = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
+  const files = glob.sync(basePath(blueprint.get('stone.builder.input.views', 'app/**/*.{tsx,jsx,mjsx}')))
+  return event.is('target', 'react') || blueprint.is('stone.builder.target', 'react') || files.length > 0
+}
+
+/**
+ * Determines if the application is using lazy loading.
+ *
+ * @param blueprint The blueprint object.
+ * @param event The incoming event.
+ * @returns True if the application is using lazy loading.
+ */
+export const isLazyViews = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
+  const files = glob.sync(basePath(blueprint.get('stone.builder.input.all', 'app/**/*.{ts,tsx,js,jsx,mjsx}')))
+  return event.is('lazy', true) || blueprint.is('stone.builder.lazy', true) || files.some((filePath) => {
+    const content = readFileSync(filePath, 'utf-8')
+    return content.includes('@stone-js/router') && (content.includes('@Routing') || content.includes('routerBlueprint'))
+  })
+}
+
+/**
+ * Determines if the application is using declarative API.
+ *
+ * @param blueprint The blueprint object.
+ * @param event The incoming event.
+ * @returns True if the application is using imperative API.
+ */
+export const isDeclarative = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
+  const files = glob.sync(basePath(blueprint.get('stone.builder.input.all', 'app/**/*.{ts,tsx,js,jsx,mjsx}')))
+  return event.is('imperative', false) || blueprint.is('stone.builder.imperative', false) || files.some((filePath) => {
+    const content = readFileSync(filePath, 'utf-8')
+    return content.includes('@stone-js/core') && content.includes('@StoneApp')
+  })
+}
+
+/**
+ * Determines if the application is using client-side rendering.
+ *
+ * @param blueprint The blueprint object.
+ * @param event The incoming event.
+ * @returns True if the application is using client-side rendering.
+ */
+export const isCSR = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
+  const files = glob.sync(basePath(blueprint.get('stone.builder.input.all', 'app/**/*.{ts,tsx,js,jsx,mjsx}')))
+  return event.is('rendering', 'csr') || blueprint.is('stone.builder.rendering', 'csr') || files.some((filePath) => {
+    return inferRenderingStrategy(readFileSync(filePath, 'utf-8')) === 'csr'
+  })
+}
+
+/**
+ * Determines if the application is using server-side rendering.
+ *
+ * @param blueprint The blueprint object.
+ * @param event The incoming event.
+ * @returns True if the application is using server-side rendering.
+ */
+export const isSSR = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
+  const files = glob.sync(basePath(blueprint.get('stone.builder.input.all', 'app/**/*.{ts,tsx,js,jsx,mjsx}')))
+  return event.is('rendering', 'ssr') || blueprint.is('stone.builder.rendering', 'ssr') || files.some((filePath) => {
+    return inferRenderingStrategy(readFileSync(filePath, 'utf-8')) === 'ssr'
+  })
+}
+
+/**
+ * Determines the rendering strategy based on the content of the file.
+ *
+ * @param content - The content of the file.
+ * @returns The rendering strategy: 'csr' or 'ssr'.
+ */
+export function inferRenderingStrategy (content: string): 'csr' | 'ssr' | undefined {
+  const hasBrowser = content.includes('@stone-js/browser-adapter')
+  const allAdapters = content.match(/['"]@?[\w\-\\/]+-adapter['"]/ig)
+  const hasNonBrowserAdapter = allAdapters?.some(v => v !== '@stone-js/browser-adapter')
+
+  if (hasBrowser && hasNonBrowserAdapter === true) return 'ssr'
+  if (hasBrowser && hasNonBrowserAdapter !== true) return 'csr'
 }

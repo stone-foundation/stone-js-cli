@@ -3,21 +3,21 @@ import fsExtra from 'fs-extra'
 import { relative } from 'node:path'
 import { existsSync } from 'node:fs'
 import { build, mergeConfig } from 'vite'
-import { getViteConfig } from './react-utils'
 import { ConsoleContext } from '../declarations'
 import { PageRouteDefinition } from '@stone-js/router'
 import { MetaPipe, NextPipe } from '@stone-js/pipeline'
 import { removeImportsVitePlugin } from './RemoveImportsVitePlugin'
 import { basePath, buildPath, distPath } from '@stone-js/filesystem'
-import { generatePublicEnviromentsFile, isTypescriptApp } from '../utils'
-import { getMetadata, hasMetadata, isNotEmpty, IBlueprint, ClassType } from '@stone-js/core'
+import { isNotEmpty, IBlueprint, ClassType, isStoneBlueprint } from '@stone-js/core'
+import { generatePublicEnviromentsFile, isDeclarative, isLazyViews, isTypescriptApp } from '../utils'
+import { generateDeclarativeLazyPages, generateImperativeLazyPages, getViteConfig } from './react-utils'
+import { MetaErrorPage, MetaPageLayout, ReactIncomingEvent, UseReactBlueprint } from '@stone-js/use-react'
 import { reactHtmlEntryPointTemplate, reactClientEntryPointTemplate, reactServerEntryPointTemplate } from './stubs'
-import { REACT_ADAPTER_ERROR_PAGE_KEY, REACT_ERROR_PAGE_KEY, REACT_PAGE_KEY, REACT_PAGE_LAYOUT_KEY } from '@stone-js/use-react'
 
 const { outputFileSync, moveSync, removeSync, readFileSync } = fsExtra
 
 /**
- * Generates an index file for all views in the application.
+ * Lazy: Generates an index file for all views in the application.
  *
  * @param context The console context.
  * @param next The next pipe function.
@@ -27,7 +27,11 @@ export const GenerateViewsIndexMiddleware = async (
   context: ConsoleContext,
   next: NextPipe<ConsoleContext, IBlueprint>
 ): Promise<IBlueprint> => {
-  context.commandOutput.info('Generating lazy routes...')
+  if (!isLazyViews(context.blueprint, context.event)) {
+    return await next(context)
+  }
+
+  context.commandOutput.info('Generating lazy pages...')
 
   let imports = ''
   let exportsMap = ''
@@ -56,7 +60,7 @@ export const GenerateViewsIndexMiddleware = async (
 }
 
 /**
- * Builds the views using Vite.
+ * Lazy: Builds the views using Vite.
  *
  * @param context The console context.
  * @param next The next pipe function.
@@ -66,6 +70,10 @@ export const BuildViewsMiddleware = async (
   context: ConsoleContext,
   next: NextPipe<ConsoleContext, IBlueprint>
 ): Promise<IBlueprint> => {
+  if (!isLazyViews(context.blueprint, context.event)) {
+    return await next(context)
+  }
+
   const userConfig = await getViteConfig('build', 'production')
 
   const viteConfig = mergeConfig(userConfig, {
@@ -94,60 +102,67 @@ export const BuildViewsMiddleware = async (
 }
 
 /**
- * Generates a lazy page routes file.
+ * Lazy: Generates a lazy pages file.
  *
  * @param context The console context.
  * @param next The next pipe function.
  * @returns The updated blueprint object.
  */
-export const GenerateLazyPageRoutesMiddleware = async (
+export const GenerateLazyPageMiddleware = async (
   context: ConsoleContext,
   next: NextPipe<ConsoleContext, IBlueprint>
 ): Promise<IBlueprint> => {
+  if (!isLazyViews(context.blueprint, context.event)) {
+    return await next(context)
+  }
+
   let exported = ''
   const definitions: PageRouteDefinition[] = []
+  const layouts: Record<string, MetaPageLayout> = {}
+  const errorPages: Record<string, MetaErrorPage<ReactIncomingEvent>> = {}
+
   const { views } = await import(buildPath('tmp/viewsIndex.mjs'))
 
   for (const [path, view] of Object.entries<Record<string, ClassType>>(views)) {
-    const module = Object.values(view)[0]
-    const pageOptions = getMetadata(module, REACT_PAGE_KEY)
+    for (const [key, module] of Object.entries(view)) {
+      let result = {}
+      type resultType = ReturnType<typeof generateDeclarativeLazyPages | typeof generateImperativeLazyPages>
 
-    if (
-      hasMetadata(module, REACT_PAGE_LAYOUT_KEY) ||
-      hasMetadata(module, REACT_ERROR_PAGE_KEY) ||
-      hasMetadata(module, REACT_ADAPTER_ERROR_PAGE_KEY)
-    ) {
-      exported += `export * from '${path}';\n`
-    }
+      if (isDeclarative(context.blueprint, context.event)) {
+        result = generateDeclarativeLazyPages(module, path, key)
+      } else if (isStoneBlueprint<UseReactBlueprint>(module)) {
+        result = generateImperativeLazyPages(module, path, key)
+      }
 
-    if (isNotEmpty<PageRouteDefinition>(pageOptions)) {
-      definitions.push({
-        ...pageOptions,
-        handler: {
-          lazy: true,
-          ...pageOptions.handler,
-          module: `() => import('${path}').then(v => Object.values(v)[0])` as any
-        }
-      })
-    }
-  }
-
-  const routerBlueprint = {
-    stone: {
-      router: {
-        definitions
+      if (isNotEmpty<resultType>(result)) {
+        exported += result.exported
+        definitions.push(...result.definitions)
+        Object.assign(layouts, result.layouts)
+        Object.assign(errorPages, result.errorPages)
       }
     }
   }
-  const replacePattern = /"(\(\) => import\([^)]+\)\.then\(v => Object\.values\(v\)\[0\]\))"/g
-  const routesContent = `
+
+  const dynamicBlueprint = {
+    stone: {
+      router: {
+        definitions
+      },
+      useReact: {
+        layouts,
+        errorPages
+      }
+    }
+  }
+  const replacePattern = /"(\(\) => import\([^)]+\)\.then\(v => v\.[^)]+\))"/g
+  const pagesContent = `
   ${exported}
-  export const dynamicBlueprint = ${JSON.stringify(routerBlueprint, null, 2).replace(replacePattern, '$1')};
+  export const dynamicBlueprint = ${JSON.stringify(dynamicBlueprint, null, 2).replace(replacePattern, '$1')};
   `
 
   outputFileSync(
-    buildPath(isTypescriptApp(context.blueprint) ? 'tmp/routes.ts' : 'tmp/routes.mjs'),
-    routesContent,
+    buildPath(isTypescriptApp(context.blueprint, context.event) ? 'tmp/pages.ts' : 'tmp/pages.mjs'),
+    pagesContent,
     'utf-8'
   )
 
@@ -165,13 +180,13 @@ export const GenerateClientFileMiddleware = async (
   context: ConsoleContext,
   next: NextPipe<ConsoleContext, IBlueprint>
 ): Promise<IBlueprint> => {
-  const isNanoApp = context.blueprint.get('stone.builder.nano', false)
-  const basePattern = isNanoApp
+  const isLazy = isLazyViews(context.blueprint, context.event)
+  const basePattern = !isLazy
     ? context.blueprint.get('stone.builder.input.all', 'app/**/*.**')
     : context.blueprint.get('stone.builder.input.app', 'app/**/*.{ts,js,mjs,json}')
   const pattern = relative(buildPath('tmp'), basePattern)
 
-  const isTypescript = isTypescriptApp(context.blueprint)
+  const isTypescript = isTypescriptApp(context.blueprint, context.event)
   const userFilename = isTypescript ? 'client.ts' : 'client.mjs'
   const filename = isTypescript ? 'tmp/index.ts' : 'tmp/index.mjs'
 
@@ -179,13 +194,13 @@ export const GenerateClientFileMiddleware = async (
     ? readFileSync(basePath(userFilename), 'utf-8')
     : reactClientEntryPointTemplate(pattern)
 
-  // Add the lazy routes to the client file when not a Nano app
-  content = isNanoApp
+  // Add the lazy pages to the client file.
+  content = !isLazy
     ? content.replace('%pattern%', pattern)
-    : `import * as pageRoutes from './routes${isTypescript ? '' : '.mjs'}';\n`
+    : `import * as pages from './pages${isTypescript ? '' : '.mjs'}';\n`
       .concat(content)
       .replace('%pattern%', pattern)
-      .replace('// %concat%', '.concat(Object.values(pageRoutes))')
+      .replace('// %concat%', '.concat(Object.values(pages))')
 
   outputFileSync(buildPath(filename), content, 'utf-8')
 
@@ -209,7 +224,7 @@ export const GenerateReactServerFileMiddleware = async (
   )
   const printUrls = context.blueprint.get('stone.builder.server.printUrls', true)
 
-  const isTypescript = isTypescriptApp(context.blueprint)
+  const isTypescript = isTypescriptApp(context.blueprint, context.event)
   const userFilename = isTypescript ? 'server.ts' : 'server.mjs'
   const filename = isTypescript ? 'tmp/server.ts' : 'tmp/server.mjs'
 
@@ -237,7 +252,7 @@ export const GenerateIndexHtmlFileMiddleware = async (
   context: ConsoleContext,
   next: NextPipe<ConsoleContext, IBlueprint>
 ): Promise<IBlueprint> => {
-  const jsEntryPoint = isTypescriptApp(context.blueprint) ? 'index.ts' : 'index.mjs'
+  const jsEntryPoint = isTypescriptApp(context.blueprint, context.event) ? 'index.ts' : 'index.mjs'
   const cssEntryPoint = context.blueprint.get('stone.builder.input.mainCSS', '/assets/css/index.css')
 
   const mainjs = `<script type="module" src="${jsEntryPoint}"></script>`
@@ -306,7 +321,7 @@ export const BuildReactServerAppMiddleware = async (
     build: {
       emptyOutDir: false,
       outDir: distPath(),
-      ssr: buildPath(isTypescriptApp(context.blueprint) ? 'tmp/server.ts' : 'tmp/server.mjs'),
+      ssr: buildPath(isTypescriptApp(context.blueprint, context.event) ? 'tmp/server.ts' : 'tmp/server.mjs'),
       rollupOptions: {
         output: {
           entryFileNames: 'server.mjs',
@@ -395,12 +410,12 @@ export const GeneratePublicEnvFileMiddleware = async (
 }
 
 /**
- * Middleware for building SPA React applications.
+ * Middleware for building CSR React applications.
  */
-export const ReactClientBuildMiddleware: Array<MetaPipe<ConsoleContext, IBlueprint>> = [
+export const ReactCSRBuildMiddleware: Array<MetaPipe<ConsoleContext, IBlueprint>> = [
   { module: GenerateViewsIndexMiddleware, priority: 0 },
   { module: BuildViewsMiddleware, priority: 1 },
-  { module: GenerateLazyPageRoutesMiddleware, priority: 2 },
+  { module: GenerateLazyPageMiddleware, priority: 2 },
   { module: GenerateClientFileMiddleware, priority: 3 },
   { module: GenerateIndexHtmlFileMiddleware, priority: 4 },
   { module: BuildClientAppMiddleware, priority: 5 },
@@ -411,10 +426,10 @@ export const ReactClientBuildMiddleware: Array<MetaPipe<ConsoleContext, IBluepri
 /**
  * Middleware for building SSR React applications.
  */
-export const ReactServerBuildMiddleware: Array<MetaPipe<ConsoleContext, IBlueprint>> = [
+export const ReactSSRBuildMiddleware: Array<MetaPipe<ConsoleContext, IBlueprint>> = [
   { module: GenerateViewsIndexMiddleware, priority: 0 },
   { module: BuildViewsMiddleware, priority: 1 },
-  { module: GenerateLazyPageRoutesMiddleware, priority: 2 },
+  { module: GenerateLazyPageMiddleware, priority: 2 },
   { module: GenerateClientFileMiddleware, priority: 3 },
   { module: GenerateIndexHtmlFileMiddleware, priority: 4 },
   { module: BuildClientAppMiddleware, priority: 5 },

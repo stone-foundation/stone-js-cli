@@ -8,10 +8,11 @@
 
 > **reactServerEntryPointTemplate**(`path`, `printUrls`): `string`
 
-Defined in: [cli/src/react/stubs.ts:33](https://github.com/stonemjs/cli/blob/f139573d7f6e29779d41fb031ed261bfcad59d09/src/react/stubs.ts#L33)
+Defined in: [cli/src/react/stubs.ts:35](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/react/stubs.ts#L35)
 
 The React server template.
 This template is used to create the server entry point for a React application.
+Note: This file is used to create th SSR server to run the application.
 
 ## Parameters
 

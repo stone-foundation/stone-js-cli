@@ -15,20 +15,30 @@ import { isReactApp, setupProcessSignalHandlers } from '../utils'
 export const serveCommandOptions: CommandOptions = {
   name: 'serve',
   alias: 'dev',
-  args: ['[app-type]'],
+  args: ['[target]'],
   desc: 'Run project in dev mode',
   options: (yargs: Argv) => {
     return yargs
-      .positional('app-type', {
+      .positional('target', {
         type: 'string',
-        default: 'server',
-        desc: 'app type to run',
+        desc: 'app target to serve',
         choices: ['server', 'react']
+      })
+      .option('language', {
+        alias: 'lang',
+        type: 'string',
+        desc: 'language to use',
+        choices: ['javascript', 'typescript']
+      })
+      .option('rendering', {
+        alias: 'r',
+        type: 'string',
+        desc: 'web rendering type',
+        choices: ['csr', 'ssr']
       })
       .option('imperative', {
         alias: 'i',
         type: 'boolean',
-        default: false,
         desc: 'imperative api'
       })
   }

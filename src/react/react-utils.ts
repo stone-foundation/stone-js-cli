@@ -12,6 +12,9 @@ import { viteConfig } from './vite.config'
 import { getStoneBuilderConfig } from '../utils'
 import { removeImportsVitePlugin } from './RemoveImportsVitePlugin'
 import { basePath, buildPath, distPath } from '@stone-js/filesystem'
+import { PageRouteDefinition, GET, RouterBlueprint } from '@stone-js/router'
+import { getMetadata, isNotEmpty, hasMetadata, ClassType, isObjectLikeModule } from '@stone-js/core'
+import { REACT_PAGE_KEY, REACT_PAGE_LAYOUT_KEY, REACT_ERROR_PAGE_KEY, PageLayoutOptions, ErrorPageOptions, REACT_ADAPTER_ERROR_PAGE_KEY, MetaErrorPage, MetaPageLayout, ReactIncomingEvent, MetaAdapterErrorPage, UseReactBlueprint } from '@stone-js/use-react'
 
 /**
  * Gets the Vite configuration.
@@ -97,4 +100,118 @@ export const runPreviewServer = async (
   }
 
   return server
+}
+
+/**
+ * Generates the declarative lazy pages.
+ *
+ * @param module The module to generate.
+ * @param path The path to the module.
+ * @param key The key to use for the module.
+ * @returns The generated pages.
+ */
+export const generateDeclarativeLazyPages = (
+  module: ClassType,
+  path: string,
+  key: string
+): {
+  exported: string
+  layouts: Record<string, MetaPageLayout>
+  definitions: PageRouteDefinition[]
+  errorPages: Record<string, MetaErrorPage<ReactIncomingEvent>>
+} => {
+  let exported = ''
+  const definitions: PageRouteDefinition[] = []
+  const layouts: Record<string, MetaPageLayout> = {}
+  const lazyModule: any = `() => import('${path}').then(v => v.${key})`
+  const errorPages: Record<string, MetaErrorPage<ReactIncomingEvent>> = {}
+
+  const pageOptions = getMetadata(module, REACT_PAGE_KEY)
+  const layoutOptions = getMetadata(module, REACT_PAGE_LAYOUT_KEY)
+  const errorPageOptions = getMetadata(module, REACT_ERROR_PAGE_KEY)
+
+  if (isNotEmpty<PageLayoutOptions>(layoutOptions)) {
+    layouts[layoutOptions.name ?? 'default'] = { module: lazyModule, lazy: true, isClass: true }
+  } else if (isNotEmpty<ErrorPageOptions>(errorPageOptions)) {
+    Array(errorPageOptions.error ?? 'default').flat().forEach((name: string) => {
+      errorPages[name] = { ...errorPageOptions, module: lazyModule, lazy: true, isClass: true }
+    })
+  } else if (isNotEmpty<PageRouteDefinition>(pageOptions)) {
+    definitions.push({
+      ...pageOptions,
+      method: GET,
+      methods: undefined,
+      children: undefined,
+      handler: {
+        ...pageOptions.handler,
+        lazy: true,
+        isComponent: true,
+        module: lazyModule
+      }
+    })
+  } else if (hasMetadata(module, REACT_ADAPTER_ERROR_PAGE_KEY)) {
+    exported += `export * from '${path}';\n`
+  }
+
+  return { exported, layouts, definitions, errorPages }
+}
+
+/**
+ * Generates the imperative lazy pages.
+ *
+ * @param module The module to generate.
+ * @param path The path to the module.
+ * @param key The key to use for the module.
+ * @returns The generated pages.
+ */
+export const generateImperativeLazyPages = (
+  module: UseReactBlueprint,
+  path: string,
+  key: string
+): {
+  exported: string
+  layouts: Record<string, MetaPageLayout>
+  definitions: PageRouteDefinition[]
+  errorPages: Record<string, MetaErrorPage<ReactIncomingEvent>>
+} => {
+  let exported = ''
+  const definitions: PageRouteDefinition[] = []
+  const layouts: Record<string, MetaPageLayout> = {}
+  const lazyModule: any = `() => import('${path}').then(v => v.${key})`
+  const errorPages: Record<string, MetaErrorPage<ReactIncomingEvent>> = {}
+
+  if (isObjectLikeModule<MetaPageLayout>(module.stone.useReact?.layout)) {
+    Object.entries(module.stone.useReact.layout).forEach(([name, layout]) => {
+      if (isNotEmpty<MetaPageLayout>(layout)) {
+        layouts[name] = { ...layout, module: lazyModule, lazy: true }
+      }
+    })
+  } else if (isObjectLikeModule<MetaErrorPage<ReactIncomingEvent>>(module.stone.useReact?.errorPages)) {
+    Object.entries(module.stone.useReact.errorPages).forEach(([name, errorPage]) => {
+      if (isNotEmpty<MetaErrorPage<ReactIncomingEvent>>(errorPage)) {
+        errorPages[name] = { ...errorPage, module: lazyModule, lazy: true }
+      }
+    })
+  } else if (isNotEmpty<RouterBlueprint>(module) && isNotEmpty<PageRouteDefinition[]>(module.stone.router?.definitions)) {
+    module.stone.router.definitions.forEach((route) => {
+      if (isNotEmpty<PageRouteDefinition>(route)) {
+        definitions.push({
+          ...route,
+          method: GET,
+          methods: undefined,
+          children: undefined,
+          handler: {
+            ...route.handler,
+            lazy: true,
+            isComponent: true,
+            module: lazyModule
+          }
+        })
+      }
+    })
+  } else if (isObjectLikeModule<MetaAdapterErrorPage<unknown, unknown, unknown>>(module.stone.useReact?.adapterErrorPages)) {
+    exported += `export * from '${path}';\n`
+  }
+
+  return { exported, layouts, definitions, errorPages }
 }

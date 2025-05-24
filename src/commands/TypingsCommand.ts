@@ -45,7 +45,7 @@ export class TypingsCommand {
    * Handle the incoming event.
    */
   async handle (event: IncomingEvent): Promise<void> {
-    if (isTypescriptApp(this.context.blueprint)) {
+    if (isTypescriptApp(this.context.blueprint, event)) {
       this.startProcess(event.get<boolean>('watch', false) ? ['--watch'] : [])
     }
   }

@@ -12,26 +12,35 @@ import { CommandOptions } from '@stone-js/node-cli-adapter'
 export const buildCommandOptions: CommandOptions = {
   name: 'build',
   alias: 'prod',
-  args: ['[app-type]'],
-  desc: 'Build project',
+  args: ['[target]'],
+  desc: 'Build project for production',
   options: (yargs: Argv) => {
     return yargs
-      .positional('app-type', {
+      .positional('target', {
         type: 'string',
-        default: 'server',
-        desc: 'app type to build',
+        desc: 'app target to build',
         choices: ['server', 'react']
       })
-      .option('ssr', {
-        alias: 's',
+      .option('language', {
+        alias: 'lang',
+        type: 'string',
+        desc: 'language to use',
+        choices: ['javascript', 'typescript']
+      })
+      .option('rendering', {
+        alias: 'r',
+        type: 'string',
+        desc: 'web rendering type',
+        choices: ['csr', 'ssr']
+      })
+      .option('lazy', {
+        alias: 'l',
         type: 'boolean',
-        default: false,
-        desc: 'Build SSR App'
+        desc: 'lazy loading for pages, error pages and layouts'
       })
       .option('imperative', {
         alias: 'i',
         type: 'boolean',
-        default: false,
         desc: 'imperative api'
       })
   }
