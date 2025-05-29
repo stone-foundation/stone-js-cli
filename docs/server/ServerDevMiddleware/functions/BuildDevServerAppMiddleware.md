@@ -8,7 +8,7 @@
 
 > **BuildDevServerAppMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
 
-Defined in: [cli/src/server/ServerDevMiddleware.ts:21](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/server/ServerDevMiddleware.ts#L21)
+Defined in: [cli/src/server/ServerDevMiddleware.ts:21](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/server/ServerDevMiddleware.ts#L21)
 
 Builds the server application using Rollup.
 

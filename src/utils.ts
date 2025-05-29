@@ -209,7 +209,9 @@ export const getStoneBuilderConfig = async (): Promise<BuilderConfig> => {
  */
 export const isTypescriptApp = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
   const files = glob.sync(basePath(blueprint.get('stone.builder.input.all', 'app/**/*.{tsx,ts}')))
-  return event.is('language', 'typescript') || blueprint.is('stone.builder.language', 'typescript') || files.length > 0
+  if (!event.is('language', undefined)) return event.is('language', 'typescript')
+  if (!blueprint.is('stone.builder.language', undefined)) return blueprint.is('stone.builder.language', 'typescript')
+  return files.length > 0
 }
 
 /**
@@ -221,7 +223,9 @@ export const isTypescriptApp = (blueprint: IBlueprint, event: IncomingEvent): bo
  */
 export const isReactApp = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
   const files = glob.sync(basePath(blueprint.get('stone.builder.input.views', 'app/**/*.{tsx,jsx,mjsx}')))
-  return event.is('target', 'react') || blueprint.is('stone.builder.target', 'react') || files.length > 0
+  if (!event.is('target', undefined)) return event.is('target', 'react')
+  if (!blueprint.is('stone.builder.target', undefined)) return blueprint.is('stone.builder.target', 'react')
+  return files.length > 0
 }
 
 /**
@@ -233,7 +237,9 @@ export const isReactApp = (blueprint: IBlueprint, event: IncomingEvent): boolean
  */
 export const isLazyViews = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
   const files = glob.sync(basePath(blueprint.get('stone.builder.input.all', 'app/**/*.{ts,tsx,js,jsx,mjsx}')))
-  return event.is('lazy', true) || blueprint.is('stone.builder.lazy', true) || files.some((filePath) => {
+  if (!event.is('lazy', undefined)) return event.is('lazy', true)
+  if (!blueprint.is('stone.builder.lazy', undefined)) return blueprint.is('stone.builder.lazy', true)
+  return files.some((filePath) => {
     const content = readFileSync(filePath, 'utf-8')
     return content.includes('@stone-js/router') && (content.includes('@Routing') || content.includes('routerBlueprint'))
   })
@@ -248,7 +254,9 @@ export const isLazyViews = (blueprint: IBlueprint, event: IncomingEvent): boolea
  */
 export const isDeclarative = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
   const files = glob.sync(basePath(blueprint.get('stone.builder.input.all', 'app/**/*.{ts,tsx,js,jsx,mjsx}')))
-  return event.is('imperative', false) || blueprint.is('stone.builder.imperative', false) || files.some((filePath) => {
+  if (!event.is('imperative', undefined)) return event.is('imperative', false)
+  if (!blueprint.is('stone.builder.imperative', undefined)) return blueprint.is('stone.builder.imperative', false)
+  return files.some((filePath) => {
     const content = readFileSync(filePath, 'utf-8')
     return content.includes('@stone-js/core') && content.includes('@StoneApp')
   })
@@ -263,7 +271,9 @@ export const isDeclarative = (blueprint: IBlueprint, event: IncomingEvent): bool
  */
 export const isCSR = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
   const files = glob.sync(basePath(blueprint.get('stone.builder.input.all', 'app/**/*.{ts,tsx,js,jsx,mjsx}')))
-  return event.is('rendering', 'csr') || blueprint.is('stone.builder.rendering', 'csr') || files.some((filePath) => {
+  if (!event.is('rendering', undefined)) return event.is('rendering', 'csr')
+  if (!blueprint.is('stone.builder.rendering', undefined)) return blueprint.is('stone.builder.rendering', 'csr')
+  return files.some((filePath) => {
     return inferRenderingStrategy(readFileSync(filePath, 'utf-8')) === 'csr'
   })
 }
@@ -277,7 +287,9 @@ export const isCSR = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
  */
 export const isSSR = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
   const files = glob.sync(basePath(blueprint.get('stone.builder.input.all', 'app/**/*.{ts,tsx,js,jsx,mjsx}')))
-  return event.is('rendering', 'ssr') || blueprint.is('stone.builder.rendering', 'ssr') || files.some((filePath) => {
+  if (!event.is('rendering', undefined)) return event.is('rendering', 'ssr')
+  if (!blueprint.is('stone.builder.rendering', undefined)) return blueprint.is('stone.builder.rendering', 'ssr')
+  return files.some((filePath) => {
     return inferRenderingStrategy(readFileSync(filePath, 'utf-8')) === 'ssr'
   })
 }

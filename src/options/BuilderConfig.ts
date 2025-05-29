@@ -139,6 +139,7 @@ export interface BuilderConfig {
  */
 export const builder: BuilderConfig = {
   dotenv,
+  lazy: false, // TODO: To be removed when the vite issue is fixed.
   rollup: {
     build: rollupBuildConfig,
     bundle: rollupBundleConfig

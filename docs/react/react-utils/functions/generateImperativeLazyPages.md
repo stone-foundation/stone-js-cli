@@ -8,7 +8,7 @@
 
 > **generateImperativeLazyPages**(`module`, `path`, `key`): `object`
 
-Defined in: [cli/src/react/react-utils.ts:168](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/react/react-utils.ts#L168)
+Defined in: [cli/src/react/react-utils.ts:170](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/react/react-utils.ts#L170)
 
 Generates the imperative lazy pages.
 
@@ -38,6 +38,10 @@ The key to use for the module.
 
 The generated pages.
 
+### adapterErrorPages
+
+> **adapterErrorPages**: `Record`\<`string`, `MetaAdapterErrorPage`\<`unknown`, `unknown`, `unknown`\>\>
+
 ### definitions
 
 > **definitions**: `PageRouteDefinition`\<`IIncomingEvent`, `unknown`\>[]
@@ -45,10 +49,6 @@ The generated pages.
 ### errorPages
 
 > **errorPages**: `Record`\<`string`, `MetaErrorPage`\<`ReactIncomingEvent`, `unknown`\>\>
-
-### exported
-
-> **exported**: `string`
 
 ### layouts
 

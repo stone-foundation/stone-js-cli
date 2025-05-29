@@ -6,7 +6,7 @@
 
 # Interface: StoneCliAppConfig
 
-Defined in: [cli/src/options/StoneCliBlueprint.ts:12](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/options/StoneCliBlueprint.ts#L12)
+Defined in: [cli/src/options/StoneCliBlueprint.ts:12](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/StoneCliBlueprint.ts#L12)
 
 App Config configuration for the Stone CLI application.
 
@@ -83,7 +83,7 @@ Configuration options for building the application blueprint, including middlewa
 
 > **builder**: [`BuilderConfig`](../../BuilderConfig/interfaces/BuilderConfig.md)
 
-Defined in: [cli/src/options/StoneCliBlueprint.ts:16](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/options/StoneCliBlueprint.ts#L16)
+Defined in: [cli/src/options/StoneCliBlueprint.ts:16](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/StoneCliBlueprint.ts#L16)
 
 Stone application builder configuration.
 
@@ -93,7 +93,7 @@ Stone application builder configuration.
 
 > **createApp**: [`CreateAppConfig`](../../CreateAppConfig/interfaces/CreateAppConfig.md)
 
-Defined in: [cli/src/options/StoneCliBlueprint.ts:21](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/options/StoneCliBlueprint.ts#L21)
+Defined in: [cli/src/options/StoneCliBlueprint.ts:21](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/StoneCliBlueprint.ts#L21)
 
 Create app configuration
 

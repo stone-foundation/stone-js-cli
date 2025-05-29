@@ -11,8 +11,8 @@ import { basePath, buildPath, distPath } from '@stone-js/filesystem'
 import { isNotEmpty, IBlueprint, ClassType, isStoneBlueprint } from '@stone-js/core'
 import { generatePublicEnviromentsFile, isDeclarative, isLazyViews, isTypescriptApp } from '../utils'
 import { generateDeclarativeLazyPages, generateImperativeLazyPages, getViteConfig } from './react-utils'
-import { MetaErrorPage, MetaPageLayout, ReactIncomingEvent, UseReactBlueprint } from '@stone-js/use-react'
 import { reactHtmlEntryPointTemplate, reactClientEntryPointTemplate, reactServerEntryPointTemplate } from './stubs'
+import { MetaAdapterErrorPage, MetaErrorPage, MetaPageLayout, ReactIncomingEvent, UseReactBlueprint } from '@stone-js/use-react'
 
 const { outputFileSync, moveSync, removeSync, readFileSync } = fsExtra
 
@@ -116,12 +116,16 @@ export const GenerateLazyPageMiddleware = async (
     return await next(context)
   }
 
-  let exported = ''
   const definitions: PageRouteDefinition[] = []
   const layouts: Record<string, MetaPageLayout> = {}
   const errorPages: Record<string, MetaErrorPage<ReactIncomingEvent>> = {}
+  const adapterErrorPages: Record<string, MetaAdapterErrorPage<unknown, unknown, unknown>> = {}
 
   const { views } = await import(buildPath('tmp/viewsIndex.mjs'))
+  const viewsPattern = relative(
+    buildPath('tmp'),
+    basePath(context.blueprint.get('stone.builder.input.views', 'app/**/*.{tsx,jsx,mjsx}'))
+  )
 
   for (const [path, view] of Object.entries<Record<string, ClassType>>(views)) {
     for (const [key, module] of Object.entries(view)) {
@@ -135,10 +139,10 @@ export const GenerateLazyPageMiddleware = async (
       }
 
       if (isNotEmpty<resultType>(result)) {
-        exported += result.exported
         definitions.push(...result.definitions)
         Object.assign(layouts, result.layouts)
         Object.assign(errorPages, result.errorPages)
+        Object.assign(adapterErrorPages, result.adapterErrorPages)
       }
     }
   }
@@ -150,13 +154,15 @@ export const GenerateLazyPageMiddleware = async (
       },
       useReact: {
         layouts,
-        errorPages
+        errorPages,
+        adapterErrorPages
       }
     }
   }
-  const replacePattern = /"(\(\) => import\([^)]+\)\.then\(v => v\.[^)]+\))"/g
+  const replacePattern = /"(\(\) => modules\[[^)]+\]\(\)\.then\(v => v\.[^)]+\))"/g
   const pagesContent = `
-  ${exported}
+  // @ts-ignore
+  const modules = import.meta.glob('${viewsPattern}')
   export const dynamicBlueprint = ${JSON.stringify(dynamicBlueprint, null, 2).replace(replacePattern, '$1')};
   `
 
@@ -181,9 +187,9 @@ export const GenerateClientFileMiddleware = async (
   next: NextPipe<ConsoleContext, IBlueprint>
 ): Promise<IBlueprint> => {
   const isLazy = isLazyViews(context.blueprint, context.event)
-  const basePattern = !isLazy
+  const basePattern = basePath(!isLazy
     ? context.blueprint.get('stone.builder.input.all', 'app/**/*.**')
-    : context.blueprint.get('stone.builder.input.app', 'app/**/*.{ts,js,mjs,json}')
+    : context.blueprint.get('stone.builder.input.app', 'app/**/*.{ts,js,mjs,json}'))
   const pattern = relative(buildPath('tmp'), basePattern)
 
   const isTypescript = isTypescriptApp(context.blueprint, context.event)

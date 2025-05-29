@@ -13,8 +13,8 @@ import { getStoneBuilderConfig } from '../utils'
 import { removeImportsVitePlugin } from './RemoveImportsVitePlugin'
 import { basePath, buildPath, distPath } from '@stone-js/filesystem'
 import { PageRouteDefinition, GET, RouterBlueprint } from '@stone-js/router'
-import { getMetadata, isNotEmpty, hasMetadata, ClassType, isObjectLikeModule } from '@stone-js/core'
-import { REACT_PAGE_KEY, REACT_PAGE_LAYOUT_KEY, REACT_ERROR_PAGE_KEY, PageLayoutOptions, ErrorPageOptions, REACT_ADAPTER_ERROR_PAGE_KEY, MetaErrorPage, MetaPageLayout, ReactIncomingEvent, MetaAdapterErrorPage, UseReactBlueprint } from '@stone-js/use-react'
+import { getMetadata, isNotEmpty, ClassType, isObjectLikeModule } from '@stone-js/core'
+import { REACT_PAGE_KEY, REACT_PAGE_LAYOUT_KEY, REACT_ERROR_PAGE_KEY, PageLayoutOptions, ErrorPageOptions, REACT_ADAPTER_ERROR_PAGE_KEY, MetaErrorPage, MetaPageLayout, ReactIncomingEvent, MetaAdapterErrorPage, UseReactBlueprint, AdapterErrorPageOptions } from '@stone-js/use-react'
 
 /**
  * Gets the Vite configuration.
@@ -115,26 +115,31 @@ export const generateDeclarativeLazyPages = (
   path: string,
   key: string
 ): {
-  exported: string
-  layouts: Record<string, MetaPageLayout>
   definitions: PageRouteDefinition[]
+  layouts: Record<string, MetaPageLayout>
   errorPages: Record<string, MetaErrorPage<ReactIncomingEvent>>
+  adapterErrorPages: Record<string, MetaAdapterErrorPage<unknown, unknown, unknown>>
 } => {
-  let exported = ''
   const definitions: PageRouteDefinition[] = []
   const layouts: Record<string, MetaPageLayout> = {}
-  const lazyModule: any = `() => import('${path}').then(v => v.${key})`
+  const lazyModule: any = `() => modules['${path}']().then(v => v.${key})`
   const errorPages: Record<string, MetaErrorPage<ReactIncomingEvent>> = {}
+  const adapterErrorPages: Record<string, MetaAdapterErrorPage<unknown, unknown, unknown>> = {}
 
   const pageOptions = getMetadata(module, REACT_PAGE_KEY)
   const layoutOptions = getMetadata(module, REACT_PAGE_LAYOUT_KEY)
   const errorPageOptions = getMetadata(module, REACT_ERROR_PAGE_KEY)
+  const errorAdapterPageOptions = getMetadata(module, REACT_ADAPTER_ERROR_PAGE_KEY)
 
   if (isNotEmpty<PageLayoutOptions>(layoutOptions)) {
     layouts[layoutOptions.name ?? 'default'] = { module: lazyModule, lazy: true, isClass: true }
   } else if (isNotEmpty<ErrorPageOptions>(errorPageOptions)) {
     Array(errorPageOptions.error ?? 'default').flat().forEach((name: string) => {
       errorPages[name] = { ...errorPageOptions, module: lazyModule, lazy: true, isClass: true }
+    })
+  } else if (isNotEmpty<AdapterErrorPageOptions>(errorAdapterPageOptions)) {
+    Array(errorAdapterPageOptions.error ?? 'default').flat().forEach((name: string) => {
+      adapterErrorPages[name] = { ...errorAdapterPageOptions, module: lazyModule, lazy: true, isClass: true }
     })
   } else if (isNotEmpty<PageRouteDefinition>(pageOptions)) {
     definitions.push({
@@ -149,11 +154,9 @@ export const generateDeclarativeLazyPages = (
         module: lazyModule
       }
     })
-  } else if (hasMetadata(module, REACT_ADAPTER_ERROR_PAGE_KEY)) {
-    exported += `export * from '${path}';\n`
   }
 
-  return { exported, layouts, definitions, errorPages }
+  return { adapterErrorPages, layouts, definitions, errorPages }
 }
 
 /**
@@ -169,16 +172,16 @@ export const generateImperativeLazyPages = (
   path: string,
   key: string
 ): {
-  exported: string
-  layouts: Record<string, MetaPageLayout>
   definitions: PageRouteDefinition[]
+  layouts: Record<string, MetaPageLayout>
   errorPages: Record<string, MetaErrorPage<ReactIncomingEvent>>
+  adapterErrorPages: Record<string, MetaAdapterErrorPage<unknown, unknown, unknown>>
 } => {
-  let exported = ''
   const definitions: PageRouteDefinition[] = []
   const layouts: Record<string, MetaPageLayout> = {}
-  const lazyModule: any = `() => import('${path}').then(v => v.${key})`
+  const lazyModule: any = `() => modules['${path}']().then(v => v.${key})`
   const errorPages: Record<string, MetaErrorPage<ReactIncomingEvent>> = {}
+  const adapterErrorPages: Record<string, MetaAdapterErrorPage<unknown, unknown, unknown>> = {}
 
   if (isObjectLikeModule<MetaPageLayout>(module.stone.useReact?.layout)) {
     Object.entries(module.stone.useReact.layout).forEach(([name, layout]) => {
@@ -190,6 +193,12 @@ export const generateImperativeLazyPages = (
     Object.entries(module.stone.useReact.errorPages).forEach(([name, errorPage]) => {
       if (isNotEmpty<MetaErrorPage<ReactIncomingEvent>>(errorPage)) {
         errorPages[name] = { ...errorPage, module: lazyModule, lazy: true }
+      }
+    })
+  } else if (isObjectLikeModule<MetaAdapterErrorPage<unknown, unknown, unknown>>(module.stone.useReact?.adapterErrorPages)) {
+    Object.entries(module.stone.useReact.adapterErrorPages).forEach(([name, errorPage]) => {
+      if (isNotEmpty<MetaAdapterErrorPage<unknown, unknown, unknown>>(errorPage)) {
+        adapterErrorPages[name] = { ...errorPage, module: lazyModule, lazy: true }
       }
     })
   } else if (isNotEmpty<RouterBlueprint>(module) && isNotEmpty<PageRouteDefinition[]>(module.stone.router?.definitions)) {
@@ -209,9 +218,7 @@ export const generateImperativeLazyPages = (
         })
       }
     })
-  } else if (isObjectLikeModule<MetaAdapterErrorPage<unknown, unknown, unknown>>(module.stone.useReact?.adapterErrorPages)) {
-    exported += `export * from '${path}';\n`
   }
 
-  return { exported, layouts, definitions, errorPages }
+  return { adapterErrorPages, layouts, definitions, errorPages }
 }

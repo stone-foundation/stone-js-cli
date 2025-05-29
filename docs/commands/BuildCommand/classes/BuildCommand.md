@@ -6,7 +6,7 @@
 
 # Class: BuildCommand
 
-Defined in: [cli/src/commands/BuildCommand.ts:52](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/commands/BuildCommand.ts#L52)
+Defined in: [cli/src/commands/BuildCommand.ts:52](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/commands/BuildCommand.ts#L52)
 
 The build command class.
 
@@ -16,7 +16,7 @@ The build command class.
 
 > **new BuildCommand**(`context`): `BuildCommand`
 
-Defined in: [cli/src/commands/BuildCommand.ts:58](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/commands/BuildCommand.ts#L58)
+Defined in: [cli/src/commands/BuildCommand.ts:58](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/commands/BuildCommand.ts#L58)
 
 Create a new instance of BuildCommand.
 
@@ -38,7 +38,7 @@ The service container to manage dependencies.
 
 > **handle**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/commands/BuildCommand.ts:65](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/commands/BuildCommand.ts#L65)
+Defined in: [cli/src/commands/BuildCommand.ts:65](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/commands/BuildCommand.ts#L65)
 
 Handle the incoming event.
 

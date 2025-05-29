@@ -6,7 +6,7 @@
 
 # Class: AppBuilder
 
-Defined in: [cli/src/create/AppBuilder.ts:17](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/create/AppBuilder.ts#L17)
+Defined in: [cli/src/create/AppBuilder.ts:17](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/create/AppBuilder.ts#L17)
 
 The App builder class.
 
@@ -16,7 +16,7 @@ The App builder class.
 
 > **new AppBuilder**(`context`): `AppBuilder`
 
-Defined in: [cli/src/create/AppBuilder.ts:23](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/create/AppBuilder.ts#L23)
+Defined in: [cli/src/create/AppBuilder.ts:23](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/create/AppBuilder.ts#L23)
 
 Creates a new App builder instance.
 
@@ -38,7 +38,7 @@ The service container to manage dependencies.
 
 > **build**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/create/AppBuilder.ts:30](https://github.com/stonemjs/cli/blob/df49bf1f270a78a61946870e36ae0b10d02482b3/src/create/AppBuilder.ts#L30)
+Defined in: [cli/src/create/AppBuilder.ts:30](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/create/AppBuilder.ts#L30)
 
 Builds the application.
 
