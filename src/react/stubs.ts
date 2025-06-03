@@ -57,6 +57,7 @@ export const stone = await stoneApp({
 .configure({
   afterConfigure (blueprint) {
     blueprint.setIf('stone.adapter.printUrls', ${String(printUrls)})
+    // %blueprint%
   }
 })
 .run()

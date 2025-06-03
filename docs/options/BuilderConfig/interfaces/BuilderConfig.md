@@ -6,7 +6,7 @@
 
 # Interface: BuilderConfig
 
-Defined in: [cli/src/options/BuilderConfig.ts:55](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/BuilderConfig.ts#L55)
+Defined in: [cli/src/options/BuilderConfig.ts:55](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/BuilderConfig.ts#L55)
 
 Configuration for building the Stone.js application.
 
@@ -16,7 +16,7 @@ Configuration for building the Stone.js application.
 
 > `optional` **browser**: `object`
 
-Defined in: [cli/src/options/BuilderConfig.ts:99](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/BuilderConfig.ts#L99)
+Defined in: [cli/src/options/BuilderConfig.ts:99](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/BuilderConfig.ts#L99)
 
 The browser configuration for the application.
 
@@ -32,7 +32,7 @@ Modules to be removed from the browser build.
 
 > `optional` **dotenv**: `Partial`\<[`DotenvConfig`](../../DotenvConfig/interfaces/DotenvConfig.md)\>
 
-Defined in: [cli/src/options/BuilderConfig.ts:84](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/BuilderConfig.ts#L84)
+Defined in: [cli/src/options/BuilderConfig.ts:84](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/BuilderConfig.ts#L84)
 
 Environment variable management configuration.
 
@@ -42,7 +42,7 @@ Environment variable management configuration.
 
 > `optional` **imperative**: `boolean`
 
-Defined in: [cli/src/options/BuilderConfig.ts:79](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/BuilderConfig.ts#L79)
+Defined in: [cli/src/options/BuilderConfig.ts:79](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/BuilderConfig.ts#L79)
 
 Whether the application is using imperative programming style.
 
@@ -52,7 +52,7 @@ Whether the application is using imperative programming style.
 
 > `optional` **input**: [`InputConfig`](InputConfig.md)
 
-Defined in: [cli/src/options/BuilderConfig.ts:109](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/BuilderConfig.ts#L109)
+Defined in: [cli/src/options/BuilderConfig.ts:109](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/BuilderConfig.ts#L109)
 
 Module autoloading configuration.
 
@@ -62,7 +62,7 @@ Module autoloading configuration.
 
 > `optional` **language**: `"typescript"` \| `"javascript"`
 
-Defined in: [cli/src/options/BuilderConfig.ts:59](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/BuilderConfig.ts#L59)
+Defined in: [cli/src/options/BuilderConfig.ts:59](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/BuilderConfig.ts#L59)
 
 The language used in the application.
 
@@ -72,7 +72,7 @@ The language used in the application.
 
 > `optional` **lazy**: `boolean`
 
-Defined in: [cli/src/options/BuilderConfig.ts:69](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/BuilderConfig.ts#L69)
+Defined in: [cli/src/options/BuilderConfig.ts:69](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/BuilderConfig.ts#L69)
 
 Whether the application is using lazy loading for pages, error pages and layouts.
 
@@ -82,7 +82,7 @@ Whether the application is using lazy loading for pages, error pages and layouts
 
 > `optional` **output**: `string`
 
-Defined in: [cli/src/options/BuilderConfig.ts:114](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/BuilderConfig.ts#L114)
+Defined in: [cli/src/options/BuilderConfig.ts:114](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/BuilderConfig.ts#L114)
 
 The output file path for the production build.
 
@@ -92,7 +92,7 @@ The output file path for the production build.
 
 > `optional` **rendering**: `"csr"` \| `"ssr"`
 
-Defined in: [cli/src/options/BuilderConfig.ts:74](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/BuilderConfig.ts#L74)
+Defined in: [cli/src/options/BuilderConfig.ts:74](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/BuilderConfig.ts#L74)
 
 Whether the application is using server-side rendering.
 
@@ -102,7 +102,7 @@ Whether the application is using server-side rendering.
 
 > `optional` **rollup**: [`RollupConfig`](RollupConfig.md)
 
-Defined in: [cli/src/options/BuilderConfig.ts:129](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/BuilderConfig.ts#L129)
+Defined in: [cli/src/options/BuilderConfig.ts:129](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/BuilderConfig.ts#L129)
 
 The rollup configuration for the application.
 
@@ -112,7 +112,7 @@ The rollup configuration for the application.
 
 > `optional` **server**: `object`
 
-Defined in: [cli/src/options/BuilderConfig.ts:89](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/BuilderConfig.ts#L89)
+Defined in: [cli/src/options/BuilderConfig.ts:89](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/BuilderConfig.ts#L89)
 
 The HTTP server configuration for the application.
 
@@ -128,7 +128,7 @@ Should print or not the URLs of the server.
 
 > `optional` **target**: `"react"` \| `"service"`
 
-Defined in: [cli/src/options/BuilderConfig.ts:64](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/BuilderConfig.ts#L64)
+Defined in: [cli/src/options/BuilderConfig.ts:64](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/BuilderConfig.ts#L64)
 
 The application target.
 
@@ -138,7 +138,7 @@ The application target.
 
 > `optional` **vite**: `Partial`\<`UserConfig`\>
 
-Defined in: [cli/src/options/BuilderConfig.ts:134](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/BuilderConfig.ts#L134)
+Defined in: [cli/src/options/BuilderConfig.ts:134](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/BuilderConfig.ts#L134)
 
 The Vite configuration for the application.
 
@@ -148,7 +148,7 @@ The Vite configuration for the application.
 
 > `optional` **watcher**: `object`
 
-Defined in: [cli/src/options/BuilderConfig.ts:119](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/options/BuilderConfig.ts#L119)
+Defined in: [cli/src/options/BuilderConfig.ts:119](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/BuilderConfig.ts#L119)
 
 File watching configuration.
 

@@ -6,7 +6,7 @@
 
 # Class: CliError
 
-Defined in: [cli/src/errors/CliError.ts:8](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/errors/CliError.ts#L8)
+Defined in: [cli/src/errors/CliError.ts:8](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/errors/CliError.ts#L8)
 
 Represents an error specific to the Stone CLI.
 
@@ -22,7 +22,7 @@ Extends `RuntimeError` to provide a custom error type for handling CLI-related i
 
 > **new CliError**(`message`, `options`?): `CliError`
 
-Defined in: [cli/src/errors/CliError.ts:15](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/errors/CliError.ts#L15)
+Defined in: [cli/src/errors/CliError.ts:15](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/errors/CliError.ts#L15)
 
 Creates a new instance of `CliError`.
 
@@ -54,7 +54,7 @@ Optional additional error options.
 
 > `readonly` `optional` **cause**: `Error`
 
-Defined in: core/dist/index.d.ts:3907
+Defined in: core/dist/index.d.ts:3101
 
 #### Inherited from
 
@@ -66,7 +66,7 @@ Defined in: core/dist/index.d.ts:3907
 
 > `readonly` `optional` **code**: `string`
 
-Defined in: core/dist/index.d.ts:3906
+Defined in: core/dist/index.d.ts:3100
 
 #### Inherited from
 
@@ -78,7 +78,7 @@ Defined in: core/dist/index.d.ts:3906
 
 > `readonly` `optional` **metadata**: `unknown`
 
-Defined in: core/dist/index.d.ts:3908
+Defined in: core/dist/index.d.ts:3102
 
 #### Inherited from
 
@@ -90,7 +90,7 @@ Defined in: core/dist/index.d.ts:3908
 
 > **toString**(`multiline`?): `string`
 
-Defined in: core/dist/index.d.ts:3929
+Defined in: core/dist/index.d.ts:3123
 
 Converts the error to a formatted string representation.
 
@@ -118,7 +118,7 @@ A formatted error string.
 
 > `static` **create**\<`T`\>(`message`, `options`?): `T`
 
-Defined in: core/dist/index.d.ts:3915
+Defined in: core/dist/index.d.ts:3109
 
 Create a RuntimeError.
 

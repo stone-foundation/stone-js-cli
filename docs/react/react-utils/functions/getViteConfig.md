@@ -8,7 +8,7 @@
 
 > **getViteConfig**(`command`, `mode`): `Promise`\<`UserConfig`\>
 
-Defined in: [cli/src/react/react-utils.ts:26](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/react/react-utils.ts#L26)
+Defined in: [cli/src/react/react-utils.ts:26](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/react-utils.ts#L26)
 
 Gets the Vite configuration.
 

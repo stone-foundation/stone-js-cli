@@ -89,32 +89,32 @@ export const InstallDependenciesMiddleware = async (
  * @param next - Function to pass to the next middleware.
  * @returns A promise resolving with the context object.
  */
-export const ConvertToVanillaMiddleware = async (
-  context: ConsoleContext,
-  next: NextPipe<ConsoleContext, IBlueprint>
-): Promise<IBlueprint> => {
-  // const {
-  //   // typing,
-  //   // destDir = ''
-  // } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
+// export const ConvertToVanillaMiddleware = async (
+//   context: ConsoleContext,
+//   next: NextPipe<ConsoleContext, IBlueprint>
+// ): Promise<IBlueprint> => {
+// const {
+//   // typing,
+//   // destDir = ''
+// } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
 
-  // TODO: Implement this feature
-  // if (typing === 'vanilla') {
-  //   createAppRollupConfig.input = join(destDir, 'app/**/*.ts')
+// TODO: Implement this feature
+// if (typing === 'vanilla') {
+//   createAppRollupConfig.input = join(destDir, 'app/**/*.ts')
 
-  //   if (isNotEmpty<OutputOptions>(createAppRollupConfig.output)) {
-  //     process.chdir(destDir)
-  //     createAppRollupConfig.output.dir = join(destDir, '.tmp')
-  //     const builder = await rollup(createAppRollupConfig)
-  //     await builder.write(createAppRollupConfig.output)
-  //   }
+//   if (isNotEmpty<OutputOptions>(createAppRollupConfig.output)) {
+//     process.chdir(destDir)
+//     createAppRollupConfig.output.dir = join(destDir, '.tmp')
+//     const builder = await rollup(createAppRollupConfig)
+//     await builder.write(createAppRollupConfig.output)
+//   }
 
-  //   removeSync(join(destDir, 'app'))
-  //   renameSync(join(destDir, '.tmp'), join(destDir, 'app'))
-  // }
+//   removeSync(join(destDir, 'app'))
+//   renameSync(join(destDir, '.tmp'), join(destDir, 'app'))
+// }
 
-  return await next(context)
-}
+//   return await next(context)
+// }
 
 /**
  * Configure testing.

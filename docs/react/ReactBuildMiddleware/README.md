@@ -23,4 +23,3 @@
 - [GeneratePublicEnvFileMiddleware](functions/GeneratePublicEnvFileMiddleware.md)
 - [GenerateReactServerFileMiddleware](functions/GenerateReactServerFileMiddleware.md)
 - [GenerateViewsIndexMiddleware](functions/GenerateViewsIndexMiddleware.md)
-- [MakeServerHtmlTemplateMiddleware](functions/MakeServerHtmlTemplateMiddleware.md)

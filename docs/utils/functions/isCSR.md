@@ -8,7 +8,7 @@
 
 > **isCSR**(`blueprint`, `event`): `boolean`
 
-Defined in: [cli/src/utils.ts:272](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/utils.ts#L272)
+Defined in: [cli/src/utils.ts:272](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/utils.ts#L272)
 
 Determines if the application is using client-side rendering.
 

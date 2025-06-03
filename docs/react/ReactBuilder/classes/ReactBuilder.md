@@ -6,7 +6,7 @@
 
 # Class: ReactBuilder
 
-Defined in: [cli/src/react/ReactBuilder.ts:21](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/react/ReactBuilder.ts#L21)
+Defined in: [cli/src/react/ReactBuilder.ts:21](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuilder.ts#L21)
 
 The React builder class.
 
@@ -16,7 +16,7 @@ The React builder class.
 
 > **new ReactBuilder**(`context`): `ReactBuilder`
 
-Defined in: [cli/src/react/ReactBuilder.ts:27](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/react/ReactBuilder.ts#L27)
+Defined in: [cli/src/react/ReactBuilder.ts:27](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuilder.ts#L27)
 
 Creates a new React builder instance.
 
@@ -38,7 +38,7 @@ The service container to manage dependencies.
 
 > **build**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/react/ReactBuilder.ts:34](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/react/ReactBuilder.ts#L34)
+Defined in: [cli/src/react/ReactBuilder.ts:34](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuilder.ts#L34)
 
 Builds the application.
 
@@ -60,7 +60,7 @@ The incoming event.
 
 > **console**(`_event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/react/ReactBuilder.ts:65](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/react/ReactBuilder.ts#L65)
+Defined in: [cli/src/react/ReactBuilder.ts:65](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuilder.ts#L65)
 
 Runs the application in the console.
 
@@ -82,7 +82,7 @@ The incoming event.
 
 > **dev**(`_event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/react/ReactBuilder.ts:47](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/react/ReactBuilder.ts#L47)
+Defined in: [cli/src/react/ReactBuilder.ts:47](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuilder.ts#L47)
 
 Starts the development server.
 
@@ -104,7 +104,7 @@ The incoming event.
 
 > **export**(`event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/react/ReactBuilder.ts:74](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/react/ReactBuilder.ts#L74)
+Defined in: [cli/src/react/ReactBuilder.ts:74](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuilder.ts#L74)
 
 Exports server files.
 
@@ -126,7 +126,7 @@ The incoming event.
 
 > **preview**(`_event`): `Promise`\<`void`\>
 
-Defined in: [cli/src/react/ReactBuilder.ts:56](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/react/ReactBuilder.ts#L56)
+Defined in: [cli/src/react/ReactBuilder.ts:56](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuilder.ts#L56)
 
 Previews the application.
 

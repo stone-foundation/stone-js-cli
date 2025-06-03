@@ -7,6 +7,20 @@ import {
   ViteDevServer,
   loadConfigFromFile
 } from 'vite'
+import {
+  MetaErrorPage,
+  REACT_PAGE_KEY,
+  MetaPageLayout,
+  ErrorPageOptions,
+  PageLayoutOptions,
+  UseReactBlueprint,
+  ReactIncomingEvent,
+  REACT_ERROR_PAGE_KEY,
+  MetaAdapterErrorPage,
+  REACT_PAGE_LAYOUT_KEY,
+  AdapterErrorPageOptions,
+  REACT_ADAPTER_ERROR_PAGE_KEY
+} from '@stone-js/use-react'
 import { existsSync } from 'fs'
 import { viteConfig } from './vite.config'
 import { getStoneBuilderConfig } from '../utils'
@@ -14,7 +28,6 @@ import { removeImportsVitePlugin } from './RemoveImportsVitePlugin'
 import { basePath, buildPath, distPath } from '@stone-js/filesystem'
 import { PageRouteDefinition, GET, RouterBlueprint } from '@stone-js/router'
 import { getMetadata, isNotEmpty, ClassType, isObjectLikeModule } from '@stone-js/core'
-import { REACT_PAGE_KEY, REACT_PAGE_LAYOUT_KEY, REACT_ERROR_PAGE_KEY, PageLayoutOptions, ErrorPageOptions, REACT_ADAPTER_ERROR_PAGE_KEY, MetaErrorPage, MetaPageLayout, ReactIncomingEvent, MetaAdapterErrorPage, UseReactBlueprint, AdapterErrorPageOptions } from '@stone-js/use-react'
 
 /**
  * Gets the Vite configuration.

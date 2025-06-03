@@ -303,7 +303,7 @@ export const isSSR = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
 export function inferRenderingStrategy (content: string): 'csr' | 'ssr' | undefined {
   const hasBrowser = content.includes('@stone-js/browser-adapter')
   const allAdapters = content.match(/['"]@?[\w\-\\/]+-adapter['"]/ig)
-  const hasNonBrowserAdapter = allAdapters?.some(v => v !== '@stone-js/browser-adapter')
+  const hasNonBrowserAdapter = allAdapters?.some(v => !v.includes('@stone-js/browser-adapter'))
 
   if (hasBrowser && hasNonBrowserAdapter === true) return 'ssr'
   if (hasBrowser && hasNonBrowserAdapter !== true) return 'csr'

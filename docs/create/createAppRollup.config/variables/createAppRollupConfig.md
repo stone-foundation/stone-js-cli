@@ -8,6 +8,6 @@
 
 > `const` **createAppRollupConfig**: `RollupOptions`
 
-Defined in: [cli/src/create/createAppRollup.config.ts:9](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/create/createAppRollup.config.ts#L9)
+Defined in: [cli/src/create/createAppRollup.config.ts:9](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/createAppRollup.config.ts#L9)
 
 Generate Rollup build options for the entire application.

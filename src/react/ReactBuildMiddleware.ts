@@ -242,6 +242,17 @@ export const GenerateReactServerFileMiddleware = async (
     .replace('%pattern%', pattern)
     .replace("'%printUrls%'", String(printUrls))
 
+  outputFileSync(
+    buildPath('tmp/template.mjs'),
+    `export const indexHtmlTemplate = \`${readFileSync(distPath('.stone/tmp/index.html'), 'utf-8')}\`;`,
+    'utf-8'
+  )
+
+  content = `import { indexHtmlTemplate } from './template.mjs';\n ${content}`.replace(
+    '// %blueprint%',
+    'blueprint.setIf(\'stone.useReact.htmlTemplateContent\', indexHtmlTemplate);'
+  )
+
   outputFileSync(buildPath(filename), content, 'utf-8')
 
   return await next(context)
@@ -348,26 +359,6 @@ export const BuildReactServerAppMiddleware = async (
 }
 
 /**
- * Makes the server HTML template.
- *
- * @param context The console context.
- * @param next The next pipe function.
- * @returns The updated blueprint object.
- */
-export const MakeServerHtmlTemplateMiddleware = async (
-  context: ConsoleContext,
-  next: NextPipe<ConsoleContext, IBlueprint>
-): Promise<IBlueprint> => {
-  outputFileSync(
-    distPath('template.mjs'),
-    `export const template = \`${readFileSync(distPath('index.html'), 'utf-8')}\`;`,
-    'utf-8'
-  )
-
-  return await next(context)
-}
-
-/**
  * Build terminating middleware.
  *
  * @param context The console context.
@@ -442,6 +433,5 @@ export const ReactSSRBuildMiddleware: Array<MetaPipe<ConsoleContext, IBlueprint>
   { module: GenerateReactServerFileMiddleware, priority: 6 },
   { module: BuildReactServerAppMiddleware, priority: 7 },
   { module: BuildReactCleaningMiddleware, priority: 8 },
-  { module: GeneratePublicEnvFileMiddleware, priority: 9 },
-  { module: MakeServerHtmlTemplateMiddleware, priority: 10 }
+  { module: GeneratePublicEnvFileMiddleware, priority: 9 }
 ]

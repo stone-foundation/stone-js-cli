@@ -8,7 +8,7 @@
 
 > **inferRenderingStrategy**(`content`): `undefined` \| `"csr"` \| `"ssr"`
 
-Defined in: [cli/src/utils.ts:303](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/utils.ts#L303)
+Defined in: [cli/src/utils.ts:303](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/utils.ts#L303)
 
 Determines the rendering strategy based on the content of the file.
 

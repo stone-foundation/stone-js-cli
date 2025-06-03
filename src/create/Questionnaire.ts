@@ -184,7 +184,7 @@ export class Questionnaire {
   private getConfirmationMessage (answers: Record<string, any>): string {
     const message = Object.entries(answers)
       .filter(([, value]) => value !== undefined)
-      .map(([key, value]) => `${String(this.messages[key])}${this.context.commandOutput.format.blue(value ?? 'None')}`)
+      .map(([key, value]) => `${String(this.messages[key])}${this.context.commandOutput.format.blue(value)}`)
       .join('\n')
 
     return `Project will be generated with the following configurations:\n${message}\nDo you confirm?`

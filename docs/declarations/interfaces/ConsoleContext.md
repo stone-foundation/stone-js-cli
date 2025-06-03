@@ -6,7 +6,7 @@
 
 # Interface: ConsoleContext
 
-Defined in: [cli/src/declarations.ts:7](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/declarations.ts#L7)
+Defined in: [cli/src/declarations.ts:7](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/declarations.ts#L7)
 
 Represents the context for the console.
 
@@ -16,7 +16,7 @@ Represents the context for the console.
 
 > **blueprint**: `IBlueprint`
 
-Defined in: [cli/src/declarations.ts:9](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/declarations.ts#L9)
+Defined in: [cli/src/declarations.ts:9](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/declarations.ts#L9)
 
 ***
 
@@ -24,7 +24,7 @@ Defined in: [cli/src/declarations.ts:9](https://github.com/stonemjs/cli/blob/ae3
 
 > **commandInput**: `CommandInput`
 
-Defined in: [cli/src/declarations.ts:10](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/declarations.ts#L10)
+Defined in: [cli/src/declarations.ts:10](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/declarations.ts#L10)
 
 ***
 
@@ -32,7 +32,7 @@ Defined in: [cli/src/declarations.ts:10](https://github.com/stonemjs/cli/blob/ae
 
 > **commandOutput**: `CommandOutput`
 
-Defined in: [cli/src/declarations.ts:11](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/declarations.ts#L11)
+Defined in: [cli/src/declarations.ts:11](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/declarations.ts#L11)
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: [cli/src/declarations.ts:11](https://github.com/stonemjs/cli/blob/ae
 
 > **event**: `IncomingEvent`
 
-Defined in: [cli/src/declarations.ts:8](https://github.com/stonemjs/cli/blob/ae332002b2560de84ae3a35accc1d91282bd1543/src/declarations.ts#L8)
+Defined in: [cli/src/declarations.ts:8](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/declarations.ts#L8)
