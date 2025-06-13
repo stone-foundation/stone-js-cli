@@ -6,41 +6,38 @@ import typescript from '@rollup/plugin-typescript'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import nodeExternals from 'rollup-plugin-node-externals'
 
-const inputs = {
-  index: 'src/**/*.ts'
-}
-
-export default Object.entries(inputs).map(([name, input]) => ({
-	input,
-	output: {
-    dir: 'dist',
-    format: 'es',
-    chunkFileNames: '[name].js',
-    manualChunks: (id) => {
-      if (id.includes('vite.config')) {
-        return 'vite.config'
+export default [
+  {
+    input: 'src/**/*.ts',
+    output: {
+      dir: 'dist',
+      format: 'es',
+      chunkFileNames: '[name].js',
+      manualChunks: (id) => {
+        if (id.includes('vite.config')) {
+          return 'vite.config'
+        }
+        if (id.includes('rollup.config')) {
+          return 'rollup.config'
+        }
       }
-      if (id.includes('rollup.config')) {
-        return 'rollup.config'
-      }
-    }
+    },
+    plugins: [
+      multi({
+        entryFileName: 'index.js'
+      }),
+      nodeExternals(), // Must always be before `nodeResolve()`.
+      nodeResolve({
+        extensions: ['.js', '.ts', '.ts'],
+        exportConditions: ['node', 'import', 'require', 'default']
+      }),
+      typescript({
+        noEmitOnError: true,
+        tsconfig: './tsconfig.build.json',
+      }),
+      commonjs(),
+    ]
   },
-  plugins: [
-    multi({
-      entryFileName: `${name}.js`
-    }),
-    nodeExternals(), // Must always be before `nodeResolve()`.
-    nodeResolve({
-      extensions: ['.js', '.ts', '.ts'],
-      exportConditions: ['node', 'import', 'require', 'default']
-    }),
-    typescript({
-      noEmitOnError: true,
-      tsconfig: './tsconfig.build.json',
-    }),
-    commonjs(),
-  ]
-})).concat([
   {
     input: 'dist/**/*.d.ts',
     output: [{ format: 'es' , file: 'dist/index.d.ts' }],
@@ -58,4 +55,4 @@ export default Object.entries(inputs).map(([name, input]) => ({
       })
     ],
   },
-])
+]

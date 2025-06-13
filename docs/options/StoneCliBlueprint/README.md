@@ -1,9 +1,3 @@
-[**CLI Documentation**](../../README.md)
-
-***
-
-[CLI Documentation](../../README.md) / options/StoneCliBlueprint
-
 # options/StoneCliBlueprint
 
 ## Interfaces

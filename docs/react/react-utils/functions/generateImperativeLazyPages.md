@@ -1,14 +1,11 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [react/react-utils](../README.md) / generateImperativeLazyPages
-
 # Function: generateImperativeLazyPages()
 
-> **generateImperativeLazyPages**(`module`, `path`, `key`): `object`
-
-Defined in: [cli/src/react/react-utils.ts:170](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/react-utils.ts#L170)
+```ts
+function generateImperativeLazyPages(
+   module, 
+   path, 
+   key): object;
+```
 
 Generates the imperative lazy pages.
 
@@ -40,16 +37,24 @@ The generated pages.
 
 ### adapterErrorPages
 
-> **adapterErrorPages**: `Record`\<`string`, `MetaAdapterErrorPage`\<`unknown`, `unknown`, `unknown`\>\>
+```ts
+adapterErrorPages: Record<string, MetaAdapterErrorPage<unknown, unknown, unknown>>;
+```
 
 ### definitions
 
-> **definitions**: `PageRouteDefinition`\<`IIncomingEvent`, `unknown`\>[]
+```ts
+definitions: PageRouteDefinition<IIncomingEvent, unknown>[];
+```
 
 ### errorPages
 
-> **errorPages**: `Record`\<`string`, `MetaErrorPage`\<`ReactIncomingEvent`, `unknown`\>\>
+```ts
+errorPages: Record<string, MetaErrorPage<ReactIncomingEvent>>;
+```
 
 ### layouts
 
-> **layouts**: `Record`\<`string`, `MetaPageLayout`\>
+```ts
+layouts: Record<string, MetaPageLayout>;
+```

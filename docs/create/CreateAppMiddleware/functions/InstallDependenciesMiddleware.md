@@ -1,14 +1,8 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [create/CreateAppMiddleware](../README.md) / InstallDependenciesMiddleware
-
 # Function: InstallDependenciesMiddleware()
 
-> **InstallDependenciesMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
-
-Defined in: [cli/src/create/CreateAppMiddleware.ts:62](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/CreateAppMiddleware.ts#L62)
+```ts
+function InstallDependenciesMiddleware(context, next): Promise<IBlueprint>;
+```
 
 Install dependencies.
 

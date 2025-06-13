@@ -1,14 +1,8 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [react/ReactDevMiddleware](../README.md) / GenerateDevHtmlTemplateFileMiddleware
-
 # Function: GenerateDevHtmlTemplateFileMiddleware()
 
-> **GenerateDevHtmlTemplateFileMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
-
-Defined in: [cli/src/react/ReactDevMiddleware.ts:60](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactDevMiddleware.ts#L60)
+```ts
+function GenerateDevHtmlTemplateFileMiddleware(context, next): Promise<IBlueprint>;
+```
 
 Generates an index HTML file for the application.
 

@@ -1,12 +1,4 @@
-[**CLI Documentation**](../../README.md)
-
-***
-
-[CLI Documentation](../../README.md) / [ConsoleErrorHandler](../README.md) / ConsoleErrorHandler
-
 # Class: ConsoleErrorHandler
-
-Defined in: [cli/src/ConsoleErrorHandler.ts:10](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/ConsoleErrorHandler.ts#L10)
 
 Class representing an ConsoleErrorHandler.
 
@@ -20,9 +12,9 @@ Kernel level error handler for CLI applications.
 
 ### Constructor
 
-> **new ConsoleErrorHandler**(`context`): `ConsoleErrorHandler`
-
-Defined in: [cli/src/ConsoleErrorHandler.ts:16](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/ConsoleErrorHandler.ts#L16)
+```ts
+new ConsoleErrorHandler(context): ConsoleErrorHandler;
+```
 
 Create an ConsoleErrorHandler.
 
@@ -42,9 +34,9 @@ The service container to manage dependencies.
 
 ### handle()
 
-> **handle**(`error`): `OutgoingResponse`
-
-Defined in: [cli/src/ConsoleErrorHandler.ts:24](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/ConsoleErrorHandler.ts#L24)
+```ts
+handle(error): OutgoingResponse;
+```
 
 Handle an error.
 
@@ -64,4 +56,6 @@ The outgoing http response.
 
 #### Implementation of
 
-`IErrorHandler.handle`
+```ts
+IErrorHandler.handle
+```

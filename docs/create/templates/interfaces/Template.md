@@ -1,12 +1,4 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [create/templates](../README.md) / Template
-
 # Interface: Template
-
-Defined in: [cli/src/create/templates.ts:6](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/templates.ts#L6)
 
 Represents a single template in the list.
 
@@ -14,9 +6,9 @@ Represents a single template in the list.
 
 ### disabled?
 
-> `optional` **disabled**: `boolean`
-
-Defined in: [cli/src/create/templates.ts:14](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/templates.ts#L14)
+```ts
+optional disabled: boolean;
+```
 
 Whether the template is disabled (optional).
 
@@ -24,9 +16,9 @@ Whether the template is disabled (optional).
 
 ### title
 
-> **title**: `string`
-
-Defined in: [cli/src/create/templates.ts:11](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/templates.ts#L11)
+```ts
+title: string;
+```
 
 The display name of the template, with formatting applied.
 
@@ -34,8 +26,8 @@ The display name of the template, with formatting applied.
 
 ### value
 
-> **value**: `string`
-
-Defined in: [cli/src/create/templates.ts:8](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/templates.ts#L8)
+```ts
+value: string;
+```
 
 The unique identifier for the template.

@@ -26,7 +26,7 @@ export const CloneStarterMiddleware = async (
     overwrite = false,
     projectName = 'stone-project',
     template = 'basic-service-declarative',
-    startersRepo = 'https://github.com/stonemjs/starters.git'
+    startersRepo = 'https://github.com/stone-foundation/stone-js-starters.git'
   } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
 
   const destDir = basePath(projectName)

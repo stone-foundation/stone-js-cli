@@ -1,9 +1,3 @@
-[**CLI Documentation**](../../README.md)
-
-***
-
-[CLI Documentation](../../README.md) / create/CreateAppMiddleware
-
 # create/CreateAppMiddleware
 
 ## Variables
@@ -14,6 +8,5 @@
 
 - [CloneStarterMiddleware](functions/CloneStarterMiddleware.md)
 - [ConfigureTestingMiddleware](functions/ConfigureTestingMiddleware.md)
-- [ConvertToVanillaMiddleware](functions/ConvertToVanillaMiddleware.md)
 - [FinalizeMiddleware](functions/FinalizeMiddleware.md)
 - [InstallDependenciesMiddleware](functions/InstallDependenciesMiddleware.md)

@@ -1,14 +1,8 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [server/server-utils](../README.md) / getRollupConfig
-
 # Function: getRollupConfig()
 
-> **getRollupConfig**(`blueprint`, `command`): `Promise`\<`RollupOptions`\>
-
-Defined in: [cli/src/server/server-utils.ts:12](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/server/server-utils.ts#L12)
+```ts
+function getRollupConfig(blueprint, command): Promise<RollupOptions>;
+```
 
 Gets the Rollup configuration.
 

@@ -1,12 +1,4 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [errors/CliError](../README.md) / CliError
-
 # Class: CliError
-
-Defined in: [cli/src/errors/CliError.ts:8](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/errors/CliError.ts#L8)
 
 Represents an error specific to the Stone CLI.
 
@@ -20,9 +12,9 @@ Extends `RuntimeError` to provide a custom error type for handling CLI-related i
 
 ### Constructor
 
-> **new CliError**(`message`, `options`?): `CliError`
-
-Defined in: [cli/src/errors/CliError.ts:15](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/errors/CliError.ts#L15)
+```ts
+new CliError(message, options?): CliError;
+```
 
 Creates a new instance of `CliError`.
 
@@ -46,106 +38,6 @@ Optional additional error options.
 
 #### Overrides
 
-`RuntimeError.constructor`
-
-## Properties
-
-### cause?
-
-> `readonly` `optional` **cause**: `Error`
-
-Defined in: core/dist/index.d.ts:3101
-
-#### Inherited from
-
-`RuntimeError.cause`
-
-***
-
-### code?
-
-> `readonly` `optional` **code**: `string`
-
-Defined in: core/dist/index.d.ts:3100
-
-#### Inherited from
-
-`RuntimeError.code`
-
-***
-
-### metadata?
-
-> `readonly` `optional` **metadata**: `unknown`
-
-Defined in: core/dist/index.d.ts:3102
-
-#### Inherited from
-
-`RuntimeError.metadata`
-
-## Methods
-
-### toString()
-
-> **toString**(`multiline`?): `string`
-
-Defined in: core/dist/index.d.ts:3123
-
-Converts the error to a formatted string representation.
-
-#### Parameters
-
-##### multiline?
-
-`boolean`
-
-Determine if output value must be multiline or not.
-
-#### Returns
-
-`string`
-
-A formatted error string.
-
-#### Inherited from
-
-`RuntimeError.toString`
-
-***
-
-### create()
-
-> `static` **create**\<`T`\>(`message`, `options`?): `T`
-
-Defined in: core/dist/index.d.ts:3109
-
-Create a RuntimeError.
-
-#### Type Parameters
-
-##### T
-
-`T` *extends* `RuntimeError` = `RuntimeError`
-
-#### Parameters
-
-##### message
-
-`string`
-
-##### options?
-
-`ErrorOptions`
-
-The options to create a RuntimeError.
-
-#### Returns
-
-`T`
-
-A new RuntimeError instance.
-
-#### Inherited from
-
-`RuntimeError.create`
+```ts
+RuntimeError.constructor
+```

@@ -1,12 +1,4 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [create/AppBuilder](../README.md) / AppBuilder
-
 # Class: AppBuilder
-
-Defined in: [cli/src/create/AppBuilder.ts:17](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/AppBuilder.ts#L17)
 
 The App builder class.
 
@@ -14,9 +6,9 @@ The App builder class.
 
 ### Constructor
 
-> **new AppBuilder**(`context`): `AppBuilder`
-
-Defined in: [cli/src/create/AppBuilder.ts:23](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/AppBuilder.ts#L23)
+```ts
+new AppBuilder(context): AppBuilder;
+```
 
 Creates a new App builder instance.
 
@@ -36,9 +28,9 @@ The service container to manage dependencies.
 
 ### build()
 
-> **build**(`event`): `Promise`\<`void`\>
-
-Defined in: [cli/src/create/AppBuilder.ts:30](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/AppBuilder.ts#L30)
+```ts
+build(event): Promise<void>;
+```
 
 Builds the application.
 

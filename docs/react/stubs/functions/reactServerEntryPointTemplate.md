@@ -1,14 +1,8 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [react/stubs](../README.md) / reactServerEntryPointTemplate
-
 # Function: reactServerEntryPointTemplate()
 
-> **reactServerEntryPointTemplate**(`path`, `printUrls`): `string`
-
-Defined in: [cli/src/react/stubs.ts:35](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/stubs.ts#L35)
+```ts
+function reactServerEntryPointTemplate(path, printUrls): string;
+```
 
 The React server template.
 This template is used to create the server entry point for a React application.

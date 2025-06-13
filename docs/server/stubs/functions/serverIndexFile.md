@@ -1,14 +1,8 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [server/stubs](../README.md) / serverIndexFile
-
 # Function: serverIndexFile()
 
-> **serverIndexFile**(`printUrls`): `string`
-
-Defined in: [cli/src/server/stubs.ts:3](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/server/stubs.ts#L3)
+```ts
+function serverIndexFile(printUrls): string;
+```
 
 ## Parameters
 

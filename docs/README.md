@@ -1,8 +1,4 @@
-**CLI Documentation**
-
-***
-
-# CLI Documentation
+# CLI
 
 ## Modules
 

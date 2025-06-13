@@ -1,14 +1,8 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [react/ReactBuildMiddleware](../README.md) / GenerateViewsIndexMiddleware
-
 # Function: GenerateViewsIndexMiddleware()
 
-> **GenerateViewsIndexMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
-
-Defined in: [cli/src/react/ReactBuildMiddleware.ts:26](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuildMiddleware.ts#L26)
+```ts
+function GenerateViewsIndexMiddleware(context, next): Promise<IBlueprint>;
+```
 
 Lazy: Generates an index file for all views in the application.
 

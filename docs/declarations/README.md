@@ -1,9 +1,3 @@
-[**CLI Documentation**](../README.md)
-
-***
-
-[CLI Documentation](../README.md) / declarations
-
 # declarations
 
 ## Interfaces

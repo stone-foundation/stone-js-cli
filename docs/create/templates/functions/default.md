@@ -1,14 +1,8 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [create/templates](../README.md) / default
-
 # Function: default()
 
-> **default**(`params`): [`Template`](../interfaces/Template.md)[]
-
-Defined in: [cli/src/create/templates.ts:24](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/templates.ts#L24)
+```ts
+function default(params): Template[];
+```
 
 Returns the available template list.
 

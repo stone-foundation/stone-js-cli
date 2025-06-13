@@ -1,14 +1,8 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [react/ReactBuildMiddleware](../README.md) / BuildClientAppMiddleware
-
 # Function: BuildClientAppMiddleware()
 
-> **BuildClientAppMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
-
-Defined in: [cli/src/react/ReactBuildMiddleware.ts:298](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuildMiddleware.ts#L298)
+```ts
+function BuildClientAppMiddleware(context, next): Promise<IBlueprint>;
+```
 
 Builds the client application using Vite.
 

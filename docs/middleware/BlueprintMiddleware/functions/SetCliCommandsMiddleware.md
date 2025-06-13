@@ -1,14 +1,8 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [middleware/BlueprintMiddleware](../README.md) / SetCliCommandsMiddleware
-
 # Function: SetCliCommandsMiddleware()
 
-> **SetCliCommandsMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
-
-Defined in: [cli/src/middleware/BlueprintMiddleware.ts:74](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/middleware/BlueprintMiddleware.ts#L74)
+```ts
+function SetCliCommandsMiddleware(context, next): Promise<IBlueprint>;
+```
 
 Middleware to set cli commands for Node CLI adapters.
 

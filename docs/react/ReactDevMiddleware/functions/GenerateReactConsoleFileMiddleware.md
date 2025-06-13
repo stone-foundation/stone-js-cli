@@ -1,14 +1,8 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [react/ReactDevMiddleware](../README.md) / GenerateReactConsoleFileMiddleware
-
 # Function: GenerateReactConsoleFileMiddleware()
 
-> **GenerateReactConsoleFileMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
-
-Defined in: [cli/src/react/ReactDevMiddleware.ts:138](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactDevMiddleware.ts#L138)
+```ts
+function GenerateReactConsoleFileMiddleware(context, next): Promise<IBlueprint>;
+```
 
 Generates console index file for all modules in the application.
 

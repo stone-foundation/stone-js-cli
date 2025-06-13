@@ -1,12 +1,4 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [create/Questionnaire](../README.md) / Questionnaire
-
 # Class: Questionnaire
-
-Defined in: [cli/src/create/Questionnaire.ts:12](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/Questionnaire.ts#L12)
 
 Represents a Questionnaire to guide users in creating a Stone.js application.
 
@@ -14,9 +6,9 @@ Represents a Questionnaire to guide users in creating a Stone.js application.
 
 ### Constructor
 
-> **new Questionnaire**(`context`): `Questionnaire`
-
-Defined in: [cli/src/create/Questionnaire.ts:28](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/Questionnaire.ts#L28)
+```ts
+new Questionnaire(context): Questionnaire;
+```
 
 Initializes a new Questionnaire instance.
 
@@ -36,9 +28,9 @@ The service container to manage dependencies.
 
 ### getAnswers()
 
-> **getAnswers**(): `Promise`\<`Record`\<`string`, `unknown`\>\>
-
-Defined in: [cli/src/create/Questionnaire.ts:102](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/Questionnaire.ts#L102)
+```ts
+getAnswers(): Promise<Record<string, unknown>>;
+```
 
 Runs the questionnaire and collects user answers.
 
@@ -52,9 +44,9 @@ A promise that resolves with the user's answers.
 
 ### create()
 
-> `static` **create**(`context`): `Questionnaire`
-
-Defined in: [cli/src/create/Questionnaire.ts:19](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/Questionnaire.ts#L19)
+```ts
+static create(context): Questionnaire;
+```
 
 Factory method to create a new Questionnaire instance.
 

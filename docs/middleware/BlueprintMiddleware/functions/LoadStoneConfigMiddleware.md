@@ -1,14 +1,8 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [middleware/BlueprintMiddleware](../README.md) / LoadStoneConfigMiddleware
-
 # Function: LoadStoneConfigMiddleware()
 
-> **LoadStoneConfigMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
-
-Defined in: [cli/src/middleware/BlueprintMiddleware.ts:28](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/middleware/BlueprintMiddleware.ts#L28)
+```ts
+function LoadStoneConfigMiddleware(context, next): Promise<IBlueprint>;
+```
 
 Middleware to load the Stone configuration from the stone.config.js or stone.config.mjs file.
 

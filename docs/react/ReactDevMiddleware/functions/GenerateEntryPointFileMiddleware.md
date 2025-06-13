@@ -1,14 +1,8 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [react/ReactDevMiddleware](../README.md) / GenerateEntryPointFileMiddleware
-
 # Function: GenerateEntryPointFileMiddleware()
 
-> **GenerateEntryPointFileMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
-
-Defined in: [cli/src/react/ReactDevMiddleware.ts:28](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactDevMiddleware.ts#L28)
+```ts
+function GenerateEntryPointFileMiddleware(context, next): Promise<IBlueprint>;
+```
 
 Generates an index file for all modules in the application.
 This index file is used for SSR and in development mode.

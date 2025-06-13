@@ -1,14 +1,8 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [create/CreateAppMiddleware](../README.md) / FinalizeMiddleware
-
 # Function: FinalizeMiddleware()
 
-> **FinalizeMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
-
-Defined in: [cli/src/create/CreateAppMiddleware.ts:157](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/CreateAppMiddleware.ts#L157)
+```ts
+function FinalizeMiddleware(context, next): Promise<IBlueprint>;
+```
 
 Finalize setup.
 

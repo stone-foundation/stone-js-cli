@@ -1,9 +1,3 @@
-[**CLI Documentation**](../../README.md)
-
-***
-
-[CLI Documentation](../../README.md) / react/ReactBuildMiddleware
-
 # react/ReactBuildMiddleware
 
 ## Variables

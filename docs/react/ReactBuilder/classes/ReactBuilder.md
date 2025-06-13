@@ -1,12 +1,4 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [react/ReactBuilder](../README.md) / ReactBuilder
-
 # Class: ReactBuilder
-
-Defined in: [cli/src/react/ReactBuilder.ts:21](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuilder.ts#L21)
 
 The React builder class.
 
@@ -14,9 +6,9 @@ The React builder class.
 
 ### Constructor
 
-> **new ReactBuilder**(`context`): `ReactBuilder`
-
-Defined in: [cli/src/react/ReactBuilder.ts:27](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuilder.ts#L27)
+```ts
+new ReactBuilder(context): ReactBuilder;
+```
 
 Creates a new React builder instance.
 
@@ -36,9 +28,9 @@ The service container to manage dependencies.
 
 ### build()
 
-> **build**(`event`): `Promise`\<`void`\>
-
-Defined in: [cli/src/react/ReactBuilder.ts:34](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuilder.ts#L34)
+```ts
+build(event): Promise<void>;
+```
 
 Builds the application.
 
@@ -58,9 +50,9 @@ The incoming event.
 
 ### console()
 
-> **console**(`_event`): `Promise`\<`void`\>
-
-Defined in: [cli/src/react/ReactBuilder.ts:65](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuilder.ts#L65)
+```ts
+console(_event): Promise<void>;
+```
 
 Runs the application in the console.
 
@@ -80,9 +72,9 @@ The incoming event.
 
 ### dev()
 
-> **dev**(`_event`): `Promise`\<`void`\>
-
-Defined in: [cli/src/react/ReactBuilder.ts:47](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuilder.ts#L47)
+```ts
+dev(_event): Promise<void>;
+```
 
 Starts the development server.
 
@@ -102,9 +94,9 @@ The incoming event.
 
 ### export()
 
-> **export**(`event`): `Promise`\<`void`\>
-
-Defined in: [cli/src/react/ReactBuilder.ts:74](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuilder.ts#L74)
+```ts
+export(event): Promise<void>;
+```
 
 Exports server files.
 
@@ -124,9 +116,9 @@ The incoming event.
 
 ### preview()
 
-> **preview**(`_event`): `Promise`\<`void`\>
-
-Defined in: [cli/src/react/ReactBuilder.ts:56](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/react/ReactBuilder.ts#L56)
+```ts
+preview(_event): Promise<void>;
+```
 
 Previews the application.
 

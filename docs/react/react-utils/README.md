@@ -1,9 +1,3 @@
-[**CLI Documentation**](../../README.md)
-
-***
-
-[CLI Documentation](../../README.md) / react/react-utils
-
 # react/react-utils
 
 ## Functions

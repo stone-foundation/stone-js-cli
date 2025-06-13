@@ -1,12 +1,4 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [commands/ListCommand](../README.md) / ListCommand
-
 # Class: ListCommand
-
-Defined in: [cli/src/commands/ListCommand.ts:24](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/commands/ListCommand.ts#L24)
 
 The list command class.
 
@@ -14,9 +6,9 @@ The list command class.
 
 ### Constructor
 
-> **new ListCommand**(`context`): `ListCommand`
-
-Defined in: [cli/src/commands/ListCommand.ts:32](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/commands/ListCommand.ts#L32)
+```ts
+new ListCommand(context): ListCommand;
+```
 
 Create a new instance of ListCommand.
 
@@ -36,9 +28,9 @@ The service container to manage dependencies.
 
 ### handle()
 
-> **handle**(`event`): `Promise`\<`void`\>
-
-Defined in: [cli/src/commands/ListCommand.ts:42](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/commands/ListCommand.ts#L42)
+```ts
+handle(event): Promise<void>;
+```
 
 Handle the incoming event.
 

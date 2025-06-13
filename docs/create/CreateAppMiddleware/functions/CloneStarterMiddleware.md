@@ -1,14 +1,8 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [create/CreateAppMiddleware](../README.md) / CloneStarterMiddleware
-
 # Function: CloneStarterMiddleware()
 
-> **CloneStarterMiddleware**(`context`, `next`): `Promise`\<`IBlueprint`\>
-
-Defined in: [cli/src/create/CreateAppMiddleware.ts:21](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/create/CreateAppMiddleware.ts#L21)
+```ts
+function CloneStarterMiddleware(context, next): Promise<IBlueprint>;
+```
 
 Clone starter from GitHub.
 

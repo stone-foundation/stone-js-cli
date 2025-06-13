@@ -1,13 +1,7 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [options/CreateAppConfig](../README.md) / createApp
-
 # Variable: createApp
 
-> `const` **createApp**: [`CreateAppConfig`](../interfaces/CreateAppConfig.md)
-
-Defined in: [cli/src/options/CreateAppConfig.ts:26](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/CreateAppConfig.ts#L26)
+```ts
+const createApp: CreateAppConfig;
+```
 
 Default configuration for creating a new Stone.js Application.

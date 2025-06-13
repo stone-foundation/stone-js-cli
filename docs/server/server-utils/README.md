@@ -1,9 +1,3 @@
-[**CLI Documentation**](../../README.md)
-
-***
-
-[CLI Documentation](../../README.md) / server/server-utils
-
 # server/server-utils
 
 ## Functions

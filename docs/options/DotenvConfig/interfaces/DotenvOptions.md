@@ -1,12 +1,4 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [options/DotenvConfig](../README.md) / DotenvOptions
-
 # Interface: DotenvOptions
-
-Defined in: [cli/src/options/DotenvConfig.ts:6](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/DotenvConfig.ts#L6)
 
 Configuration options for `dotenv` and `dotenv-expand`.
 
@@ -18,9 +10,9 @@ Configuration options for `dotenv` and `dotenv-expand`.
 
 ### expand?
 
-> `optional` **expand**: `boolean`
-
-Defined in: [cli/src/options/DotenvConfig.ts:10](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/DotenvConfig.ts#L10)
+```ts
+optional expand: boolean;
+```
 
 Expands variables within values in the `.env` file.
 
@@ -28,8 +20,8 @@ Expands variables within values in the `.env` file.
 
 ### ignoreProcessEnv?
 
-> `optional` **ignoreProcessEnv**: `boolean`
-
-Defined in: [cli/src/options/DotenvConfig.ts:15](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/DotenvConfig.ts#L15)
+```ts
+optional ignoreProcessEnv: boolean;
+```
 
 Ignores the process environment variables.

@@ -1,12 +1,4 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [options/StoneCliBlueprint](../README.md) / StoneCliBlueprint
-
 # Interface: StoneCliBlueprint
-
-Defined in: [cli/src/options/StoneCliBlueprint.ts:27](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/StoneCliBlueprint.ts#L27)
 
 Blueprint configuration for the Stone CLI application.
 
@@ -16,18 +8,25 @@ Blueprint configuration for the Stone CLI application.
 
 ## Indexable
 
-\[`key`: `string`\]: `unknown`
+```ts
+[key: string]: unknown
+```
+
+Allow adding any additional custom properties.
+The value of the custom properties can be of any type, depending on user requirements.
 
 ## Properties
 
 ### stone
 
-> **stone**: [`StoneCliAppConfig`](StoneCliAppConfig.md)
-
-Defined in: [cli/src/options/StoneCliBlueprint.ts:28](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/options/StoneCliBlueprint.ts#L28)
+```ts
+stone: StoneCliAppConfig;
+```
 
 Application-level settings, including environment, middleware, logging, and service registration.
 
 #### Overrides
 
-`StoneBlueprint.stone`
+```ts
+StoneBlueprint.stone
+```

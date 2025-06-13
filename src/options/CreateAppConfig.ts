@@ -33,5 +33,5 @@ export const createApp: CreateAppConfig = {
   linting: 'standard',
   packageManager: 'npm',
   projectName: 'stone-app',
-  startersRepo: 'https://github.com/stonemjs/starters.git'
+  startersRepo: 'https://github.com/stone-foundation/stone-js-starters.git'
 }

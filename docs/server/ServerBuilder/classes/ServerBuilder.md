@@ -1,12 +1,4 @@
-[**CLI Documentation**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../README.md) / [server/ServerBuilder](../README.md) / ServerBuilder
-
 # Class: ServerBuilder
-
-Defined in: [cli/src/server/ServerBuilder.ts:18](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/server/ServerBuilder.ts#L18)
 
 The Server builder class.
 
@@ -14,9 +6,9 @@ The Server builder class.
 
 ### Constructor
 
-> **new ServerBuilder**(`context`): `ServerBuilder`
-
-Defined in: [cli/src/server/ServerBuilder.ts:24](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/server/ServerBuilder.ts#L24)
+```ts
+new ServerBuilder(context): ServerBuilder;
+```
 
 Creates a new Server builder instance.
 
@@ -36,9 +28,9 @@ The service container to manage dependencies.
 
 ### build()
 
-> **build**(`_event`): `Promise`\<`void`\>
-
-Defined in: [cli/src/server/ServerBuilder.ts:31](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/server/ServerBuilder.ts#L31)
+```ts
+build(_event): Promise<void>;
+```
 
 Builds the application.
 
@@ -58,9 +50,9 @@ The incoming event.
 
 ### console()
 
-> **console**(`_event`): `Promise`\<`void`\>
-
-Defined in: [cli/src/server/ServerBuilder.ts:63](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/server/ServerBuilder.ts#L63)
+```ts
+console(_event): Promise<void>;
+```
 
 Runs the application in the console.
 
@@ -80,9 +72,9 @@ The incoming event.
 
 ### dev()
 
-> **dev**(`_event`, `restart`?): `Promise`\<`void`\>
-
-Defined in: [cli/src/server/ServerBuilder.ts:41](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/server/ServerBuilder.ts#L41)
+```ts
+dev(_event, restart?): Promise<void>;
+```
 
 Starts the development server.
 
@@ -108,9 +100,9 @@ Whether to restart the server.
 
 ### export()
 
-> **export**(`event`): `Promise`\<`void`\>
-
-Defined in: [cli/src/server/ServerBuilder.ts:72](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/server/ServerBuilder.ts#L72)
+```ts
+export(event): Promise<void>;
+```
 
 Exports server files.
 
@@ -130,9 +122,9 @@ The incoming event.
 
 ### preview()
 
-> **preview**(`_event`): `Promise`\<`void`\>
-
-Defined in: [cli/src/server/ServerBuilder.ts:51](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/server/ServerBuilder.ts#L51)
+```ts
+preview(_event): void;
+```
 
 Previews the application.
 
@@ -146,15 +138,15 @@ The incoming event.
 
 #### Returns
 
-`Promise`\<`void`\>
+`void`
 
 ***
 
 ### watchFiles()
 
-> **watchFiles**(`cb`): `void`
-
-Defined in: [cli/src/server/ServerBuilder.ts:95](https://github.com/stonemjs/cli/blob/83156d7f07cad6e0545ad29ba32878fdd248ede2/src/server/ServerBuilder.ts#L95)
+```ts
+watchFiles(cb): void;
+```
 
 Server Files watcher.
 
