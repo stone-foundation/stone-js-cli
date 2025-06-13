@@ -105,7 +105,11 @@ describe('utils: getFileHash', () => {
     writeTempFile(filePath, content)
 
     const hash = getFileHash(filePath)
+
+    // MD5 is intentionally used here for fast, non-cryptographic hashing in test/caching logic.
+    // This is not a security-sensitive context.
     const expected = crypto.createHash('md5').update(content).digest('hex')
+
     expect(hash).toBe(expected)
   })
 })

@@ -42,7 +42,7 @@ export function removeImportsVitePlugin (modulesToRemove: Array<string | RegExp>
               importedIdentifiers = importContent
                 .replace(/[{}]/g, '')
                 .split(',')
-                .map(i => i.trim().split(/\s+as\s+/)[0]) // Handle aliasing
+                .map(i => i.trim().split(/\s{1,20}as\s{1,20}/)[0]) // Handle aliasing
             } else {
               // Handle default or namespace imports
               importedIdentifiers.push(importContent)
@@ -86,7 +86,7 @@ export function removeImportsVitePlugin (modulesToRemove: Array<string | RegExp>
         modifiedCode = modifiedCode.replace(new RegExp(`import\\(['"]${String(moduleValue)}['"]\\)\\.then\\([^)]*\\)`, 'g'), '{}')
 
         // Ensure no broken syntax (empty statements)
-        modifiedCode = modifiedCode.replace(/^\s*;\s*$/gm, '')
+        modifiedCode = modifiedCode.replace(/^\s{0,20};\s{0,20}$/gm, '')
       })
 
       if (modifiedCode === code) return

@@ -2,7 +2,7 @@ import fsExtra from 'fs-extra'
 import { join } from 'node:path'
 import simpleGit from 'simple-git'
 import { CliError } from '../errors/CliError'
-import { execSync } from 'node:child_process'
+import { execFileSync } from 'node:child_process'
 import { MetaPipe, NextPipe } from '@stone-js/pipeline'
 import { IBlueprint, isNotEmpty } from '@stone-js/core'
 import { basePath, tmpPath } from '@stone-js/filesystem'
@@ -70,6 +70,12 @@ export const InstallDependenciesMiddleware = async (
     packageManager
   } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
 
+  const allowedManagers = ['npm', 'yarn', 'pnpm']
+
+  if (!allowedManagers.includes(packageManager)) {
+    throw new CliError(`Unsupported package manager: ${packageManager}`)
+  }
+
   const installCmd = packageManager === 'yarn' ? 'add' : 'install'
   const testingDeps = testing === 'vitest' ? ['@vitest/coverage-v8'] : []
 
@@ -77,7 +83,11 @@ export const InstallDependenciesMiddleware = async (
 
   const packages = [modules, testing, testingDeps].flat()
 
-  execSync(`${packageManager} ${installCmd} ${packages.join(' ')}`, { cwd: destDir })
+  execFileSync(packageManager, [installCmd, ...packages], {
+    cwd: destDir,
+    shell: false,
+    stdio: 'inherit'
+  })
 
   return await next(context)
 }

@@ -1,6 +1,6 @@
 import fsExtra from 'fs-extra'
 import simpleGit from 'simple-git'
-import { execSync } from 'child_process'
+import { execFileSync } from 'child_process'
 import { CliError } from '../../src/errors/CliError'
 import { CloneStarterMiddleware, ConfigureTestingMiddleware, FinalizeMiddleware, InstallDependenciesMiddleware } from '../../src/create/CreateAppMiddleware'
 
@@ -17,7 +17,7 @@ vi.mock('fs-extra', () => ({
 }))
 
 vi.mock('node:child_process', () => ({
-  execSync: vi.fn()
+  execFileSync: vi.fn()
 }))
 
 vi.mock('simple-git', () => ({
@@ -94,13 +94,24 @@ describe('InstallDependenciesMiddleware', () => {
     })
   })
 
+  it('should throw an exception if package manager is not supported', async () => {
+    vi.mocked(mockContext.blueprint.get).mockReturnValue({
+      testing: 'vitest',
+      destDir: '/dest/my-app',
+      modules: ['@stone-js/core'],
+      packageManager: 'patate'
+    })
+    await expect(InstallDependenciesMiddleware(mockContext, next)).rejects.toThrow(CliError)
+  })
+
   it('executes install command with testing dependencies using npm', async () => {
     const result = await InstallDependenciesMiddleware(mockContext, next)
 
     expect(mockContext.commandOutput.info).toHaveBeenCalledWith('Installing packages. This might take a while...')
-    expect(execSync).toHaveBeenCalledWith(
-      'npm install @stone-js/core vitest @vitest/coverage-v8',
-      { cwd: '/dest/my-app' }
+    expect(execFileSync).toHaveBeenCalledWith(
+      'npm',
+      ['install', '@stone-js/core', 'vitest', '@vitest/coverage-v8'],
+      { cwd: '/dest/my-app', shell: false, stdio: 'inherit' }
     )
     expect(result).toBe('next-called')
   })
@@ -115,9 +126,10 @@ describe('InstallDependenciesMiddleware', () => {
 
     await InstallDependenciesMiddleware(mockContext, next)
 
-    expect(execSync).toHaveBeenCalledWith(
-      'yarn add @stone-js/core jest',
-      { cwd: '/dest/my-app' }
+    expect(execFileSync).toHaveBeenCalledWith(
+      'yarn',
+      ['add', '@stone-js/core', 'jest'],
+      { cwd: '/dest/my-app', shell: false, stdio: 'inherit' }
     )
   })
 })
