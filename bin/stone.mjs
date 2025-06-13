@@ -6,11 +6,11 @@
  * This script serves as the main entry point for running a Stone.js application in a CLI environment.
  * It initializes the necessary configuration, resolves the current adapter, and executes the CLI application.
  * 
- * @see {@link https://stonejs.com/docs Stone.js Documentation}
+ * @see {@link https://stonejs.dev/docs Stone.js Documentation}
  */
-import { stoneCliBlueprint } from '../dist/index.js';
-import { stoneBlueprint, stoneApp } from '@stone-js/core';
-import { MetaCommandRouterEventHandler, nodeConsoleAdapterBlueprint } from '@stone-js/node-cli-adapter';
+import { stoneCliBlueprint } from '../dist/index.js'
+import { stoneBlueprint, stoneApp } from '@stone-js/core'
+import { MetaCommandRouterEventHandler, nodeConsoleAdapterBlueprint } from '@stone-js/node-cli-adapter'
 
 try {
   // Handle exit signals gracefully
@@ -32,6 +32,6 @@ try {
     })
     .run();
 } catch (error) {
-  console.error('Error running Stone commands:\n', error);
-  process.exit(1);
+  console.error('Error running Stone commands:\n', error)
+  process.exit(1)
 }

@@ -1,5 +1,4 @@
 import builtins from 'module'
-import { describe, it, expect } from 'vitest'
 import { viteConfig as getViteConfig } from '../../src/react/vite.config'
 
 describe('viteConfig', () => {
@@ -15,7 +14,7 @@ describe('viteConfig', () => {
     expect(viteConfig.plugins.length).toBe(2)
 
     // Plugin 1: @vitejs/plugin-react
-    const reactPlugin = viteConfig.plugins[0]
+    const reactPlugin = viteConfig.plugins[0][0]
     expect(typeof reactPlugin).toBe('object')
     expect(reactPlugin).toHaveProperty('name')
 
