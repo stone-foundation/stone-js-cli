@@ -1,61 +1,47 @@
-[**CLI Documentation v0.0.0**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../modules.md) / [commands/BuildCommand](../README.md) / BuildCommand
-
 # Class: BuildCommand
+
+The build command class.
 
 ## Constructors
 
-### new BuildCommand()
+### Constructor
 
-> **new BuildCommand**(`container`): [`BuildCommand`](BuildCommand.md)
+```ts
+new BuildCommand(context): BuildCommand;
+```
 
-Create a new instance of CoreServiceProvider.
+Create a new instance of BuildCommand.
 
 #### Parameters
 
-##### container
+##### context
+
+[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
 The service container to manage dependencies.
 
-###### blueprint
-
-`IBlueprint`
-
 #### Returns
 
-[`BuildCommand`](BuildCommand.md)
-
-#### Throws
-
-If the Blueprint config or EventEmitter is not bound to the container.
-
-#### Defined in
-
-[src/commands/BuildCommand.ts:25](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/BuildCommand.ts#L25)
+`BuildCommand`
 
 ## Methods
 
 ### handle()
 
-> **handle**(`_event`): `Promise`\<`OutgoingResponse`\>
+```ts
+handle(event): Promise<void>;
+```
 
 Handle the incoming event.
 
 #### Parameters
 
-##### \_event
+##### event
 
 `IncomingEvent`
 
 #### Returns
 
-`Promise`\<`OutgoingResponse`\>
+`Promise`\<`void`\>
 
 The blueprint.
-
-#### Defined in
-
-[src/commands/BuildCommand.ts:36](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/BuildCommand.ts#L36)

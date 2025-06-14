@@ -1,52 +1,42 @@
-[**CLI Documentation v0.0.0**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../modules.md) / [commands/CustomCommand](../README.md) / CustomCommand
-
 # Class: CustomCommand
+
+The custom command class.
 
 ## Constructors
 
-### new CustomCommand()
+### Constructor
 
-> **new CustomCommand**(`container`): [`CustomCommand`](CustomCommand.md)
+```ts
+new CustomCommand(context): CustomCommand;
+```
 
-Create a new instance of CoreServiceProvider.
+Create a new instance of CustomCommand.
 
 #### Parameters
 
-##### container
+##### context
+
+[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
 The service container to manage dependencies.
 
-###### blueprint
-
-`IBlueprint`
-
 #### Returns
 
-[`CustomCommand`](CustomCommand.md)
-
-#### Throws
-
-If the Blueprint config or EventEmitter is not bound to the container.
-
-#### Defined in
-
-[src/commands/CustomCommand.ts:26](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/CustomCommand.ts#L26)
+`CustomCommand`
 
 ## Methods
 
 ### handle()
 
-> **handle**(`_event`): `Promise`\<`OutgoingResponse`\>
+```ts
+handle(event): Promise<void>;
+```
 
 Handle the incoming event.
 
 #### Parameters
 
-##### \_event
+##### event
 
 `IncomingEvent`
 
@@ -54,10 +44,6 @@ The incoming event.
 
 #### Returns
 
-`Promise`\<`OutgoingResponse`\>
+`Promise`\<`void`\>
 
 The blueprint.
-
-#### Defined in
-
-[src/commands/CustomCommand.ts:38](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/CustomCommand.ts#L38)

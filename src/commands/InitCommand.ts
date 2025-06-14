@@ -1,18 +1,21 @@
 import { Argv } from 'yargs'
-import spawn from 'cross-spawn'
+import { IncomingEvent } from '@stone-js/core'
+import { ConsoleContext } from '../declarations'
+import { AppBuilder } from '../create/AppBuilder'
 import { CommandOptions } from '@stone-js/node-cli-adapter'
-import { IncomingEvent, OutgoingResponse } from '@stone-js/core'
 
+/**
+ * The init command options.
+ */
 export const initCommandOptions: CommandOptions = {
   name: 'init',
   alias: 'i',
   args: ['[project-name]'],
-  desc: 'Create a fresh Stone app',
+  desc: 'Create a fresh Stone app from a starter template',
   options: (yargs: Argv) => {
     return yargs
       .positional('project-name', {
         type: 'string',
-        default: 'stone-project',
         desc: 'your project name'
       })
       .option('yes', {
@@ -24,31 +27,30 @@ export const initCommandOptions: CommandOptions = {
       .option('force', {
         alias: 'f',
         type: 'boolean',
-        default: false,
         desc: 'Force overriding'
       })
   }
 }
 
+/**
+ * The init command class.
+ */
 export class InitCommand {
+  /**
+   * Create a new instance of CoreServiceProvider.
+   *
+   * @param context - The service container to manage dependencies.
+   */
+  constructor (private readonly context: ConsoleContext) {}
+
   /**
    * Handle the incoming event.
    */
-  async handle (event: IncomingEvent): Promise<OutgoingResponse> {
-    await this.launchStarter(event)
-
-    return OutgoingResponse.create({ statusCode: 0 })
-  }
-
-  /**
-   * Launch Stone.js starter.
-   */
-  private async launchStarter (event: IncomingEvent): Promise<void> {
-    const args = [event.getMetadataValue('project-name'), '--'] as string[]
-
-    event.getMetadataValue('yes') !== undefined && args.push('--yes', event.getMetadataValue('yes') as string)
-    event.getMetadataValue('force') !== undefined && args.push('--force', event.getMetadataValue('force') as string)
-
-    spawn('npm', ['create', '@stone-js@latest'].concat(args), { stdio: 'inherit' })
+  async handle (event: IncomingEvent): Promise<void> {
+    try {
+      await new AppBuilder(this.context).build(event)
+    } catch (error: any) {
+      this.context.commandOutput.error(error.message)
+    }
   }
 }

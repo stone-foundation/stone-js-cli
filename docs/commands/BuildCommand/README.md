@@ -1,17 +1,9 @@
-[**CLI Documentation v0.0.0**](../../README.md)
-
-***
-
-[CLI Documentation](../../modules.md) / commands/BuildCommand
-
 # commands/BuildCommand
 
-## Index
-
-### Classes
+## Classes
 
 - [BuildCommand](classes/BuildCommand.md)
 
-### Variables
+## Variables
 
 - [buildCommandOptions](variables/buildCommandOptions.md)

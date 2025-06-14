@@ -8,8 +8,8 @@ export default defineConfig({
     include: ['./tests/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     coverage: {
       provider: 'v8',
-      include: ['src/**/*.ts'],
-      reporter: ['text', 'html'],
+      include: ['src/**/*.ts', 'bin/**/*.mjs'],
+      reporter: ['text', 'html', 'lcov'],
       reportsDirectory: './coverage',
       thresholds: {
         100: true

@@ -1,7 +1,7 @@
 {
   "include": [
     "src/**/*.ts",
-    "tests/**/*.ts", "src/bundler/rollup.config.mjs",
+    "tests/**/*.ts", "src/server/rollup.config.ts",
   ],
   "exclude": [
     "node_modules"

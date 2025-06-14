@@ -1,30 +1,22 @@
-[**CLI Documentation v0.0.0**](../../README.md)
-
-***
-
-[CLI Documentation](../../modules.md) / [utils](../README.md) / shouldBuild
-
 # Function: shouldBuild()
 
-> **shouldBuild**(`blueprint`): `boolean`
+```ts
+function shouldBuild(pattern): boolean;
+```
 
 Should build application.
 Determines whether the application should be rebuilt.
 
 ## Parameters
 
-### blueprint
+### pattern
 
-`IBlueprint`
+`string`
 
-The container object with config.
+The glob pattern to match files.
 
 ## Returns
 
 `boolean`
 
 True if the application should be rebuilt; otherwise, false.
-
-## Defined in
-
-[src/utils.ts:163](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/utils.ts#L163)

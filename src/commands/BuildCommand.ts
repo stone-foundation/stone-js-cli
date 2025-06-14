@@ -1,41 +1,72 @@
-import { buildApp } from '../utils'
-import { CliError } from '../errors/CliError'
+import { Argv } from 'yargs'
+import { isReactApp } from '../utils'
+import { IncomingEvent } from '@stone-js/core'
+import { ConsoleContext } from '../declarations'
+import { ReactBuilder } from '../react/ReactBuilder'
+import { ServerBuilder } from '../server/ServerBuilder'
 import { CommandOptions } from '@stone-js/node-cli-adapter'
-import { buildPipes, bundlePipes } from '../middleware/buildMiddleware'
-import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
 
+/**
+ * The build command options.
+ */
 export const buildCommandOptions: CommandOptions = {
   name: 'build',
-  alias: 'b',
-  desc: 'Build project'
+  alias: 'prod',
+  args: ['[target]'],
+  desc: 'Build project for production',
+  options: (yargs: Argv) => {
+    return yargs
+      .positional('target', {
+        type: 'string',
+        desc: 'app target to build',
+        choices: ['server', 'react']
+      })
+      .option('language', {
+        alias: 'lang',
+        type: 'string',
+        desc: 'language to use',
+        choices: ['javascript', 'typescript']
+      })
+      .option('rendering', {
+        alias: 'r',
+        type: 'string',
+        desc: 'web rendering type',
+        choices: ['csr', 'ssr']
+      })
+      .option('lazy', {
+        alias: 'l',
+        type: 'boolean',
+        desc: 'lazy loading for pages, error pages and layouts'
+      })
+      .option('imperative', {
+        alias: 'i',
+        type: 'boolean',
+        desc: 'imperative api'
+      })
+  }
 }
 
+/**
+ * The build command class.
+ */
 export class BuildCommand {
   /**
-   * Blueprint configuration used to retrieve app settings.
-   */
-  private readonly blueprint: IBlueprint
-
-  /**
-   * Create a new instance of CoreServiceProvider.
+   * Create a new instance of BuildCommand.
    *
-   * @param container - The service container to manage dependencies.
-   * @throws {InitializationError} If the Blueprint config or EventEmitter is not bound to the container.
+   * @param context - The service container to manage dependencies.
    */
-  constructor ({ blueprint }: { blueprint: IBlueprint }) {
-    if (blueprint === undefined) { throw new CliError('Blueprint is required to create a BuildCommand instance.') }
-
-    this.blueprint = blueprint
-  }
+  constructor (private readonly context: ConsoleContext) {}
 
   /**
    * Handle the incoming event.
    *
    * @returns The blueprint.
    */
-  async handle (_event: IncomingEvent): Promise<OutgoingResponse> {
-    await buildApp(this.blueprint, buildPipes.concat(bundlePipes), v => v)
-
-    return OutgoingResponse.create({ statusCode: 0 })
+  async handle (event: IncomingEvent): Promise<void> {
+    if (isReactApp(this.context.blueprint, event)) {
+      await new ReactBuilder(this.context).build(event)
+    } else {
+      await new ServerBuilder(this.context).build(event)
+    }
   }
 }

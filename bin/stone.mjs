@@ -6,43 +6,32 @@
  * This script serves as the main entry point for running a Stone.js application in a CLI environment.
  * It initializes the necessary configuration, resolves the current adapter, and executes the CLI application.
  * 
- * @see {@link https://stonejs.com/docs Stone.js Documentation}
+ * @see {@link https://stonejs.dev/docs Stone.js Documentation}
  */
+import { stoneCliBlueprint } from '../dist/index.js'
+import { stoneBlueprint, stoneApp } from '@stone-js/core'
+import { MetaCommandRouterEventHandler, nodeConsoleAdapterBlueprint } from '@stone-js/node-cli-adapter'
 
-import { Config } from '@stone-js/config';
-import { stoneCliBlueprint } from '../dist/index.js';
-import { nodeCliAdapterBlueprint } from '@stone-js/node-cli-adapter';
-import { StoneFactory, stoneBlueprint, mergeBlueprints, resolveCurrentAdapter } from '@stone-js/core';
-
-/**
- * Merge and create the application blueprint.
- * 
- * Combines multiple blueprints into a single blueprint object.
- * Blueprints include:
- * - `stoneBlueprint`: The core blueprint for Stone.js.
- * - `nodeCliAdapterBlueprint`: Adapter blueprint for Node.js CLI environment.
- * - `stoneCliBlueprint`: Stone CLI-specific configuration and commands.
- * 
- * @returns The complete application blueprint.
- */
-const blueprint = Config.create(
-  mergeBlueprints(
-    stoneBlueprint,
-    nodeCliAdapterBlueprint,
-    stoneCliBlueprint
-  )
-);
-
-/**
- * Resolve the current adapter based on the application blueprint.
- * 
- * This step ensures the correct adapter is selected for the Node.js CLI environment.
- */
-resolveCurrentAdapter(blueprint);
-
-/**
- * Execute the CLI application.
- * 
- * Initializes the Stone.js application using the resolved blueprint and executes the CLI commands.
- */
-await StoneFactory.create({ blueprint }).run();
+try {
+  // Handle exit signals gracefully
+  process.on('SIGINT', () => process.exit(0))
+  process.on('SIGTERM', () => process.exit(0))
+  
+  /**
+   * Execute the CLI application.
+   * 
+   * Initializes the Stone.js application using the resolved blueprint and executes the CLI commands.
+   */
+  await stoneApp()
+    .configure((blueprint) => {
+      blueprint
+        .set(stoneBlueprint)
+        .set(nodeConsoleAdapterBlueprint)
+        .set(stoneCliBlueprint)
+        .set('stone.kernel.eventHandler', MetaCommandRouterEventHandler)
+    })
+    .run();
+} catch (error) {
+  console.error('Error running Stone commands:\n', error)
+  process.exit(1)
+}

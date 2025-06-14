@@ -1,46 +1,36 @@
-[**CLI Documentation v0.0.0**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../modules.md) / [commands/TypingsCommand](../README.md) / TypingsCommand
-
 # Class: TypingsCommand
+
+The typings command class.
 
 ## Constructors
 
-### new TypingsCommand()
+### Constructor
 
-> **new TypingsCommand**(`container`): [`TypingsCommand`](TypingsCommand.md)
+```ts
+new TypingsCommand(context): TypingsCommand;
+```
 
-Create a new instance of CoreServiceProvider.
+Create a new instance of TypingsCommand.
 
 #### Parameters
 
-##### container
+##### context
+
+[`ConsoleContext`](../../../declarations/interfaces/ConsoleContext.md)
 
 The service container to manage dependencies.
 
-###### blueprint
-
-`IBlueprint`
-
 #### Returns
 
-[`TypingsCommand`](TypingsCommand.md)
-
-#### Throws
-
-If the Blueprint config or EventEmitter is not bound to the container.
-
-#### Defined in
-
-[src/commands/TypingsCommand.ts:35](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/TypingsCommand.ts#L35)
+`TypingsCommand`
 
 ## Methods
 
 ### handle()
 
-> **handle**(`event`): `Promise`\<`OutgoingResponse`\>
+```ts
+handle(event): Promise<void>;
+```
 
 Handle the incoming event.
 
@@ -52,8 +42,4 @@ Handle the incoming event.
 
 #### Returns
 
-`Promise`\<`OutgoingResponse`\>
-
-#### Defined in
-
-[src/commands/TypingsCommand.ts:44](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/commands/TypingsCommand.ts#L44)
+`Promise`\<`void`\>

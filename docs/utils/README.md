@@ -1,33 +1,22 @@
-[**CLI Documentation v0.0.0**](../README.md)
-
-***
-
-[CLI Documentation](../modules.md) / utils
-
 # utils
 
-## Index
+## Functions
 
-### Functions
-
-- [appPath](functions/appPath.md)
-- [basePath](functions/basePath.md)
-- [buildApp](functions/buildApp.md)
-- [buildPath](functions/buildPath.md)
-- [checkAutoloadModule](functions/checkAutoloadModule.md)
-- [configPath](functions/configPath.md)
-- [distPath](functions/distPath.md)
-- [getApplicationFiles](functions/getApplicationFiles.md)
+- [defineConfig](functions/defineConfig.md)
+- [dirPath](functions/dirPath.md)
+- [generatePublicEnviromentsFile](functions/generatePublicEnviromentsFile.md)
 - [getCache](functions/getCache.md)
+- [getDefaultPublicEnvOptions](functions/getDefaultPublicEnvOptions.md)
 - [getEnvVariables](functions/getEnvVariables.md)
 - [getFileHash](functions/getFileHash.md)
-- [getStoneOptions](functions/getStoneOptions.md)
-- [importModule](functions/importModule.md)
-- [makeBootstrapFile](functions/makeBootstrapFile.md)
-- [makeFilename](functions/makeFilename.md)
-- [nodeModulesPath](functions/nodeModulesPath.md)
-- [normalizeBootstrapStub](functions/normalizeBootstrapStub.md)
-- [pipeable](functions/pipeable.md)
+- [getStoneBuilderConfig](functions/getStoneBuilderConfig.md)
+- [inferRenderingStrategy](functions/inferRenderingStrategy.md)
+- [isCSR](functions/isCSR.md)
+- [isDeclarative](functions/isDeclarative.md)
+- [isLazyViews](functions/isLazyViews.md)
+- [isReactApp](functions/isReactApp.md)
+- [isSSR](functions/isSSR.md)
+- [isTypescriptApp](functions/isTypescriptApp.md)
 - [setCache](functions/setCache.md)
+- [setupProcessSignalHandlers](functions/setupProcessSignalHandlers.md)
 - [shouldBuild](functions/shouldBuild.md)
-- [tmpPath](functions/tmpPath.md)

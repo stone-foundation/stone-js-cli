@@ -1,10 +1,16 @@
 import { Argv } from 'yargs'
 import spawn from 'cross-spawn'
-import { nodeModulesPath } from '../utils'
-import { CliError } from '../errors/CliError'
+import process from 'node:process'
+import { IncomingEvent } from '@stone-js/core'
+import { ConsoleContext } from '../declarations'
+import { ChildProcess } from 'node:child_process'
+import { nodeModulesPath } from '@stone-js/filesystem'
 import { CommandOptions } from '@stone-js/node-cli-adapter'
-import { IBlueprint, IncomingEvent, OutgoingResponse } from '@stone-js/core'
+import { isTypescriptApp, setupProcessSignalHandlers } from '../utils'
 
+/**
+ * The typings command options.
+ */
 export const typingsCommandOptions: CommandOptions = {
   name: 'typings',
   alias: 't',
@@ -20,44 +26,35 @@ export const typingsCommandOptions: CommandOptions = {
   }
 }
 
+/**
+ * The typings command class.
+ */
 export class TypingsCommand {
-  /**
-   * Blueprint configuration used to retrieve app settings.
-   */
-  private readonly blueprint: IBlueprint
+  private serverProcess?: ChildProcess
 
   /**
-   * Create a new instance of CoreServiceProvider.
+   * Create a new instance of TypingsCommand.
    *
-   * @param container - The service container to manage dependencies.
-   * @throws {InitializationError} If the Blueprint config or EventEmitter is not bound to the container.
+   * @param context - The service container to manage dependencies.
    */
-  constructor ({ blueprint }: { blueprint: IBlueprint }) {
-    if (blueprint === undefined) { throw new CliError('Blueprint is required to create a BuildCommand instance.') }
-
-    this.blueprint = blueprint
+  constructor (private readonly context: ConsoleContext) {
+    setupProcessSignalHandlers(this.serverProcess)
   }
 
   /**
    * Handle the incoming event.
    */
-  async handle (event: IncomingEvent): Promise<OutgoingResponse> {
-    this.typeCheckerProcess(event.getMetadataValue<boolean>('watch', false))
-    return OutgoingResponse.create({ statusCode: 0 })
+  async handle (event: IncomingEvent): Promise<void> {
+    if (isTypescriptApp(this.context.blueprint, event)) {
+      this.startProcess(event.get<boolean>('watch', false) ? ['--watch'] : [])
+    }
   }
 
   /**
-   * Type checker watcher Process.
+   * Start Process.
    */
-  private typeCheckerProcess (watch?: boolean): void {
-    if (watch === true) {
-      if (this.blueprint.get('stone.autoload.type') === 'typescript') {
-        spawn('node', [nodeModulesPath('.bin/tsc'), '--noEmit', '--watch'], { stdio: 'inherit' })
-      }
-    } else {
-      if (this.blueprint.get('stone.autoload.type') === 'typescript') {
-        spawn('node', [nodeModulesPath('.bin/tsc'), '--noEmit'], { stdio: 'inherit' })
-      }
-    }
+  private startProcess (args: string[] = []): void {
+    this.serverProcess = spawn('node', [nodeModulesPath('.bin/tsc'), '--noEmit'].concat(args), { stdio: 'inherit' })
+    this.serverProcess.on('exit', (code) => process.exit(code ?? 0))
   }
 }

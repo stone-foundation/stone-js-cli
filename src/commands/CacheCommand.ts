@@ -1,54 +1,35 @@
-import { Argv } from 'yargs'
 import fsExtra from 'fs-extra'
-import { buildPath } from '../utils'
-import { CliError } from '../errors/CliError'
-import { IncomingEvent, OutgoingResponse } from '@stone-js/core'
-import { CommandOptions, CommandOutput } from '@stone-js/node-cli-adapter'
+import { buildPath } from '@stone-js/filesystem'
+import { ConsoleContext } from '../declarations'
+import { CommandOptions } from '@stone-js/node-cli-adapter'
 
 const { emptyDirSync } = fsExtra
 
+/**
+ * The cache command options.
+ */
 export const cacheCommandOptions: CommandOptions = {
-  name: 'cache',
-  alias: 'c',
-  desc: 'Manage app cache',
-  options: (yargs: Argv) => {
-    return yargs
-      .option('clear', {
-        alias: 'c',
-        type: 'boolean',
-        default: false,
-        desc: 'Clear cache'
-      })
-  }
+  name: 'cache-clear',
+  alias: 'cc',
+  desc: 'Clear app cache'
 }
 
+/**
+ * The cache command class.
+ */
 export class CacheCommand {
   /**
-   * Output used to print data in console.
-   */
-  private readonly commandOutput: CommandOutput
-
-  /**
-   * Create a new instance of CoreServiceProvider.
+   * Create a new instance of CacheCommand.
    *
-   * @param container - The service container to manage dependencies.
-   * @throws {InitializationError} If the Blueprint config or EventEmitter is not bound to the container.
+   * @param context - The service container to manage dependencies.
    */
-  constructor ({ commandOutput }: { commandOutput: CommandOutput }) {
-    if (commandOutput === undefined) { throw new CliError('CommandOutput is required to create a CacheCommand instance.') }
-
-    this.commandOutput = commandOutput
-  }
+  constructor (private readonly context: ConsoleContext) {}
 
   /**
    * Handle the incoming event.
    */
-  handle (event: IncomingEvent): OutgoingResponse {
-    if (event.getMetadataValue<boolean>('clear', false) === true) {
-      emptyDirSync(buildPath())
-      this.commandOutput.info('Cache cleared!')
-    }
-
-    return OutgoingResponse.create({ statusCode: 0 })
+  handle (): void {
+    emptyDirSync(buildPath())
+    this.context.commandOutput.info('Cache cleared!')
   }
 }

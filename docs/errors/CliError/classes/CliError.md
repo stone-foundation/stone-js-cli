@@ -1,9 +1,3 @@
-[**CLI Documentation v0.0.0**](../../../README.md)
-
-***
-
-[CLI Documentation](../../../modules.md) / [errors/CliError](../README.md) / CliError
-
 # Class: CliError
 
 Represents an error specific to the Stone CLI.
@@ -16,9 +10,11 @@ Extends `RuntimeError` to provide a custom error type for handling CLI-related i
 
 ## Constructors
 
-### new CliError()
+### Constructor
 
-> **new CliError**(`message`, `options`?): [`CliError`](CliError.md)
+```ts
+new CliError(message, options?): CliError;
+```
 
 Creates a new instance of `CliError`.
 
@@ -38,12 +34,10 @@ Optional additional error options.
 
 #### Returns
 
-[`CliError`](CliError.md)
+`CliError`
 
 #### Overrides
 
-`RuntimeError.constructor`
-
-#### Defined in
-
-[src/errors/CliError.ts:15](https://github.com/stonemjs/cli/blob/7903e21087d732d9d42947a348eb3c473963e042/src/errors/CliError.ts#L15)
+```ts
+RuntimeError.constructor
+```

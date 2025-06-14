@@ -1,17 +1,9 @@
-[**CLI Documentation v0.0.0**](../../README.md)
-
-***
-
-[CLI Documentation](../../modules.md) / commands/CustomCommand
-
 # commands/CustomCommand
 
-## Index
-
-### Classes
+## Classes
 
 - [CustomCommand](classes/CustomCommand.md)
 
-### Variables
+## Variables
 
 - [customCommandOptions](variables/customCommandOptions.md)
