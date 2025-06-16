@@ -62,6 +62,7 @@ export const viteConfig = defineConfig(() => {
     },
 
     resolve: {
+      conditions: ['browser', 'import', 'default'],
       extensions: ['.js', '.mjs', '.ts', '.jsx', '.mjsx', '.tsx', '.json']
     },
 
