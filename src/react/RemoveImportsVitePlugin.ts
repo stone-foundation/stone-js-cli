@@ -10,7 +10,8 @@ export function removeImportsVitePlugin (modulesToRemove: Array<string | RegExp>
     enforce: 'pre',
     load (id) {
       // Skip Vite virtual modules like '\0vite/modulepreload-polyfill.js'
-      if (id.startsWith('\0')) return
+      // Skip node_modules files
+      if (id.startsWith('\0') || id.includes('node_modules')) return
 
       // Skip non-JS/TS files
       if (!/\.(ts|tsx|js|mjs|jsx|mjsx)$/.test(id)) return

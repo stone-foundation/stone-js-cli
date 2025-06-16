@@ -42,10 +42,13 @@ describe('removeImportsVitePlugin', () => {
 
     const result2 = plugin.load?.call({} as any, 'some/path/OtherFile.css')
     expect(result2).toBeUndefined()
+
+    const result3 = plugin.load?.call({} as any, 'node_modules/test.js')
+    expect(result3).toBeUndefined()
   })
 
   it('should process and transform relevant files', () => {
-    const fakeId = '/node_modules/fake.ts'
+    const fakeId = '/fake.ts'
 
     vi.mocked(readFileSync).mockReturnValueOnce(mockFileContent)
 
@@ -79,7 +82,7 @@ describe('removeImportsVitePlugin', () => {
   })
 
   it('should support RegExp module matchers', () => {
-    const fakeId = '/node_modules/test.ts'
+    const fakeId = '/test.ts'
     vi.mocked(readFileSync).mockReturnValueOnce(`
       import Http from '@stone-js/http-core'
       const x = Http.Response()
