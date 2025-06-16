@@ -14,7 +14,7 @@ export function removeImportsVitePlugin (modulesToRemove: Array<string | RegExp>
       if (id.startsWith('\0') || id.includes('node_modules')) return
 
       // Skip non-JS/TS files
-      if (!/\.(ts|tsx|js|mjs|jsx|mjsx)$/.test(id)) return
+      if (!/\.(ts|tsx|js|mjs|jsx|mjsx)$/i.test(id)) return
 
       const code = readFileSync(id, 'utf-8')
       let modifiedCode = code
