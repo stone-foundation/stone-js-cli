@@ -9,18 +9,12 @@ export function removeImportsVitePlugin (modulesToRemove: Array<string | RegExp>
     name: 'vite-plugin-remove-imports',
     enforce: 'pre',
     load (id) {
-      if (
-        id.includes('node_modules') ||
-        !id.includes('/StoneJS/') ||
-        (
-          !id.endsWith('.ts') &&
-          !id.endsWith('.tsx') &&
-          !id.endsWith('.js') &&
-          !id.endsWith('.mjs') &&
-          !id.endsWith('.jsx') &&
-          !id.endsWith('.mjsx')
-        )
-      ) return
+      // Skip Vite virtual modules like '\0vite/modulepreload-polyfill.js'
+      // Skip node_modules files
+      if (id.startsWith('\0') || id.includes('node_modules')) return
+
+      // Skip non-JS/TS files
+      if (!/\.(ts|tsx|js|mjs|jsx|mjsx)$/i.test(id)) return
 
       const code = readFileSync(id, 'utf-8')
       let modifiedCode = code
