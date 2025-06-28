@@ -4,6 +4,13 @@ All notable changes to the "Stone.js CLI" extension will be documented in this f
 
 ## Unreleased
 
+## [0.1.2](https://github.com/stone-foundation/stone-js-cli/compare/v0.1.1...v0.1.2) (2025-06-28)
+
+
+### Bug Fixes
+
+* change domain name to stonejs.dev ([#11](https://github.com/stone-foundation/stone-js-cli/issues/11)) ([dce0000](https://github.com/stone-foundation/stone-js-cli/commit/dce0000152d9346b004b0468edd8a21311cdd813))
+
 ## [0.1.1](https://github.com/stone-foundation/stone-js-cli/compare/v0.1.0...v0.1.1) (2025-06-16)
 
 
