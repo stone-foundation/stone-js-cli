@@ -207,7 +207,7 @@ export const FinalizeMiddleware = async (
 
   Documentation:
 
-    Check https://stonejs.com
+    Check https://stonejs.dev
   `)
 
   return await next(context)
