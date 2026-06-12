@@ -1,12 +1,12 @@
 # Function: consoleIndexFile()
 
 ```ts
-function consoleIndexFile(platform): string;
+function consoleIndexFile(platform?): string;
 ```
 
 ## Parameters
 
-### platform
+### platform?
 
 `string` = `NODE_CONSOLE_PLATFORM`
 

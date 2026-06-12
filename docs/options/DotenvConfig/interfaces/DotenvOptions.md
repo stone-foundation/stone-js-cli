@@ -11,7 +11,7 @@ Configuration options for `dotenv` and `dotenv-expand`.
 ### expand?
 
 ```ts
-optional expand: boolean;
+optional expand?: boolean;
 ```
 
 Expands variables within values in the `.env` file.
@@ -21,7 +21,7 @@ Expands variables within values in the `.env` file.
 ### ignoreProcessEnv?
 
 ```ts
-optional ignoreProcessEnv: boolean;
+optional ignoreProcessEnv?: boolean;
 ```
 
 Ignores the process environment variables.

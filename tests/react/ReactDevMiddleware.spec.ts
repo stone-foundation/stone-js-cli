@@ -1,6 +1,6 @@
 import fsExtra from 'fs-extra'
 import { build as viteBuild } from 'vite'
-import { generatePublicEnviromentsFile, isTypescriptApp, setCache } from '../../src/utils'
+import { generatePublicEnvironmentsFile, isTypescriptApp, setCache } from '../../src/utils'
 import { reactClientEntryPointTemplate, reactConsoleEntryPointTemplate } from '../../src/react/stubs'
 import { GenerateEntryPointFileMiddleware, BuildConsoleAppMiddleware, GenerateDevHtmlTemplateFileMiddleware, GenerateDevServerMiddleware, GeneratePublicEnvFileDevMiddleware, GenerateReactConsoleFileMiddleware } from '../../src/react/ReactDevMiddleware'
 
@@ -30,7 +30,7 @@ vi.mock('../../src/react/stubs', async () => ({
 
 vi.mock('../../src/utils', async () => ({
   isTypescriptApp: vi.fn().mockReturnValue(true),
-  generatePublicEnviromentsFile: vi.fn().mockReturnValue(true),
+  generatePublicEnvironmentsFile: vi.fn().mockReturnValue(true),
   setCache: vi.fn()
 }))
 
@@ -139,7 +139,7 @@ describe('ReactDevMiddleware', () => {
 
   it('should run GeneratePublicEnvFileDevMiddleware when no env is defined', async () => {
     vi.mocked(readFileSync).mockReturnValue('<html><!--env-js--></html>')
-    vi.mocked(generatePublicEnviromentsFile).mockReturnValue(false)
+    vi.mocked(generatePublicEnvironmentsFile).mockReturnValue(false)
 
     const context: any = createContext()
 

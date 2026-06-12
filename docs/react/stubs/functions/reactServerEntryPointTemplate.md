@@ -1,7 +1,7 @@
 # Function: reactServerEntryPointTemplate()
 
 ```ts
-function reactServerEntryPointTemplate(path, printUrls): string;
+function reactServerEntryPointTemplate(path?, printUrls?): string;
 ```
 
 The React server template.
@@ -10,13 +10,13 @@ Note: This file is used to create th SSR server to run the application.
 
 ## Parameters
 
-### path
+### path?
 
 `string` = `'./app/**/*'`
 
-### printUrls
+### printUrls?
 
-`string` | `boolean`
+`string` \| `boolean`
 
 ## Returns
 

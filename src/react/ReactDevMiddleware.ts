@@ -12,7 +12,7 @@ import { getViteConfig } from './react-utils'
 import { ConsoleContext } from '../declarations'
 import { MetaPipe, NextPipe } from '@stone-js/pipeline'
 import { basePath, buildPath } from '@stone-js/filesystem'
-import { generatePublicEnviromentsFile, isTypescriptApp, setCache } from '../utils'
+import { generatePublicEnvironmentsFile, isTypescriptApp, setCache } from '../utils'
 
 const { outputFileSync, existsSync, readFileSync } = fsExtra
 
@@ -111,7 +111,7 @@ export const GeneratePublicEnvFileDevMiddleware = async (
   next: NextPipe<ConsoleContext, IBlueprint>
 ): Promise<IBlueprint> => {
   const content = readFileSync(buildPath('index.html'), 'utf-8')
-  const hasEnvFile = generatePublicEnviromentsFile(
+  const hasEnvFile = generatePublicEnvironmentsFile(
     context.blueprint,
     buildPath()
   )
@@ -181,6 +181,7 @@ export const BuildConsoleAppMiddleware = async (
   const filename = isTypescriptApp(context.blueprint, context.event) ? 'index.console.ts' : 'index.console.mjs'
   const customInput = {
     build: {
+      target: 'node20', // Override the browser target: SSR bundle runs on Node, TLA allowed.
       ssr: buildPath(filename),
       emptyOutDir: false,
       outDir: buildPath(),

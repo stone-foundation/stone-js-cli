@@ -1,7 +1,7 @@
 # Function: reactClientEntryPointTemplate()
 
 ```ts
-function reactClientEntryPointTemplate(path): string;
+function reactClientEntryPointTemplate(path?): string;
 ```
 
 The React client template.
@@ -10,7 +10,7 @@ Note: This file is embedded in the index.html file.
 
 ## Parameters
 
-### path
+### path?
 
 `string` = `'./app/**/*.{ts,js,mjs,json}'`
 

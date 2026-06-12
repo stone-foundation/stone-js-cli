@@ -7,7 +7,7 @@ Complete configuration for managing environment variables.
 ### options?
 
 ```ts
-optional options: DotenvOptions;
+optional options?: DotenvOptions;
 ```
 
 Options for loading and expanding `.env` files.
@@ -17,7 +17,7 @@ Options for loading and expanding `.env` files.
 ### private?
 
 ```ts
-optional private: DotenvFiles;
+optional private?: DotenvFiles;
 ```
 
 Configuration for private `.env` files (not included in the bundle).
@@ -27,7 +27,7 @@ Configuration for private `.env` files (not included in the bundle).
 ### public?
 
 ```ts
-optional public: Record<string, DotenvFiles>;
+optional public?: Record<string, DotenvFiles>;
 ```
 
 Configuration for public `.env` files (included in the bundle).

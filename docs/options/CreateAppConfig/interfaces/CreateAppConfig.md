@@ -8,7 +8,7 @@ Used internally by the `init` command.
 ### destDir?
 
 ```ts
-optional destDir: string;
+optional destDir?: string;
 ```
 
 ***
@@ -48,7 +48,7 @@ overwrite: boolean;
 ### packageJson?
 
 ```ts
-optional packageJson: PackageJson;
+optional packageJson?: PackageJson;
 ```
 
 ***
@@ -72,7 +72,7 @@ projectName: string;
 ### srcDir?
 
 ```ts
-optional srcDir: string;
+optional srcDir?: string;
 ```
 
 ***

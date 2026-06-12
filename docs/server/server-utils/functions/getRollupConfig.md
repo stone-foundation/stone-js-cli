@@ -1,7 +1,7 @@
 # Function: getRollupConfig()
 
 ```ts
-function getRollupConfig(blueprint, command): Promise<RollupOptions>;
+function getRollupConfig(blueprint, command?): Promise<RollupOptions>;
 ```
 
 Gets the Rollup configuration.
@@ -12,9 +12,9 @@ Gets the Rollup configuration.
 
 `IBlueprint`
 
-### command
+### command?
 
-`"build"` | `"bundle"`
+`"build"` \| `"bundle"`
 
 ## Returns
 

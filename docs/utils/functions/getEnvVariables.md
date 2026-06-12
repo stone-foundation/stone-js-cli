@@ -1,7 +1,7 @@
 # Function: getEnvVariables()
 
 ```ts
-function getEnvVariables(options): undefined | Record<string, string>;
+function getEnvVariables(options): Record<string, string> | undefined;
 ```
 
 Get the env variables in .env file using the Dotenv package.
@@ -16,6 +16,6 @@ The options for loading environment variables.
 
 ## Returns
 
-`undefined` \| `Record`\<`string`, `string`\>
+`Record`\<`string`, `string`\> \| `undefined`
 
 The parsed environment variables.

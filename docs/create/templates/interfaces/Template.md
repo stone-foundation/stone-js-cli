@@ -7,7 +7,7 @@ Represents a single template in the list.
 ### disabled?
 
 ```ts
-optional disabled: boolean;
+optional disabled?: boolean;
 ```
 
 Whether the template is disabled (optional).
