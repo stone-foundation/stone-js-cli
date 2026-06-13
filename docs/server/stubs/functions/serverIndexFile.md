@@ -1,14 +1,14 @@
 # Function: serverIndexFile()
 
 ```ts
-function serverIndexFile(printUrls): string;
+function serverIndexFile(printUrls?): string;
 ```
 
 ## Parameters
 
-### printUrls
+### printUrls?
 
-`string` | `boolean`
+`string` \| `boolean`
 
 ## Returns
 

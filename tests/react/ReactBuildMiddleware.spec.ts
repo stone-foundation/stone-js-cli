@@ -16,7 +16,7 @@ import {
 } from '../../src/react/ReactBuildMiddleware'
 import { stoneCliBlueprint } from '../../src/options/StoneCliBlueprint'
 import { generateImperativeLazyPages, generateDeclarativeLazyPages } from '../../src/react/react-utils'
-import { generatePublicEnviromentsFile, isDeclarative, isLazyViews, isTypescriptApp } from '../../src/utils'
+import { generatePublicEnvironmentsFile, isDeclarative, isLazyViews, isTypescriptApp } from '../../src/utils'
 
 const { outputFileSync, moveSync, removeSync, readFileSync } = fsExtra
 
@@ -69,7 +69,7 @@ vi.mock('@stone-js/filesystem', async () => ({
 }))
 
 vi.mock('../../src/utils', async () => ({
-  generatePublicEnviromentsFile: vi.fn().mockReturnValue(true),
+  generatePublicEnvironmentsFile: vi.fn().mockReturnValue(true),
   isDeclarative: vi.fn().mockReturnValue(false),
   isLazyViews: vi.fn().mockReturnValue(true),
   isTypescriptApp: vi.fn().mockReturnValue(true)
@@ -292,7 +292,7 @@ describe('ReactBuildMiddleware', () => {
   })
 
   it('should not inject env script in index.html', async () => {
-    vi.mocked(generatePublicEnviromentsFile).mockReturnValue(false)
+    vi.mocked(generatePublicEnvironmentsFile).mockReturnValue(false)
 
     const result = await GeneratePublicEnvFileMiddleware(context, mockNext)
 

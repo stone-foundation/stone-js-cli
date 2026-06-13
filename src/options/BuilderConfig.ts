@@ -71,7 +71,7 @@ export interface BuilderConfig {
   /**
    * Whether the application is using server-side rendering.
    */
-  rendering?: 'csr' | 'ssr'
+  rendering?: 'csr' | 'ssr' | 'ssg'
 
   /**
    * Whether the application is using imperative programming style.

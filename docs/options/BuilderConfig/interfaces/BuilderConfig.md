@@ -7,7 +7,7 @@ Configuration for building the Stone.js application.
 ### browser?
 
 ```ts
-optional browser: object;
+optional browser?: object;
 ```
 
 The browser configuration for the application.
@@ -15,7 +15,7 @@ The browser configuration for the application.
 #### excludedModules?
 
 ```ts
-optional excludedModules: string[];
+optional excludedModules?: string[];
 ```
 
 Modules to be removed from the browser build.
@@ -25,7 +25,7 @@ Modules to be removed from the browser build.
 ### dotenv?
 
 ```ts
-optional dotenv: Partial<DotenvConfig>;
+optional dotenv?: Partial<DotenvConfig>;
 ```
 
 Environment variable management configuration.
@@ -35,7 +35,7 @@ Environment variable management configuration.
 ### imperative?
 
 ```ts
-optional imperative: boolean;
+optional imperative?: boolean;
 ```
 
 Whether the application is using imperative programming style.
@@ -45,7 +45,7 @@ Whether the application is using imperative programming style.
 ### input?
 
 ```ts
-optional input: InputConfig;
+optional input?: InputConfig;
 ```
 
 Module autoloading configuration.
@@ -55,7 +55,7 @@ Module autoloading configuration.
 ### language?
 
 ```ts
-optional language: "typescript" | "javascript";
+optional language?: "typescript" | "javascript";
 ```
 
 The language used in the application.
@@ -65,7 +65,7 @@ The language used in the application.
 ### lazy?
 
 ```ts
-optional lazy: boolean;
+optional lazy?: boolean;
 ```
 
 Whether the application is using lazy loading for pages, error pages and layouts.
@@ -75,7 +75,7 @@ Whether the application is using lazy loading for pages, error pages and layouts
 ### output?
 
 ```ts
-optional output: string;
+optional output?: string;
 ```
 
 The output file path for the production build.
@@ -85,7 +85,7 @@ The output file path for the production build.
 ### rendering?
 
 ```ts
-optional rendering: "csr" | "ssr";
+optional rendering?: "csr" | "ssr" | "ssg";
 ```
 
 Whether the application is using server-side rendering.
@@ -95,7 +95,7 @@ Whether the application is using server-side rendering.
 ### rollup?
 
 ```ts
-optional rollup: RollupConfig;
+optional rollup?: RollupConfig;
 ```
 
 The rollup configuration for the application.
@@ -105,7 +105,7 @@ The rollup configuration for the application.
 ### server?
 
 ```ts
-optional server: object;
+optional server?: object;
 ```
 
 The HTTP server configuration for the application.
@@ -113,7 +113,7 @@ The HTTP server configuration for the application.
 #### printUrls?
 
 ```ts
-optional printUrls: boolean;
+optional printUrls?: boolean;
 ```
 
 Should print or not the URLs of the server.
@@ -123,7 +123,7 @@ Should print or not the URLs of the server.
 ### target?
 
 ```ts
-optional target: "react" | "service";
+optional target?: "react" | "service";
 ```
 
 The application target.
@@ -133,7 +133,7 @@ The application target.
 ### vite?
 
 ```ts
-optional vite: Partial<UserConfig>;
+optional vite?: Partial<UserConfig>;
 ```
 
 The Vite configuration for the application.
@@ -143,7 +143,7 @@ The Vite configuration for the application.
 ### watcher?
 
 ```ts
-optional watcher: object;
+optional watcher?: object;
 ```
 
 File watching configuration.
@@ -151,7 +151,7 @@ File watching configuration.
 #### ignored?
 
 ```ts
-optional ignored: string[];
+optional ignored?: string[];
 ```
 
 Files to be ignored during watching.

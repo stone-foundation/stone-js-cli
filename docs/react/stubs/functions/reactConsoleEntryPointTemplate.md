@@ -1,7 +1,7 @@
 # Function: reactConsoleEntryPointTemplate()
 
 ```ts
-function reactConsoleEntryPointTemplate(path, platform): string;
+function reactConsoleEntryPointTemplate(path?, platform?): string;
 ```
 
 The React console template.
@@ -10,11 +10,11 @@ Note: This file is used to create the console server to run the application.
 
 ## Parameters
 
-### path
+### path?
 
 `string` = `'./app/**/*'`
 
-### platform
+### platform?
 
 `string` = `NODE_CONSOLE_PLATFORM`
 

@@ -10,15 +10,15 @@ Gets the Vite configuration.
 
 ### command
 
-The command to run.
+`"build"` \| `"serve"`
 
-`"build"` | `"serve"`
+The command to run.
 
 ### mode
 
-The mode to run.
+`"production"` \| `"development"`
 
-`"production"` | `"development"`
+The mode to run.
 
 ## Returns
 

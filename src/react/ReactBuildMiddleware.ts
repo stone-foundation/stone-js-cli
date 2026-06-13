@@ -9,7 +9,7 @@ import { MetaPipe, NextPipe } from '@stone-js/pipeline'
 import { removeImportsVitePlugin } from './RemoveImportsVitePlugin'
 import { basePath, buildPath, distPath } from '@stone-js/filesystem'
 import { isNotEmpty, IBlueprint, ClassType, isStoneBlueprint } from '@stone-js/core'
-import { generatePublicEnviromentsFile, isDeclarative, isLazyViews, isTypescriptApp } from '../utils'
+import { generatePublicEnvironmentsFile, isDeclarative, isLazyViews, isTypescriptApp } from '../utils'
 import { generateDeclarativeLazyPages, generateImperativeLazyPages, getViteConfig } from './react-utils'
 import { reactHtmlEntryPointTemplate, reactClientEntryPointTemplate, reactServerEntryPointTemplate } from './stubs'
 import { MetaAdapterErrorPage, MetaErrorPage, MetaPageLayout, ReactIncomingEvent, UseReactBlueprint } from '@stone-js/use-react'
@@ -336,6 +336,7 @@ export const BuildReactServerAppMiddleware = async (
   const userConfig = await getViteConfig('build', 'production')
   const customInput = {
     build: {
+      target: 'node20', // Override the browser target: SSR bundle runs on Node, TLA allowed.
       emptyOutDir: false,
       outDir: distPath(),
       ssr: buildPath(isTypescriptApp(context.blueprint, context.event) ? 'tmp/server.ts' : 'tmp/server.mjs'),
@@ -389,7 +390,7 @@ export const GeneratePublicEnvFileMiddleware = async (
   next: NextPipe<ConsoleContext, IBlueprint>
 ): Promise<IBlueprint> => {
   const content = readFileSync(distPath('index.html'), 'utf-8')
-  const hasEnvFile = generatePublicEnviromentsFile(
+  const hasEnvFile = generatePublicEnvironmentsFile(
     context.blueprint,
     distPath('env')
   )

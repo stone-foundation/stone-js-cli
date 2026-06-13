@@ -9,7 +9,7 @@ Specifies glob patterns to identify modules for transpilation.
 ### all?
 
 ```ts
-optional all: string;
+optional all?: string;
 ```
 
 The input path pattern for the entire application.
@@ -19,7 +19,7 @@ The input path pattern for the entire application.
 ### app?
 
 ```ts
-optional app: string;
+optional app?: string;
 ```
 
 The input path pattern for the application modules expect views.
@@ -31,7 +31,7 @@ For the lazy loading of views.
 ### mainCSS?
 
 ```ts
-optional mainCSS: string;
+optional mainCSS?: string;
 ```
 
 The input path for the application Main CSS stylesheet.
@@ -41,7 +41,7 @@ The input path for the application Main CSS stylesheet.
 ### views?
 
 ```ts
-optional views: string;
+optional views?: string;
 ```
 
 The input path pattern for only the application views.

@@ -23,8 +23,12 @@ const modules = Object
 
 /**
  * Create and run the Stone app.
+ * Note: no top-level await here. TLA requires ES2022 (Safari 16.4+) and
+ * esbuild cannot lower it. Nothing awaits this entry point in a browser anyway.
  */
-export const stone = await stoneApp({ modules }).run()
+export const stone = stoneApp({ modules }).run().catch((error) => {
+  console.error('[Stone.js] Failed to start the application.', error)
+})
 `
 
 /**

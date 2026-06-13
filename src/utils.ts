@@ -127,7 +127,7 @@ export function getDefaultPublicEnvOptions (): Record<string, DotenvFiles> {
  * @param baseOutputPath - The base output path.
  * @returns True if the environment files were generated; otherwise, false.
  */
-export function generatePublicEnviromentsFile (blueprint: IBlueprint, baseOutputPath: string): boolean {
+export function generatePublicEnvironmentsFile (blueprint: IBlueprint, baseOutputPath: string): boolean {
   let generated: boolean = false
 
   const dotenv = blueprint.get<DotenvConfig>('stone.builder.dotenv', {})

@@ -21,7 +21,7 @@ import {
   inferRenderingStrategy,
   setupProcessSignalHandlers,
   getDefaultPublicEnvOptions,
-  generatePublicEnviromentsFile
+  generatePublicEnvironmentsFile
 } from '../src/utils'
 import Dotenv from 'dotenv'
 import { importModule } from '@stone-js/filesystem'
@@ -262,7 +262,7 @@ describe('utils: getDefaultPublicEnvOptions', () => {
   })
 })
 
-describe('utils: generatePublicEnviromentsFile', () => {
+describe('utils: generatePublicEnvironmentsFile', () => {
   const outputDir = path.join(TMP_DIR, 'env-output')
   const defaultEnv = path.join(TMP_DIR, '.env.public')
   const devEnv = path.join(TMP_DIR, '.env.public.dev')
@@ -284,7 +284,7 @@ describe('utils: generatePublicEnviromentsFile', () => {
   } as unknown as IBlueprint
 
   it('should write environment files and return true if default exists', () => {
-    const result = generatePublicEnviromentsFile(fakeBlueprint, outputDir)
+    const result = generatePublicEnvironmentsFile(fakeBlueprint, outputDir)
 
     const defaultFile = fs.readFileSync(path.join(outputDir, 'environments.js'), 'utf-8')
     const devFile = fs.readFileSync(path.join(outputDir, 'environments.dev.js'), 'utf-8')
@@ -302,14 +302,14 @@ describe('utils: generatePublicEnviromentsFile', () => {
       }
     })
 
-    const result = generatePublicEnviromentsFile(fakeBlueprint, outputDir)
+    const result = generatePublicEnvironmentsFile(fakeBlueprint, outputDir)
     expect(result).toBe(false)
   })
 
   it('should return true when default env is marked', () => {
     fakeBlueprint.get = vi.fn().mockReturnValueOnce({})
 
-    const result = generatePublicEnviromentsFile(fakeBlueprint, outputDir)
+    const result = generatePublicEnvironmentsFile(fakeBlueprint, outputDir)
     expect(result).toBe(true)
   })
 
@@ -328,7 +328,7 @@ describe('utils: generatePublicEnviromentsFile', () => {
     const fallbackFile = path.join(TMP_DIR, '.env.public')
     writeFile(fallbackFile, 'FALLBACK_ENV=yes')
 
-    const result = generatePublicEnviromentsFile(noPathBlueprint, outputDir)
+    const result = generatePublicEnvironmentsFile(noPathBlueprint, outputDir)
 
     expect(result).toBe(true)
     // expect(fallbackContent).toContain('FALLBACK_ENV')
@@ -344,7 +344,7 @@ describe('utils: generatePublicEnviromentsFile', () => {
       })
     } as unknown as IBlueprint
 
-    const result = generatePublicEnviromentsFile(noVarsBlueprint, outputDir)
+    const result = generatePublicEnvironmentsFile(noVarsBlueprint, outputDir)
     const content = fs.readFileSync(path.join(outputDir, 'environments.js'), 'utf-8')
 
     expect(result).toBe(true)

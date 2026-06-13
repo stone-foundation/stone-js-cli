@@ -99,7 +99,7 @@ export const runPreviewServer = async (
 ): Promise<PreviewServer> => {
   const stoneConfig = await getStoneBuilderConfig()
   const printUrls = stoneConfig.server?.printUrls ?? true
-  const viteConfig = await getViteConfig('serve', 'development')
+  const viteConfig = await getViteConfig('serve', 'production')
 
   const server = await preview(mergeConfig(viteConfig, userConfig ?? {
     build: {
@@ -147,11 +147,11 @@ export const generateDeclarativeLazyPages = (
   if (isNotEmpty<PageLayoutOptions>(layoutOptions)) {
     layouts[layoutOptions.name ?? 'default'] = { module: lazyModule, lazy: true, isClass: true }
   } else if (isNotEmpty<ErrorPageOptions>(errorPageOptions)) {
-    Array(errorPageOptions.error ?? 'default').flat().forEach((name: string) => {
+    [errorPageOptions.error ?? 'default'].flat().forEach((name: string) => {
       errorPages[name] = { ...errorPageOptions, module: lazyModule, lazy: true, isClass: true }
     })
   } else if (isNotEmpty<AdapterErrorPageOptions>(errorAdapterPageOptions)) {
-    Array(errorAdapterPageOptions.error ?? 'default').flat().forEach((name: string) => {
+    [errorAdapterPageOptions.error ?? 'default'].flat().forEach((name: string) => {
       adapterErrorPages[name] = { ...errorAdapterPageOptions, module: lazyModule, lazy: true, isClass: true }
     })
   } else if (isNotEmpty<PageRouteDefinition>(pageOptions)) {

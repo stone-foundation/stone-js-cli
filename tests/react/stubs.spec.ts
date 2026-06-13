@@ -12,7 +12,7 @@ describe('React stubs', () => {
   it('reactClientEntryPointTemplate should return valid client entry code with default path', () => {
     const code = reactClientEntryPointTemplate()
     expect(code).toContain("const rawModules = import.meta.glob('./app/**/*.{ts,js,mjs,json}'")
-    expect(code).toContain('const stone = await stoneApp({ modules }).run()')
+    expect(code).toContain('export const stone = stoneApp({ modules }).run()')
   })
 
   it('reactClientEntryPointTemplate should accept a custom path', () => {
