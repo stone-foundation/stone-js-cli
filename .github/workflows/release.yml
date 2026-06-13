@@ -25,7 +25,7 @@ jobs:
           scope: '@stone-js'
           registry-url: https://registry.npmjs.org
       - name: Install dependencies
-        run: npm i
+        run: npm ci
       - name: Build library
         run: npm run build
       - name: Publish to NPM
