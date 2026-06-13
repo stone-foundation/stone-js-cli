@@ -4,6 +4,14 @@ All notable changes to the "Stone.js CLI" extension will be documented in this f
 
 ## Unreleased
 
+## [0.1.3](https://github.com/stone-foundation/stone-js-cli/compare/v0.1.2...v0.1.3) (2026-06-13)
+
+
+### Miscellaneous Chores
+
+* update Stone core dep ([d19c1f4](https://github.com/stone-foundation/stone-js-cli/commit/d19c1f42a26148dc0bf8fe3b17c8569609f4bbd2))
+* update Stone core dep ([#28](https://github.com/stone-foundation/stone-js-cli/issues/28)) ([8a58296](https://github.com/stone-foundation/stone-js-cli/commit/8a5829609e8e686014bc905f99674e7c04274ce7))
+
 ## [0.1.2](https://github.com/stone-foundation/stone-js-cli/compare/v0.1.1...v0.1.2) (2025-06-28)
 
 
