@@ -42,7 +42,7 @@
     "predoc": "rimraf docs",
     "doc": "typedoc",
     "prebuild": "rimraf dist && npm run doc",
-    "build": "rollup -c",
+    "build": "NODE_OPTIONS=--max-old-space-size=8192 rollup -c",
     "test": "vitest run",
     "test:cvg": "npm run test -- --coverage",
     "test:text": "npm run test:cvg -- --coverage.reporter=text",
