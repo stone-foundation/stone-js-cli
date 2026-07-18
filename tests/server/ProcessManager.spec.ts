@@ -121,6 +121,9 @@ describe('ProcessManager', () => {
     child.simulateExit(0)
 
     expect(child.kill).toHaveBeenCalled()
+    // The handler exits asynchronously (`stop().finally(() => process.exit(0))`); wait for it
+    // while the spy is still active, otherwise the real process.exit fires after the test.
+    await vi.waitFor(() => { expect(exitSpy).toHaveBeenCalledWith(0) })
     exitSpy.mockRestore()
     onceSpy.mockRestore()
   })
