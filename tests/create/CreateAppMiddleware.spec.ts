@@ -2,7 +2,13 @@ import fsExtra from 'fs-extra'
 import simpleGit from 'simple-git'
 import { execFileSync } from 'child_process'
 import { CliError } from '../../src/errors/CliError'
+import { getAvailableStarters, materializeStarter } from '../../src/create/StarterContract'
 import { CloneStarterMiddleware, ConfigureTestingMiddleware, FinalizeMiddleware, InstallDependenciesMiddleware } from '../../src/create/CreateAppMiddleware'
+
+vi.mock('../../src/create/StarterContract', () => ({
+  getAvailableStarters: vi.fn(),
+  materializeStarter: vi.fn()
+}))
 
 vi.mock('fs-extra', () => ({
   default: {
@@ -62,20 +68,22 @@ describe('CloneStarterMiddleware', () => {
     expect(fsExtra.pathExistsSync).toHaveBeenCalled()
   })
 
-  it('resolves the starter from the registry, materialises it, and adds to blueprint', async () => {
+  it('resolves an available starter, materialises it, and adds to blueprint', async () => {
     vi.mocked(fsExtra.existsSync).mockReturnValue(true)
     vi.mocked(fsExtra.pathExistsSync).mockReturnValue(false)
-    const clone = vi.fn()
-    ;(simpleGit as any).mockReturnValue({ clone })
-
     vi.mocked(fsExtra.readJsonSync).mockReturnValue({ name: 'test' })
+    vi.mocked(getAvailableStarters).mockImplementation(async (_bp: any, ctx: any) => {
+      ctx.output.info('collecting') // exercises the inline info callback
+      return [{ value: 'basic-service-declarative', provider: 'p', dir: '/d', path: '.' }]
+    })
 
     const result = await CloneStarterMiddleware(mockContext, next)
 
     expect(fsExtra.removeSync).toHaveBeenCalled()
-    // Official provider maps the template to a git source on the configured repo.
-    expect(clone).toHaveBeenCalledWith('https://example.com/repo.git', 'stone-js-starter-src', [])
-    expect(fsExtra.copySync).toHaveBeenCalled()
+    expect(materializeStarter).toHaveBeenCalledWith(
+      expect.objectContaining({ value: 'basic-service-declarative' }),
+      expect.any(String)
+    )
     expect(fsExtra.readJsonSync).toHaveBeenCalled()
     expect(mockContext.blueprint.add).toHaveBeenCalledWith('stone.createApp', expect.objectContaining({
       destDir: expect.any(String),
@@ -84,11 +92,21 @@ describe('CloneStarterMiddleware', () => {
     expect(result).toBe('next-called')
   })
 
-  it('throws when the selected starter is unknown', async () => {
+  it('falls back to the first available starter when the template is unknown', async () => {
     vi.mocked(fsExtra.pathExistsSync).mockReturnValue(false)
-    mockContext.blueprint.get.mockImplementationOnce((key: string) =>
+    vi.mocked(fsExtra.readJsonSync).mockReturnValue({ name: 'test' })
+    vi.mocked(getAvailableStarters).mockResolvedValue([{ value: 'other', provider: 'p', dir: '/d', path: '.' }])
+    mockContext.blueprint.get.mockImplementation((key: string) =>
       key === 'stone.createApp' ? { overwrite: true, projectName: 'my-app', template: 'does-not-exist' } : undefined
     )
+
+    await CloneStarterMiddleware(mockContext, next)
+    expect(materializeStarter).toHaveBeenCalledWith(expect.objectContaining({ value: 'other' }), expect.any(String))
+  })
+
+  it('throws when no starter is available', async () => {
+    vi.mocked(fsExtra.pathExistsSync).mockReturnValue(false)
+    vi.mocked(getAvailableStarters).mockResolvedValue([])
     await expect(CloneStarterMiddleware(mockContext, next)).rejects.toThrow(CliError)
   })
 })

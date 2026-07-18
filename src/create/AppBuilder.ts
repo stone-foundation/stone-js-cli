@@ -41,6 +41,15 @@ export class AppBuilder {
   private setUserOptions (event: IncomingEvent): void {
     this.context.blueprint.set('stone.createApp.overwrite', event.get<boolean>('force'))
     this.context.blueprint.set('stone.createApp.projectName', event.get<string>('project-name'))
+
+    const starters = event.get<string>('starters', '')
+      ?.split(',')
+      .map((link) => link.trim())
+      .filter((link) => link.length > 0)
+
+    if (starters !== undefined && starters.length > 0) {
+      this.context.blueprint.set('stone.createApp.starters', starters)
+    }
   }
 
   /**

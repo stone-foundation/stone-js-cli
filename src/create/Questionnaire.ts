@@ -2,7 +2,7 @@ import fsExtra from 'fs-extra'
 import { CliError } from '../errors/CliError'
 import { basePath } from '@stone-js/filesystem'
 import { ConsoleContext } from '../declarations'
-import { listStarters, resolveStarterProviders } from './StarterContract'
+import { getAvailableStarters } from './StarterContract'
 
 const { pathExistsSync } = fsExtra
 
@@ -28,16 +28,16 @@ export class Questionnaire {
   constructor (private readonly context: ConsoleContext) {}
 
   /**
-   * Returns the available starters, aggregated from every registered provider
-   * (official + any declared under `stone.createApp.starters`).
+   * Returns the available starters: those from the configured/default links plus any
+   * auto-detected installed starter packages. The CLI knows nothing about specific starters —
+   * titles come from each starter's own manifest.
    */
   private async getTemplates (): Promise<Array<Record<'value' | 'title', string>>> {
-    const providers = resolveStarterProviders(this.context.blueprint)
-    const starters = await listStarters(providers, {
-      format: this.context.commandOutput.format,
-      blueprint: this.context.blueprint
+    const starters = await getAvailableStarters(this.context.blueprint, {
+      cwd: basePath(),
+      output: { info: (message: string) => this.context.commandOutput.info(message) }
     })
-    return starters.map(({ value, title }) => ({ value, title }))
+    return starters.map(({ value, title }) => ({ value, title: title ?? value }))
   }
 
   /**

@@ -110,7 +110,7 @@ The public directory served/copied verbatim (defaults to `public`).
 ### rendering?
 
 ```ts
-optional rendering?: "ssr" | "ssg" | "csr";
+optional rendering?: "csr" | "ssr" | "ssg";
 ```
 
 Whether the application is using server-side rendering.
@@ -167,7 +167,7 @@ Parameterized routes should be listed explicitly (e.g. `/blog/hello`).
 ### target?
 
 ```ts
-optional target?: "service" | "react";
+optional target?: "react" | "service";
 ```
 
 The application target.

@@ -5,10 +5,10 @@ import { CliError } from '../errors/CliError'
 import { execFileSync } from 'node:child_process'
 import { MetaPipe, NextPipe } from '@stone-js/pipeline'
 import { IBlueprint, isNotEmpty } from '@stone-js/core'
-import { basePath, tmpPath } from '@stone-js/filesystem'
+import { basePath } from '@stone-js/filesystem'
 import { CreateAppConfig } from '../options/CreateAppConfig'
 import { ConsoleContext, PackageJson } from '../declarations'
-import { findStarter, materializeStarter, resolveStarterProviders } from './StarterContract'
+import { getAvailableStarters, materializeStarter } from './StarterContract'
 
 const { pathExistsSync, existsSync, renameSync, removeSync, readJsonSync, writeJsonSync } = fsExtra
 
@@ -39,22 +39,21 @@ export const CloneStarterMiddleware = async (
     throw new CliError(`Target directory (${destDir}) is not empty. Remove existing files and continue.`)
   }
 
-  const providers = resolveStarterProviders(context.blueprint)
-  const starter = await findStarter(template, providers, { format: context.commandOutput.format, blueprint: context.blueprint })
+  const starters = await getAvailableStarters(context.blueprint, {
+    cwd: basePath(),
+    output: { info: (message: string) => context.commandOutput.info(message) }
+  })
+  const starter = starters.find((s) => s.value === template) ?? starters[0]
 
   if (starter === undefined) {
-    throw new CliError(`Unknown starter "${String(template)}". Run \`stone init\` to pick from the available starters.`)
+    throw new CliError('No starter available. Pass one with `--starters <link>` or install a starter package.')
   }
 
   context.commandOutput.info(`Creating project in ${destDir}`)
 
   existsSync(destDir) && removeSync(destDir)
 
-  await materializeStarter(starter, {
-    destDir,
-    tmpDir: tmpPath(),
-    output: { info: (message: string) => context.commandOutput.info(message) }
-  })
+  materializeStarter(starter, destDir)
 
   const packageJson = readJsonSync(join(destDir, 'package.json'))
 

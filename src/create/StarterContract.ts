@@ -1,218 +1,256 @@
 import fsExtra from 'fs-extra'
-import chalk from 'chalk'
 import simpleGit from 'simple-git'
+import { execFileSync } from 'node:child_process'
 import { CliError } from '../errors/CliError'
 import { tmpPath } from '@stone-js/filesystem'
-import { IBlueprint, Promiseable } from '@stone-js/core'
+import { isAbsolute, join, resolve } from 'node:path'
 
-const { existsSync, removeSync, copySync } = fsExtra
+const { existsSync, removeSync, copySync, readJsonSync } = fsExtra
 
 /**
- * Where the files of a starter come from.
+ * The starter contract a package declares in its own `package.json`:
  *
- * The CLI knows how to materialise each `type`; third-party providers pick whichever fits,
- * or ship a `custom` resolver for anything exotic. This is the extension seam that keeps the
- * CLI open for new starters and closed for modification.
+ * ```jsonc
+ * { "name": "@acme/stone-starters", "stone": { "starters": [
+ *   { "value": "api", "title": "REST API", "tags": ["api"], "path": "api" }
+ * ] } }
+ * ```
+ *
+ * This is the ONLY thing the CLI knows about a starter — it lives in the starter, not here.
  */
-export type StarterSource =
-  | { type: 'git', repo: string, path?: string, ref?: string }
-  | { type: 'local', path: string }
-  | { type: 'npm', package: string, path?: string }
-  | { type: 'custom', resolve: (context: StarterMaterializeContext) => Promiseable<void> }
-
-/**
- * A single, selectable starter.
- */
-export interface Starter {
-  /** Unique identifier (also the questionnaire answer value). */
+export interface StarterEntry {
+  /** Unique id (the questionnaire answer value). */
   value: string
-  /** Display title (may be styled with `format`). */
-  title: string
+  /** Display title. */
+  title?: string
   /** One-line description. */
   description?: string
-  /** Free-form tags used for filtering/grouping (e.g. `api`, `spa`, `ssr`, `ssg`, `react`). */
+  /** Free-form tags (e.g. `api`, `spa`, `ssr`, `ssg`). */
   tags?: string[]
-  /** Whether the entry is shown but not selectable. */
-  disabled?: boolean
-  /** How to fetch the starter's files. */
-  source: StarterSource
+  /** Sub-path of the template inside the package (default `.`). */
+  path?: string
 }
 
 /**
- * Context handed to a provider when it lists its starters.
+ * A starter entry resolved to a concrete local directory, ready to copy.
  */
-export interface StarterListContext {
-  /** Chalk instance for styling titles. */
-  format: typeof chalk
-  /** The application blueprint (read config, e.g. a custom starters repo). */
-  blueprint: IBlueprint
+export interface ResolvedStarter extends StarterEntry {
+  /** The declaring package name (display group). */
+  provider: string
+  /** Absolute root directory of the fetched/installed package. */
+  dir: string
 }
 
 /**
- * Context handed to `materializeStarter` / a `custom` source resolver.
+ * Context for fetching/collecting starters.
  */
-export interface StarterMaterializeContext {
-  /** Absolute destination directory for the new project. */
-  destDir: string
-  /** A scratch directory the resolver may use. */
-  tmpDir: string
-  /** Minimal logger for progress messages. */
+export interface StarterFetchContext {
+  /** Current working directory (for local links and auto-detection). */
+  cwd: string
+  /** Minimal logger. */
   output: { info: (message: string) => void }
 }
 
 /**
- * A starter provider — the plugin unit.
- *
- * The official `@stone-js/starters` is registered by default; anyone can publish a package
- * exposing a `StarterProvider` and add it to `stone.createApp.starters` to make their
- * starters appear in the CLI, without touching the CLI itself.
+ * The built-in default starter link. It is just a LINK — the CLI stays agnostic; the actual
+ * starter set is declared by that package's own `stone.starters` manifest.
  */
-export interface StarterProvider {
-  /** Provider id (e.g. `@stone-js/starters`). */
-  name: string
-  /** Display group label (defaults to `name`). */
-  label?: string
-  /** The starters, as an array or a (blueprint/format-aware) resolver. */
-  starters: Starter[] | ((context: StarterListContext) => Promiseable<Starter[]>)
-}
+export const DEFAULT_STARTER_LINK = 'github:stone-foundation/stone-js-starters'
 
 /**
- * The default GitHub repository for the official Stone.js starters.
- */
-export const DEFAULT_STARTERS_REPO = 'https://github.com/stone-foundation/stone-js-starters.git'
-
-/**
- * The official Stone.js starter provider (the default, maintained set).
- *
- * Each starter lives in a sub-folder of the starters monorepo; the repo URL is overridable
- * via `stone.createApp.startersRepo` so forks can point elsewhere.
- */
-export const officialStarterProvider: StarterProvider = {
-  name: '@stone-js/starters',
-  label: 'Official Stone.js starters',
-  starters: ({ format, blueprint }: StarterListContext): Starter[] => {
-    const repo = blueprint.get<string>('stone.createApp.startersRepo', DEFAULT_STARTERS_REPO) ?? DEFAULT_STARTERS_REPO
-    const make = (value: string, color: 'green' | 'blue' | 'red', label: string, tags: string[]): Starter => ({
-      value,
-      tags,
-      title: format[color](label),
-      source: { type: 'git', repo, path: value }
-    })
-    return [
-      make('basic-service-declarative', 'green', 'Basic · service · declarative', ['api', 'service', 'declarative']),
-      make('basic-service-imperative', 'green', 'Basic · service · imperative', ['api', 'service', 'imperative']),
-      make('basic-react-declarative', 'green', 'Basic · React · declarative', ['react', 'spa', 'declarative']),
-      make('basic-react-imperative', 'green', 'Basic · React · imperative', ['react', 'spa', 'imperative']),
-      make('standard-service-declarative', 'blue', 'Standard · service · declarative', ['api', 'service', 'declarative']),
-      make('standard-service-imperative', 'blue', 'Standard · service · imperative', ['api', 'service', 'imperative']),
-      make('standard-react-declarative', 'blue', 'Standard · React · declarative', ['react', 'ssr', 'declarative']),
-      make('standard-react-imperative', 'blue', 'Standard · React · imperative', ['react', 'ssr', 'imperative']),
-      make('full-service-declarative', 'red', 'Full · service · declarative', ['api', 'service', 'declarative']),
-      make('full-service-imperative', 'red', 'Full · service · imperative', ['api', 'service', 'imperative']),
-      make('full-react-declarative', 'red', 'Full · React · declarative', ['react', 'ssr', 'ssg', 'declarative']),
-      make('full-react-imperative', 'red', 'Full · React · imperative', ['react', 'ssr', 'ssg', 'imperative'])
-    ]
-  }
-}
-
-/**
- * Resolves the registered starter providers from the blueprint.
- *
- * Defaults to the official provider; user/third-party providers declared under
- * `stone.createApp.starters` are used as-is (they may include the official one or not).
+ * Resolves the starter links to use: those given via `--starters` / `stone.createApp.starters`,
+ * otherwise the single built-in default. Passing links never disables the user's other options.
  *
  * @param blueprint - The application blueprint.
- * @returns The list of providers.
+ * @returns The starter links.
  */
-export function resolveStarterProviders (blueprint: IBlueprint): StarterProvider[] {
-  const providers = blueprint.get<StarterProvider[]>('stone.createApp.starters', []) ?? []
-  return providers.length > 0 ? providers : [officialStarterProvider]
+export function resolveStarterLinks (blueprint: { get: <T>(key: string, fallback: T) => T }): string[] {
+  const links = blueprint.get<string[]>('stone.createApp.starters', []) ?? []
+  return links.length > 0 ? links : [DEFAULT_STARTER_LINK]
 }
 
 /**
- * Flattens all starters from all providers.
+ * Parses a starter link into a fetch descriptor.
  *
- * @param providers - The providers to list from.
- * @param context - The listing context (format + blueprint).
- * @returns The aggregated starters.
+ * Supported: `github:owner/repo(#ref)`, any `*.git` / `git@` / `git+` URL, `npm:<pkg>`,
+ * a bare npm package name (`@scope/x`, `x`), or a local path (`./x`, `/x`).
+ *
+ * @param link - The starter link.
+ * @returns The parsed descriptor.
  */
-export async function listStarters (providers: StarterProvider[], context: StarterListContext): Promise<Starter[]> {
-  const all: Starter[] = []
-  for (const provider of providers) {
-    const starters = typeof provider.starters === 'function' ? await provider.starters(context) : provider.starters
-    all.push(...starters)
+export function parseStarterLink (link: string): { kind: 'git' | 'npm' | 'local', target: string, ref?: string } {
+  if (link.startsWith('github:')) {
+    const [repo, ref] = link.slice('github:'.length).split('#')
+    return { kind: 'git', target: `https://github.com/${repo}.git`, ref }
   }
-  return all
-}
-
-/**
- * Finds a starter by its value across all providers.
- *
- * @param value - The starter id.
- * @param providers - The providers to search.
- * @param context - The listing context.
- * @returns The matching starter, or `undefined`.
- */
-export async function findStarter (value: string, providers: StarterProvider[], context: StarterListContext): Promise<Starter | undefined> {
-  return (await listStarters(providers, context)).find(starter => starter.value === value)
-}
-
-/**
- * Materialises a starter's files into the destination directory.
- *
- * Handles every built-in source type; `custom` sources delegate to their own resolver.
- *
- * @param starter - The starter to materialise.
- * @param context - The materialisation context.
- * @throws {CliError} For unsupported/not-yet-implemented sources.
- */
-export async function materializeStarter (starter: Starter, context: StarterMaterializeContext): Promise<void> {
-  const source = starter.source
-
-  switch (source.type) {
-    case 'git':
-      await materializeGit(source, context)
-      break
-    case 'local':
-      copySync(source.path, context.destDir)
-      break
-    case 'custom':
-      await source.resolve(context)
-      break
-    case 'npm':
-      throw new CliError('The "npm" starter source is not supported yet. Use a "git", "local" or "custom" source.')
-    /* v8 ignore next 2 -- exhaustive guard: unreachable while StarterSource stays a closed union. */
-    default:
-      throw new CliError(`Unknown starter source type "${String((source as { type: string }).type)}".`)
+  if (link.endsWith('.git') || link.startsWith('git@') || link.startsWith('git+')) {
+    return { kind: 'git', target: link.replace(/^git\+/, '') }
   }
+  if (link.startsWith('npm:')) {
+    return { kind: 'npm', target: link.slice('npm:'.length) }
+  }
+  if (link.startsWith('.') || isAbsolute(link)) {
+    return { kind: 'local', target: link }
+  }
+  return { kind: 'npm', target: link }
 }
 
 /**
- * Materialises a git-hosted starter: clone the repo into a scratch dir, then copy the
- * (optional) sub-folder into the destination.
+ * Fetches a starter link to a local directory and returns it with its `package.json`.
  *
- * @param source - The git source.
- * @param context - The materialisation context.
+ * @param link - The starter link.
+ * @param context - The fetch context.
+ * @returns The resolved directory and its package.json.
+ * @throws {CliError} When the link cannot be fetched.
  */
-async function materializeGit (
-  source: { repo: string, path?: string, ref?: string },
-  context: StarterMaterializeContext
-): Promise<void> {
-  const cloneDir = tmpPath('stone-js-starter-src')
+export async function fetchStarter (link: string, context: StarterFetchContext): Promise<{ dir: string, packageJson: any }> {
+  const parsed = parseStarterLink(link)
 
-  existsSync(cloneDir) && removeSync(cloneDir)
+  if (parsed.kind === 'local') {
+    const dir = resolve(context.cwd, parsed.target)
+    return { dir, packageJson: readPackageJson(dir) }
+  }
 
-  context.output.info(`Fetching starter from ${source.repo}`)
+  if (parsed.kind === 'git') {
+    const name = `starter-${slug(link)}`
+    const dir = tmpPath(name)
+    existsSync(dir) && removeSync(dir)
+    context.output.info(`Fetching starter from ${parsed.target}`)
+    const options = parsed.ref !== undefined ? ['--depth', '1', '--branch', parsed.ref] : ['--depth', '1']
+    await simpleGit(tmpPath()).clone(parsed.target, name, options)
+    return { dir, packageJson: readPackageJson(dir) }
+  }
 
-  const options = source.ref !== undefined ? ['--branch', source.ref] : []
-  await simpleGit(tmpPath()).clone(source.repo, 'stone-js-starter-src', options)
+  // npm
+  const prefix = tmpPath(`starter-npm-${slug(link)}`)
+  existsSync(prefix) && removeSync(prefix)
+  context.output.info(`Installing starter ${parsed.target}`)
+  execFileSync('npm', ['install', parsed.target, '--prefix', prefix, '--no-save', '--no-audit', '--no-fund'], { stdio: 'inherit', shell: false })
+  const dir = join(prefix, 'node_modules', barePackageName(parsed.target))
+  return { dir, packageJson: readPackageJson(dir) }
+}
 
-  const srcDir = source.path !== undefined ? tmpPath('stone-js-starter-src', source.path) : cloneDir
+/**
+ * Reads the starter entries a package declares in `package.json` -> `stone.starters`.
+ * When none are declared, the whole package is treated as a single starter (path `.`),
+ * so a plain template repo works with zero manifest.
+ *
+ * @param packageJson - The package's manifest.
+ * @returns The declared starter entries.
+ */
+export function readStarterEntries (packageJson: any): StarterEntry[] {
+  const declared = packageJson?.stone?.starters
+  if (Array.isArray(declared) && declared.length > 0) {
+    return declared as StarterEntry[]
+  }
+  return [{ value: packageJson?.name ?? 'default', title: packageJson?.name ?? 'default', path: '.' }]
+}
 
+/**
+ * Fetches every link and expands each into its declared starter entries.
+ *
+ * @param links - The starter links.
+ * @param context - The fetch context.
+ * @returns The resolved starters.
+ */
+export async function collectStarters (links: string[], context: StarterFetchContext): Promise<ResolvedStarter[]> {
+  const resolved: ResolvedStarter[] = []
+  for (const link of links) {
+    const { dir, packageJson } = await fetchStarter(link, context)
+    for (const entry of readStarterEntries(packageJson)) {
+      resolved.push({ ...entry, provider: packageJson?.name ?? link, dir })
+    }
+  }
+  return resolved
+}
+
+/**
+ * Auto-detects installed starter packages: any dependency whose `package.json` declares
+ * `stone.starters`. This is the zero-config, plug-and-play path — install a starter pack and
+ * it shows up, without passing any link.
+ *
+ * @param cwd - The project directory to scan.
+ * @returns The auto-detected starters.
+ */
+export function autodetectStarters (cwd: string): ResolvedStarter[] {
+  const rootPkg = readPackageJson(cwd, true)
+  const deps = { ...rootPkg?.dependencies, ...rootPkg?.devDependencies }
+  const resolved: ResolvedStarter[] = []
+
+  for (const name of Object.keys(deps)) {
+    const dir = join(cwd, 'node_modules', name)
+    const packageJson = readPackageJson(dir, true)
+    if (packageJson?.stone?.starters === undefined) { continue }
+    for (const entry of readStarterEntries(packageJson)) {
+      resolved.push({ ...entry, provider: name, dir })
+    }
+  }
+
+  return resolved
+}
+
+/**
+ * Returns every available starter (fetched links + auto-detected packages), memoised on the
+ * blueprint so the questionnaire and the materialisation step never fetch twice.
+ *
+ * @param blueprint - The application blueprint (get/set).
+ * @param context - The fetch context.
+ * @returns The available starters.
+ */
+export async function getAvailableStarters (
+  blueprint: { get: <T>(key: string, fallback: T) => T, set: (key: string, value: unknown) => unknown },
+  context: StarterFetchContext
+): Promise<ResolvedStarter[]> {
+  const cached = blueprint.get<ResolvedStarter[] | undefined>('stone.createApp.available', undefined)
+  if (cached !== undefined) { return cached }
+
+  const collected = [
+    ...await collectStarters(resolveStarterLinks(blueprint), context),
+    ...autodetectStarters(context.cwd)
+  ]
+
+  blueprint.set('stone.createApp.available', collected)
+  return collected
+}
+
+/**
+ * Copies a resolved starter's files into the destination directory.
+ *
+ * @param starter - The resolved starter.
+ * @param destDir - The destination directory.
+ * @throws {CliError} When the starter directory/path does not exist.
+ */
+export function materializeStarter (starter: ResolvedStarter, destDir: string): void {
+  const srcDir = join(starter.dir, starter.path ?? '.')
   if (!existsSync(srcDir)) {
-    throw new CliError(`Starter path "${String(source.path)}" was not found in ${source.repo}.`)
+    throw new CliError(`Starter "${starter.value}" from "${starter.provider}" was not found at ${srcDir}.`)
   }
+  copySync(srcDir, destDir)
+}
 
-  copySync(srcDir, context.destDir)
-  removeSync(cloneDir)
+/**
+ * Reads a `package.json`, optionally tolerating a missing file (returns `undefined`).
+ */
+function readPackageJson (dir: string, optional = false): any {
+  const file = join(dir, 'package.json')
+  if (!existsSync(file)) {
+    if (optional) { return undefined }
+    throw new CliError(`No package.json found in starter at ${dir}.`)
+  }
+  return readJsonSync(file)
+}
+
+/**
+ * Builds a filesystem-safe slug from a link.
+ */
+function slug (link: string): string {
+  return link.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase()
+}
+
+/**
+ * Extracts the bare package name (drops any trailing version) from an npm spec.
+ */
+function barePackageName (spec: string): string {
+  const at = spec.lastIndexOf('@')
+  return at > 0 ? spec.slice(0, at) : spec
 }

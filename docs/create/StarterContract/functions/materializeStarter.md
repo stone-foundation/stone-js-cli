@@ -1,31 +1,29 @@
 # Function: materializeStarter()
 
 ```ts
-function materializeStarter(starter, context): Promise<void>;
+function materializeStarter(starter, destDir): void;
 ```
 
-Materialises a starter's files into the destination directory.
-
-Handles every built-in source type; `custom` sources delegate to their own resolver.
+Copies a resolved starter's files into the destination directory.
 
 ## Parameters
 
 ### starter
 
-[`Starter`](../interfaces/Starter.md)
+[`ResolvedStarter`](../interfaces/ResolvedStarter.md)
 
-The starter to materialise.
+The resolved starter.
 
-### context
+### destDir
 
-[`StarterMaterializeContext`](../interfaces/StarterMaterializeContext.md)
+`string`
 
-The materialisation context.
+The destination directory.
 
 ## Returns
 
-`Promise`\<`void`\>
+`void`
 
 ## Throws
 
-For unsupported/not-yet-implemented sources.
+When the starter directory/path does not exist.

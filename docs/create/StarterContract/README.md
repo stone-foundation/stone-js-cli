@@ -2,23 +2,21 @@
 
 ## Interfaces
 
-- [Starter](interfaces/Starter.md)
-- [StarterListContext](interfaces/StarterListContext.md)
-- [StarterMaterializeContext](interfaces/StarterMaterializeContext.md)
-- [StarterProvider](interfaces/StarterProvider.md)
-
-## Type Aliases
-
-- [StarterSource](type-aliases/StarterSource.md)
+- [ResolvedStarter](interfaces/ResolvedStarter.md)
+- [StarterEntry](interfaces/StarterEntry.md)
+- [StarterFetchContext](interfaces/StarterFetchContext.md)
 
 ## Variables
 
-- [DEFAULT\_STARTERS\_REPO](variables/DEFAULT_STARTERS_REPO.md)
-- [officialStarterProvider](variables/officialStarterProvider.md)
+- [DEFAULT\_STARTER\_LINK](variables/DEFAULT_STARTER_LINK.md)
 
 ## Functions
 
-- [findStarter](functions/findStarter.md)
-- [listStarters](functions/listStarters.md)
+- [autodetectStarters](functions/autodetectStarters.md)
+- [collectStarters](functions/collectStarters.md)
+- [fetchStarter](functions/fetchStarter.md)
+- [getAvailableStarters](functions/getAvailableStarters.md)
 - [materializeStarter](functions/materializeStarter.md)
-- [resolveStarterProviders](functions/resolveStarterProviders.md)
+- [parseStarterLink](functions/parseStarterLink.md)
+- [readStarterEntries](functions/readStarterEntries.md)
+- [resolveStarterLinks](functions/resolveStarterLinks.md)

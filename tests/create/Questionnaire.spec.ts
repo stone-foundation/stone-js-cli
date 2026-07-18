@@ -16,6 +16,16 @@ vi.mock('@stone-js/filesystem', async () => ({
   basePath: vi.fn()
 }))
 
+vi.mock('../../src/create/StarterContract', () => ({
+  getAvailableStarters: vi.fn(async (_bp: any, ctx: any) => {
+    ctx.output.info('listing starters')
+    return [
+      { value: 'template', title: 'Template', provider: 'p', dir: '/d', path: '.' },
+      { value: 'no-title', provider: 'p', dir: '/d', path: '.' } // exercises the `title ?? value` fallback
+    ]
+  })
+}))
+
 const mockFormat = {
   blue: vi.fn((v: string) => `[blue]${v}`),
   green: vi.fn((v: string) => `[green]${v}`),
@@ -31,7 +41,8 @@ const mockInput = {
 const mockContext: any = {
   commandInput: mockInput,
   commandOutput: {
-    format: mockFormat
+    format: mockFormat,
+    info: vi.fn()
   },
   blueprint: {
     get: vi.fn()

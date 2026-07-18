@@ -63,6 +63,18 @@ describe('AppBuilder', () => {
     expect(Pipeline.create).toHaveBeenCalled()
   })
 
+  it('parses the --starters option into a list of links', async () => {
+    const builder = new AppBuilder(mockContext)
+    mockEvent.get = vi.fn().mockImplementation((key: string, fallback?: any) => {
+      const map: any = { yes: true, force: false, 'project-name': 'app', starters: 'github:o/r, @acme/s ' }
+      return map[key] ?? fallback
+    })
+
+    await builder.build(mockEvent as any)
+
+    expect(mockBlueprint.set).toHaveBeenCalledWith('stone.createApp.starters', ['github:o/r', '@acme/s'])
+  })
+
   it('skips questionnaire if `yes` is true', async () => {
     const builder = new AppBuilder(mockContext)
     mockEvent.get = vi.fn().mockImplementation((key: string, fallback?: any) => {
