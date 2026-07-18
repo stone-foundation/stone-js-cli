@@ -8,6 +8,7 @@ import { IBlueprint, isNotEmpty } from '@stone-js/core'
 import { basePath } from '@stone-js/filesystem'
 import { CreateAppConfig } from '../options/CreateAppConfig'
 import { ConsoleContext, PackageJson } from '../declarations'
+import { deriveVanilla } from './vanilla'
 import { getAvailableStarters, materializeStarter } from './StarterContract'
 
 const { pathExistsSync, existsSync, renameSync, removeSync, readJsonSync, writeJsonSync } = fsExtra
@@ -103,38 +104,29 @@ export const InstallDependenciesMiddleware = async (
 }
 
 /**
- * Convert to vanilla JavaScript.
+ * Convert the scaffolded project to vanilla JavaScript when `typing === 'vanilla'`.
+ *
+ * Stone.js is a TypeScript AND JavaScript framework: the templates are authored once in TS and
+ * the JS variant is DERIVED (types stripped, stage-3 decorators preserved), so both the
+ * declarative and imperative APIs are available 1:1 in TS and JS without a second template set.
  *
  * @param context - Input data to transform via middleware.
  * @param next - Function to pass to the next middleware.
  * @returns A promise resolving with the context object.
  */
-// export const ConvertToVanillaMiddleware = async (
-//   context: ConsoleContext,
-//   next: NextPipe<ConsoleContext, IBlueprint>
-// ): Promise<IBlueprint> => {
-// const {
-//   // typing,
-//   // destDir = ''
-// } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
+export const ConvertToVanillaMiddleware = async (
+  context: ConsoleContext,
+  next: NextPipe<ConsoleContext, IBlueprint>
+): Promise<IBlueprint> => {
+  const { typing, destDir = '' } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
 
-// TODO: Implement this feature
-// if (typing === 'vanilla') {
-//   createAppRollupConfig.input = join(destDir, 'app/**/*.ts')
+  if (typing === 'vanilla' && destDir.length > 0) {
+    const generated = deriveVanilla(join(destDir, 'app'))
+    context.commandOutput.info(`Converted ${generated.length} file(s) to vanilla JavaScript.`)
+  }
 
-//   if (isNotEmpty<OutputOptions>(createAppRollupConfig.output)) {
-//     process.chdir(destDir)
-//     createAppRollupConfig.output.dir = join(destDir, '.tmp')
-//     const builder = await rollup(createAppRollupConfig)
-//     await builder.write(createAppRollupConfig.output)
-//   }
-
-//   removeSync(join(destDir, 'app'))
-//   renameSync(join(destDir, '.tmp'), join(destDir, 'app'))
-// }
-
-//   return await next(context)
-// }
+  return await next(context)
+}
 
 /**
  * Configure testing.
@@ -228,8 +220,8 @@ export const FinalizeMiddleware = async (
  */
 export const CreateAppMiddleware: Array<MetaPipe<ConsoleContext, IBlueprint>> = [
   { priority: 0, module: CloneStarterMiddleware },
-  { priority: 1, module: InstallDependenciesMiddleware },
-  // { priority: 2, module: ConvertToVanillaMiddleware },
-  { priority: 2, module: ConfigureTestingMiddleware },
-  { priority: 3, module: FinalizeMiddleware }
+  { priority: 1, module: ConvertToVanillaMiddleware },
+  { priority: 2, module: InstallDependenciesMiddleware },
+  { priority: 3, module: ConfigureTestingMiddleware },
+  { priority: 4, module: FinalizeMiddleware }
 ]

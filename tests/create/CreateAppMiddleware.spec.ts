@@ -3,11 +3,16 @@ import simpleGit from 'simple-git'
 import { execFileSync } from 'child_process'
 import { CliError } from '../../src/errors/CliError'
 import { getAvailableStarters, materializeStarter } from '../../src/create/StarterContract'
-import { CloneStarterMiddleware, ConfigureTestingMiddleware, FinalizeMiddleware, InstallDependenciesMiddleware } from '../../src/create/CreateAppMiddleware'
+import { deriveVanilla } from '../../src/create/vanilla'
+import { CloneStarterMiddleware, ConfigureTestingMiddleware, ConvertToVanillaMiddleware, FinalizeMiddleware, InstallDependenciesMiddleware } from '../../src/create/CreateAppMiddleware'
 
 vi.mock('../../src/create/StarterContract', () => ({
   getAvailableStarters: vi.fn(),
   materializeStarter: vi.fn()
+}))
+
+vi.mock('../../src/create/vanilla', () => ({
+  deriveVanilla: vi.fn(() => ['/dest/my-app/app/Application.js'])
 }))
 
 vi.mock('fs-extra', () => ({
@@ -263,6 +268,40 @@ describe('FinalizeMiddleware', () => {
     await FinalizeMiddleware(mockContext, next)
 
     expect(fsExtra.writeJsonSync).toHaveBeenCalled()
+    expect(next).toHaveBeenCalledWith(mockContext)
+  })
+})
+
+describe('ConvertToVanillaMiddleware', () => {
+  beforeEach(() => {
+    vi.mocked(deriveVanilla).mockClear()
+    next.mockClear()
+  })
+
+  it('derives the app to vanilla JavaScript when typing is vanilla', async () => {
+    mockContext.blueprint.get.mockReturnValue({ typing: 'vanilla', destDir: '/dest/my-app' })
+
+    await ConvertToVanillaMiddleware(mockContext, next)
+
+    expect(deriveVanilla).toHaveBeenCalledWith('/dest/my-app/app')
+    expect(next).toHaveBeenCalledWith(mockContext)
+  })
+
+  it('does nothing when typing is not vanilla', async () => {
+    mockContext.blueprint.get.mockReturnValue({ typing: 'typescript', destDir: '/dest/my-app' })
+
+    await ConvertToVanillaMiddleware(mockContext, next)
+
+    expect(deriveVanilla).not.toHaveBeenCalled()
+    expect(next).toHaveBeenCalledWith(mockContext)
+  })
+
+  it('does nothing when the destination directory is missing', async () => {
+    mockContext.blueprint.get.mockReturnValue({ typing: 'vanilla', destDir: '' })
+
+    await ConvertToVanillaMiddleware(mockContext, next)
+
+    expect(deriveVanilla).not.toHaveBeenCalled()
     expect(next).toHaveBeenCalledWith(mockContext)
   })
 })
