@@ -45,8 +45,8 @@ export class Questionnaire {
    */
   private get typings (): Array<Record<'value' | 'title', string>> {
     return [
-      { value: 'vanilla', title: 'None (Vanilla)' },
-      { value: 'typescript', title: 'TypeScript' }
+      { value: 'typescript', title: 'TypeScript' },
+      { value: 'vanilla', title: 'None (Vanilla)' }
     ]
   }
 
