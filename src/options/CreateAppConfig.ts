@@ -1,4 +1,5 @@
 import { PackageJson } from '../declarations'
+import { StarterProvider } from '../create/StarterContract'
 
 /**
  * Configuration for creating a new Stone.js Application.
@@ -18,6 +19,12 @@ export interface CreateAppConfig {
   startersRepo: string
   packageManager: string
   packageJson?: PackageJson
+  /**
+   * Registered starter providers (the plugin seam). Defaults to the official provider when
+   * empty. Third-party packages export a {@link StarterProvider} and add it here to make
+   * their starters available in the CLI — no CLI change required.
+   */
+  starters?: StarterProvider[]
 }
 
 /**

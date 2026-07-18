@@ -1,7 +1,7 @@
 # Function: inferRenderingStrategy()
 
 ```ts
-function inferRenderingStrategy(content): "csr" | "ssr" | undefined;
+function inferRenderingStrategy(content): "ssr" | "csr" | undefined;
 ```
 
 Determines the rendering strategy based on the content of the file.
@@ -16,6 +16,6 @@ The content of the file.
 
 ## Returns
 
-`"csr"` \| `"ssr"` \| `undefined`
+`"ssr"` \| `"csr"` \| `undefined`
 
 The rendering strategy: 'csr' or 'ssr'.

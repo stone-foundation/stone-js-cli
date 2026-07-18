@@ -8,11 +8,16 @@ import { IBlueprint, isNotEmpty } from '@stone-js/core'
 import { basePath, tmpPath } from '@stone-js/filesystem'
 import { CreateAppConfig } from '../options/CreateAppConfig'
 import { ConsoleContext, PackageJson } from '../declarations'
+import { findStarter, materializeStarter, resolveStarterProviders } from './StarterContract'
 
-const { pathExistsSync, existsSync, renameSync, removeSync, copySync, readJsonSync, writeJsonSync } = fsExtra
+const { pathExistsSync, existsSync, renameSync, removeSync, readJsonSync, writeJsonSync } = fsExtra
 
 /**
- * Clone starter from GitHub.
+ * Materialise the selected starter into the destination directory.
+ *
+ * Resolves the starter from the registered providers (the default official provider or any
+ * third-party provider declared under `stone.createApp.starters`) and copies its files using
+ * the starter's own source (git/local/custom). Nothing about the starter set is hard-coded here.
  *
  * @param context - Input data to transform via middleware.
  * @param next - Function to pass to the next middleware.
@@ -25,29 +30,35 @@ export const CloneStarterMiddleware = async (
   const {
     overwrite = false,
     projectName = 'stone-project',
-    template = 'basic-service-declarative',
-    startersRepo = 'https://github.com/stone-foundation/stone-js-starters.git'
+    template = 'basic-service-declarative'
   } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
 
   const destDir = basePath(projectName)
-  const srcDir = tmpPath('stone-js-starters', template)
 
   if (!overwrite && pathExistsSync(destDir)) {
     throw new CliError(`Target directory (${destDir}) is not empty. Remove existing files and continue.`)
   }
 
+  const providers = resolveStarterProviders(context.blueprint)
+  const starter = await findStarter(template, providers, { format: context.commandOutput.format, blueprint: context.blueprint })
+
+  if (starter === undefined) {
+    throw new CliError(`Unknown starter "${String(template)}". Run \`stone init\` to pick from the available starters.`)
+  }
+
   context.commandOutput.info(`Creating project in ${destDir}`)
 
   existsSync(destDir) && removeSync(destDir)
-  existsSync(tmpPath('stone-js-starters')) && removeSync(tmpPath('stone-js-starters'))
 
-  await simpleGit(tmpPath()).clone(startersRepo, 'stone-js-starters')
-
-  copySync(srcDir, destDir)
+  await materializeStarter(starter, {
+    destDir,
+    tmpDir: tmpPath(),
+    output: { info: (message: string) => context.commandOutput.info(message) }
+  })
 
   const packageJson = readJsonSync(join(destDir, 'package.json'))
 
-  context.blueprint.add('stone.createApp', { destDir, srcDir, packageJson })
+  context.blueprint.add('stone.createApp', { destDir, packageJson })
 
   return await next(context)
 }

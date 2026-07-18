@@ -77,6 +77,18 @@ optional srcDir?: string;
 
 ***
 
+### starters?
+
+```ts
+optional starters?: StarterProvider[];
+```
+
+Registered starter providers (the plugin seam). Defaults to the official provider when
+empty. Third-party packages export a [StarterProvider](../../../create/StarterContract/interfaces/StarterProvider.md) and add it here to make
+their starters available in the CLI — no CLI change required.
+
+***
+
 ### startersRepo
 
 ```ts

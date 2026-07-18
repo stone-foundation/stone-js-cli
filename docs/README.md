@@ -16,7 +16,7 @@
 - [create/CreateAppMiddleware](create/CreateAppMiddleware/README.md)
 - [create/createAppRollup.config](create/createAppRollup.config/README.md)
 - [create/Questionnaire](create/Questionnaire/README.md)
-- [create/templates](create/templates/README.md)
+- [create/StarterContract](create/StarterContract/README.md)
 - [declarations](declarations/README.md)
 - [EnsureStoneProjectHook](EnsureStoneProjectHook/README.md)
 - [errors/CliError](errors/CliError/README.md)

@@ -4,7 +4,11 @@
 function CloneStarterMiddleware(context, next): Promise<IBlueprint>;
 ```
 
-Clone starter from GitHub.
+Materialise the selected starter into the destination directory.
+
+Resolves the starter from the registered providers (the default official provider or any
+third-party provider declared under `stone.createApp.starters`) and copies its files using
+the starter's own source (git/local/custom). Nothing about the starter set is hard-coded here.
 
 ## Parameters
 

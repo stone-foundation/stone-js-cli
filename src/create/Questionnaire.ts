@@ -1,8 +1,8 @@
 import fsExtra from 'fs-extra'
-import templates from './templates'
 import { CliError } from '../errors/CliError'
 import { basePath } from '@stone-js/filesystem'
 import { ConsoleContext } from '../declarations'
+import { listStarters, resolveStarterProviders } from './StarterContract'
 
 const { pathExistsSync } = fsExtra
 
@@ -28,10 +28,16 @@ export class Questionnaire {
   constructor (private readonly context: ConsoleContext) {}
 
   /**
-   * Returns the available templates.
+   * Returns the available starters, aggregated from every registered provider
+   * (official + any declared under `stone.createApp.starters`).
    */
-  private get templates (): Array<Record<'value' | 'title', string>> {
-    return templates({ format: this.context.commandOutput.format })
+  private async getTemplates (): Promise<Array<Record<'value' | 'title', string>>> {
+    const providers = resolveStarterProviders(this.context.blueprint)
+    const starters = await listStarters(providers, {
+      format: this.context.commandOutput.format,
+      blueprint: this.context.blueprint
+    })
+    return starters.map(({ value, title }) => ({ value, title }))
   }
 
   /**
@@ -127,7 +133,7 @@ export class Questionnaire {
 
     answers.template = await this.context.commandInput.choice(
       this.messages.template,
-      this.templates,
+      await this.getTemplates(),
       [0]
     )
 

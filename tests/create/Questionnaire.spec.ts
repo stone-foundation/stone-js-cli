@@ -12,18 +12,14 @@ vi.mock('fs-extra', async () => {
   }
 })
 
-vi.mock('../../src/create/templates', () => {
-  return {
-    default: vi.fn(() => [{ value: 'template', title: 'Template' }])
-  }
-})
-
 vi.mock('@stone-js/filesystem', async () => ({
   basePath: vi.fn()
 }))
 
 const mockFormat = {
-  blue: vi.fn((v: string) => `[blue]${v}`)
+  blue: vi.fn((v: string) => `[blue]${v}`),
+  green: vi.fn((v: string) => `[green]${v}`),
+  red: vi.fn((v: string) => `[red]${v}`)
 }
 
 const mockInput = {
