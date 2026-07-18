@@ -23,6 +23,12 @@ describe('stoneBanner', () => {
   it('accepts a custom subtitle', () => {
     expect(stoneBanner('1.0.0', 'Backend + frontend, one framework')).toContain('Backend + frontend, one framework')
   })
+
+  it('keeps a version that already has a leading v', () => {
+    const banner = stoneBanner('v2.0.0')
+    expect(banner).toContain('v2.0.0')
+    expect(banner).not.toContain('vv2.0.0')
+  })
 })
 
 describe('formatElapsed', () => {
@@ -89,6 +95,12 @@ describe('StoneReporter', () => {
     expect(out.succeed).toHaveBeenCalledWith(expect.stringContaining('1.50s'))
   })
 
+  it('prints success without elapsed time', () => {
+    const out = fakeOutput()
+    StoneReporter.create(out).success('Done')
+    expect(out.succeed).toHaveBeenCalledWith('Done')
+  })
+
   it('delegates info/warn/error', () => {
     const out = fakeOutput()
     const reporter = StoneReporter.create(out)
@@ -109,5 +121,22 @@ describe('StoneReporter', () => {
     const out = fakeOutput()
     StoneReporter.create(out).spin('working')
     expect(out.spin).toHaveBeenCalledWith('working')
+  })
+
+  it('prints a dim hint line', () => {
+    const out = fakeOutput()
+    StoneReporter.create(out).hint('press Ctrl+C to stop')
+    expect(out.show).toHaveBeenCalledWith(expect.stringContaining('press Ctrl+C to stop'))
+  })
+
+  it('prints a context-aware "changed" line with and without a repeat count', () => {
+    const out = fakeOutput()
+    const reporter = StoneReporter.create(out)
+
+    reporter.changed('app/User.ts')
+    expect(out.show).toHaveBeenLastCalledWith(expect.stringContaining('app/User.ts'))
+
+    reporter.changed('app/User.ts', 3)
+    expect(out.show).toHaveBeenLastCalledWith(expect.stringContaining('(x3)'))
   })
 })

@@ -1,6 +1,4 @@
-import chalk from 'chalk'
 import { watch } from 'chokidar'
-import { format } from 'date-fns'
 import { dirPath } from '../utils'
 import { CliError } from '../errors/CliError'
 import { ConsoleContext } from '../declarations'
@@ -90,17 +88,24 @@ export class ServerBuilder {
   }
 
   /**
-   * Server Files watcher.
+   * Watch the application sources and invoke `cb` (debounced) on every change.
    *
-   * @param cb - The callback function.
+   * Only the source root (derived from `stone.builder.input.all`) and the project's config
+   * files are watched — not the whole working tree — so a README or `.git/` write never triggers
+   * a rebuild. Rapid successive saves are coalesced through a small debounce window so a single
+   * multi-file save produces one rebuild instead of a burst.
+   *
+   * @param cb - Called with the triggering file path and its change count.
    */
-  watchFiles (cb: () => void | Promise<void>): void {
+  watchFiles (cb: (path: string, count: number) => void | Promise<void>): void {
     const filesChangedCount: Record<string, number> = {}
     const ignored = this.context.blueprint.get(
       'stone.builder.watcher.ignored',
-      ['node_modules/**', 'dist/**', '.stone/**']
+      ['node_modules/**', 'dist/**', '.stone/**', '.git/**']
     )
-    const watcher = watch('.', {
+    const debounceMs = this.context.blueprint.get<number>('stone.builder.watcher.debounce', 120)
+
+    const watcher = watch(this.resolveWatchPaths(), {
       ignored,
       cwd: basePath(),
       persistent: true,
@@ -109,26 +114,44 @@ export class ServerBuilder {
       followSymlinks: false
     })
 
-    const incrementCount = (path: string): number => {
-      filesChangedCount[path] ??= 0
-      return ++filesChangedCount[path]
+    let timer: NodeJS.Timeout | undefined
+    let pending: { path: string, count: number } | undefined
+
+    const schedule = (path: string): void => {
+      filesChangedCount[path] = (filesChangedCount[path] ?? 0) + 1
+      pending = { path, count: filesChangedCount[path] }
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        const change = pending
+        pending = undefined
+        /* eslint-disable-next-line @typescript-eslint/no-misused-promises */
+        if (change !== undefined) { void cb(change.path, change.count) }
+      }, debounceMs)
     }
 
-    /* eslint-disable @typescript-eslint/no-misused-promises */
-    watcher.on('change', async (path) => {
-      this.printChangedFileMessage(path, 'file changed', incrementCount(path))
-      await cb()
-    })
-
-    /* eslint-disable @typescript-eslint/no-misused-promises */
-    watcher.on('add', async (path) => {
-      this.printChangedFileMessage(path, 'file added', incrementCount(path))
-      await cb()
-    })
+    watcher.on('change', schedule).on('add', schedule)
 
     process
-      .on('SIGINT', async () => await watcher.close())
-      .on('SIGTERM', async () => await watcher.close())
+      .on('SIGINT', () => { void watcher.close() })
+      .on('SIGTERM', () => { void watcher.close() })
+  }
+
+  /**
+   * Resolve the paths to watch: the source root plus the project config files.
+   *
+   * @returns The list of paths/globs for the watcher.
+   */
+  private resolveWatchPaths (): string[] {
+    const inputAll = this.context.blueprint.get<string>('stone.builder.input.all', 'app/**/*.**')
+    const sourceRoot = inputAll.split('/')[0].length > 0 ? inputAll.split('/')[0] : 'app'
+    return [
+      sourceRoot,
+      'stone.config.mjs',
+      'stone.config.js',
+      'rollup.config.mjs',
+      '.env',
+      '.env.public'
+    ]
   }
 
   /**
@@ -194,22 +217,6 @@ export class ServerBuilder {
     }
 
     return true
-  }
-
-  /**
-   * Print the changed file message.
-   *
-   * @param path - The path of the file.
-   * @param message - The message to print
-   * @param count - The count of the file.
-   */
-  private printChangedFileMessage (path: string, message: string, count: number = 0): void {
-    const time = format(new Date(), 'h:mm:ss a')
-    const countTimes = count > 1 ? chalk.yellow(`(x${count})`) : ''
-
-    this.context.commandOutput.show(
-      `${chalk.gray(time)} ${chalk.blue('[stone]')} ${chalk.green(message)} ${chalk.gray(path)} ${countTimes}`
-    )
   }
 
   /**

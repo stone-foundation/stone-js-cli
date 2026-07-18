@@ -159,6 +159,29 @@ export class StoneReporter {
   }
 
   /**
+   * Print a dim hint line (secondary guidance, e.g. "press Ctrl+C to stop").
+   *
+   * @param message - The hint message.
+   */
+  hint (message: string): this {
+    this.output.show(this.output.format.gray(`  ${message}`))
+    return this
+  }
+
+  /**
+   * Print a "file changed" line for a live-reload rebuild (distinct from a first launch).
+   *
+   * @param file - The path of the file that changed.
+   * @param count - Optional change count for the same file (shown as `(x2)`).
+   */
+  changed (file: string, count = 0): this {
+    const tag = this.output.format.magentaBright(`${STONE_MARK} [stone]`)
+    const times = count > 1 ? this.output.format.gray(` (x${count})`) : ''
+    this.output.show(`${tag} ${this.output.format.whiteBright(file)} ${this.output.format.gray('changed — rebuilding…')}${times}`)
+    return this
+  }
+
+  /**
    * Print an aligned key/value summary.
    *
    * @param rows - Label/value pairs.

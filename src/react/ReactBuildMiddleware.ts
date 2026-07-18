@@ -1,6 +1,7 @@
 import { glob } from 'glob'
 import fsExtra from 'fs-extra'
 import { runSsg } from './ssg'
+import { CliError } from '../errors/CliError'
 import { relative } from 'node:path'
 import { existsSync } from 'node:fs'
 import { build, mergeConfig } from 'vite'
@@ -449,17 +450,38 @@ export const ReactSSRBuildMiddleware: Array<MetaPipe<ConsoleContext, IBlueprint>
  * @param fallbackUrl - The URL to assume if no banner is detected.
  * @returns The base URL to crawl.
  */
-async function waitForServer (child: ChildProcess, fallbackUrl: string): Promise<string> {
-  return await new Promise<string>((resolve) => {
+async function waitForServer (child: ChildProcess, fallbackUrl: string, timeoutMs = 8000): Promise<string> {
+  return await new Promise<string>((resolve, reject) => {
     let settled = false
-    const done = (url: string): void => { if (!settled) { settled = true; resolve(url) } }
+    let stderr = ''
+
+    const cleanup = (): void => {
+      clearTimeout(timer)
+      child.stdout?.off('data', onData)
+      child.stderr?.off('data', onStderr)
+      child.off('exit', onExit)
+    }
+    const done = (url: string): void => { if (!settled) { settled = true; cleanup(); resolve(url) } }
+    const fail = (error: Error): void => { if (!settled) { settled = true; cleanup(); reject(error) } }
+
     const onData = (chunk: Buffer): void => {
       const match = /https?:\/\/[^\s]*?:(\d+)/.exec(chunk.toString())
       if (match !== null) { done(`http://127.0.0.1:${match[1]}`) }
     }
+    const onStderr = (chunk: Buffer): void => { stderr += chunk.toString(); onData(chunk) }
+    // If the server exits before ever announcing a URL, it has no HTTP endpoint to crawl:
+    // fail fast with a clear message instead of waiting out the timeout and hitting ECONNREFUSED.
+    const onExit = (code: number | null): void => {
+      fail(new CliError(
+        'SSG requires an HTTP server adapter (e.g. @stone-js/node-http-adapter): the built server ' +
+        `exited (code ${code ?? 'null'}) without exposing an HTTP endpoint.${stderr.length > 0 ? `\n${stderr.trim()}` : ''}`
+      ))
+    }
+
+    const timer = setTimeout(() => done(fallbackUrl), timeoutMs)
     child.stdout?.on('data', onData)
-    child.stderr?.on('data', onData)
-    setTimeout(() => done(fallbackUrl), 8000)
+    child.stderr?.on('data', onStderr)
+    child.on('exit', onExit)
   })
 }
 
@@ -493,8 +515,16 @@ export const GenerateStaticSiteMiddleware = async (
       extraTargets: routes.map((path) => ({ path })),
       outDir: distPath(),
       render: async (target) => {
-        const response = await fetch(new URL(target.path, baseUrl))
-        return { path: target.path, html: await response.text(), statusCode: response.status }
+        try {
+          const response = await fetch(new URL(target.path, baseUrl))
+          return { path: target.path, html: await response.text(), statusCode: response.status }
+        } catch (error: any) {
+          throw new CliError(
+            `SSG failed to reach the SSR server at ${baseUrl}${target.path}. SSG needs an HTTP ` +
+            'server adapter (e.g. @stone-js/node-http-adapter) listening at that address.\n' +
+            `Cause: ${String(error?.message ?? error)}`
+          )
+        }
       }
     })
 

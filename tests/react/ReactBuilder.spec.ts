@@ -1,7 +1,7 @@
 import { Pipeline } from '@stone-js/pipeline'
 import { CliError } from '../../src/errors/CliError'
 import { ReactBuilder } from '../../src/react/ReactBuilder'
-import { isCSR, isSSR, isTypescriptApp } from '../../src/utils'
+import { isCSR, isSSR, isSSG, isTypescriptApp } from '../../src/utils'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 
 vi.mock('node:fs')
@@ -10,7 +10,8 @@ vi.mock('@stone-js/filesystem')
 
 vi.mock('../../src/react/ReactBuildMiddleware', () => ({
   ReactCSRBuildMiddleware: ['csr'],
-  ReactSSRBuildMiddleware: ['ssr']
+  ReactSSRBuildMiddleware: ['ssr'],
+  ReactSSGBuildMiddleware: ['ssg']
 }))
 
 vi.mock('../../src/react/ReactDevMiddleware', () => ({
@@ -124,6 +125,25 @@ describe('ReactBuilder', () => {
     expect(builder.executeThroughPipeline).toHaveBeenCalledWith(['csr'])
     expect(mockContext.commandOutput.show).toHaveBeenCalledWith(expect.stringContaining('CSR'))
     expect(mockContext.commandOutput.succeed).toHaveBeenCalledWith(expect.stringContaining('built successfully'))
+  })
+
+  it('should execute SSG build middleware (checked first) and exit', async () => {
+    vi.mocked(isSSG).mockReturnValue(true)
+    mockBlueprint.get.mockReturnValueOnce(undefined) // version → '' via ?? fallback
+    // @ts-expect-error
+    builder.executeThroughPipeline = vi.fn().mockResolvedValue(undefined)
+
+    const exit = vi.spyOn(process, 'exit').mockReturnValue(0 as unknown as never)
+    const setImmediateMock = vi.fn((fn: () => void) => { fn(); return { unref: vi.fn() } })
+    vi.stubGlobal('setImmediate', setImmediateMock)
+
+    await builder.build(mockEvent)
+
+    // @ts-expect-error
+    expect(builder.executeThroughPipeline).toHaveBeenCalledWith(['ssg'])
+    expect(mockContext.commandOutput.show).toHaveBeenCalledWith(expect.stringContaining('SSG'))
+    expect(exit).toHaveBeenCalledWith(0)
+    vi.mocked(isSSG).mockReturnValue(false)
   })
 
   it('should execute SSR build middleware and exit', async () => {

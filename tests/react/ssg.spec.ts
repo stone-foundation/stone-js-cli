@@ -1,7 +1,11 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { mkdtempSync, rmSync, readFileSync, existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+
+const defaultOutDir = mkdtempSync(join(tmpdir(), 'stone-ssg-default-'))
+vi.mock('@stone-js/filesystem', () => ({ distPath: () => defaultOutDir }))
+
 import {
   collectStaticTargets,
   targetToFilePath,
@@ -65,5 +69,15 @@ describe('writePrerendered / runSsg', () => {
     expect(written).toHaveLength(3)
     expect(readFileSync(join(outDir, 'blog', 'hello', 'index.html'), 'utf-8')).toContain('/blog/hello')
     expect(existsSync(join(outDir, 'index.html'))).toBe(true)
+  })
+
+  it('defaults extraTargets to none and outDir to distPath()', async () => {
+    const written = await runSsg({
+      definitions: [{ path: '/' }],
+      render: async (target) => ({ path: target.path, html: '<title>home</title>', statusCode: 200 })
+    })
+
+    expect(written).toHaveLength(1)
+    expect(existsSync(join(defaultOutDir, 'index.html'))).toBe(true)
   })
 })

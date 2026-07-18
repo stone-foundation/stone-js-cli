@@ -156,17 +156,20 @@ window.process.env = {
 }
 
 /**
- * Setup process signal handlers.
+ * Setup process signal handlers that terminate the current child process on shutdown.
  *
- * @param serverProcess - The server process to terminate.
+ * Accepts a **getter** rather than a process value: the child is usually spawned after this is
+ * wired (in a command constructor), so capturing the value here would capture `undefined` and
+ * never kill the real child (leaving orphaned servers on Ctrl+C). The getter is read at signal
+ * time, so it always sees the current child.
+ *
+ * @param getServerProcess - Returns the child process to terminate (or undefined if none yet).
  */
-export function setupProcessSignalHandlers (serverProcess?: ChildProcess): void {
+export function setupProcessSignalHandlers (getServerProcess: () => ChildProcess | undefined): void {
   const terminate = (): void => {
-    serverProcess?.kill('SIGTERM') // Gracefully terminate the child process
-    // process.exit(0) // Exit the parent process
+    getServerProcess()?.kill('SIGTERM') // Gracefully terminate the current child process
   }
 
-  // Handle termination signals
   process
     .on('exit', terminate)
     .on('SIGINT', terminate)

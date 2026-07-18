@@ -6,6 +6,7 @@ import * as process from 'node:process'
 import {
   isSSR,
   isCSR,
+  isSSG,
   dirPath,
   getCache,
   setCache,
@@ -418,6 +419,20 @@ describe('utils: runtime detection', () => {
     expect(isSSR(blueprint, event)).toBe(true)
   })
 
+  it('should detect SSG via the --ssg flag', () => {
+    expect(isSSG(createFakeBlueprint(), createFakeEvent({ ssg: true }))).toBe(true)
+  })
+
+  it('should detect SSG via rendering event', () => {
+    expect(isSSG(createFakeBlueprint(), createFakeEvent({ rendering: 'ssg' }))).toBe(true)
+    expect(isSSG(createFakeBlueprint(), createFakeEvent({ rendering: 'csr' }))).toBe(false)
+  })
+
+  it('should detect SSG via rendering blueprint config', () => {
+    expect(isSSG(createFakeBlueprint({ 'stone.builder.rendering': 'ssg' }), createFakeEvent())).toBe(true)
+    expect(isSSG(createFakeBlueprint(), createFakeEvent())).toBe(false)
+  })
+
   it('should detect lazy views if file content includes router signature', () => {
     const file = path.join(TMP_DIR, 'lazy.tsx')
     writeFile(file, 'import \'@stone-js/router\'; const r = @Routing')
@@ -528,12 +543,20 @@ describe('getStoneBuilderConfig', () => {
 })
 
 describe('setupProcessSignalHandlers', () => {
-  it('should attach signal handlers to process', () => {
+  it('should read the current process from the getter at signal time (not capture undefined)', () => {
     const serverProcess: any = { kill: vi.fn() }
-    setupProcessSignalHandlers(serverProcess)
+    // The child is spawned AFTER wiring the handlers: the getter must see the eventual value.
+    let current: any
+    setupProcessSignalHandlers(() => current)
+    current = serverProcess
 
     process.emit('SIGINT')
 
     expect(serverProcess.kill).toHaveBeenCalledWith('SIGTERM')
+  })
+
+  it('should be a no-op when no process is present', () => {
+    setupProcessSignalHandlers(() => undefined)
+    expect(() => process.emit('SIGTERM')).not.toThrow()
   })
 })

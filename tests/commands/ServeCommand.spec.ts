@@ -5,8 +5,7 @@ vi.mock('../../src/utils', async () => {
   const actual = await vi.importActual<any>('../../src/utils')
   return {
     ...actual,
-    isReactApp: vi.fn(),
-    setupProcessSignalHandlers: vi.fn()
+    isReactApp: vi.fn()
   }
 })
 
@@ -27,76 +26,73 @@ vi.mock('../../src/server/ServerBuilder', () => ({
   }
 }))
 
-vi.mock('@stone-js/filesystem', () => ({
-  buildPath: vi.fn()
+const pmStart = vi.fn()
+const pmRestart = vi.fn()
+const pmCreate = vi.fn(() => ({ start: pmStart, restart: pmRestart }))
+
+vi.mock('../../src/server/ProcessManager', () => ({
+  ProcessManager: { create: pmCreate }
 }))
 
-describe('ServeCommand', async () => {
+vi.mock('@stone-js/filesystem', () => ({
+  buildPath: vi.fn(() => '/dist/server.mjs')
+}))
+
+// A chalk-like formatter: every color is a callable that also carries `.bold`.
+const makeColor = (): any => Object.assign((s: string) => s, { bold: (s: string) => s })
+const format = new Proxy({}, { get: () => makeColor() })
+
+const createContext = (): any => {
+  const spinner = { succeed: vi.fn(), fail: vi.fn() }
+  return {
+    spinner,
+    blueprint: { get: vi.fn(() => '') },
+    commandOutput: {
+      show: vi.fn(),
+      breakLine: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      succeed: vi.fn(),
+      spin: vi.fn(() => spinner),
+      format
+    }
+  }
+}
+
+describe('ServeCommand', () => {
   let ServeCommand: any
   let serveCommandOptions: any
-  let ServerBuilder: any
-  let buildPath: any
-  let spawnMock: any
   let context: any
   let event: IncomingEvent
 
   beforeEach(async () => {
-    vi.resetModules()
-
-    spawnMock = vi.fn(() => ({
-      kill: vi.fn(),
-      on: vi.fn()
-    }))
-
-    vi.doMock('cross-spawn', () => ({
-      default: spawnMock
-    }))
+    vi.clearAllMocks()
 
     const mod = await import('../../src/commands/ServeCommand')
     ServeCommand = mod.ServeCommand
     serveCommandOptions = mod.serveCommandOptions
 
-    ServerBuilder = (await import('../../src/server/ServerBuilder')).ServerBuilder
-    buildPath = (await import('@stone-js/filesystem')).buildPath
-
     const utils = await import('../../src/utils')
     vi.mocked(utils.isReactApp).mockReturnValue(true)
-    buildPath.mockReturnValue('/dist/server.mjs')
 
-    context = {
-      blueprint: {},
-      commandOutput: {
-        show: vi.fn(),
-        error: vi.fn(),
-        format: {
-          yellow: (txt: string) => `yellow(${txt})`
-        }
-      }
-    }
-
-    event = {
-      type: 'cli',
-      payload: {}
-    } as unknown as IncomingEvent
+    context = createContext()
+    event = { type: 'cli', payload: {} } as unknown as IncomingEvent
   })
 
-  afterEach(() => {
-    vi.restoreAllMocks()
-  })
-
-  it('should start react dev server when isReactApp is true', async () => {
+  it('should start the react dev server and launch the supervised process', async () => {
     const cmd = new ServeCommand(context)
     await cmd.handle(event)
 
     expect(ReactBuilderDev).toHaveBeenCalledWith(event)
-    expect(spawnMock).toHaveBeenCalledWith(
-      'node',
-      ['/dist/server.mjs', ...process.argv.slice(2)],
-      { stdio: 'inherit' }
-    )
+    expect(pmCreate).toHaveBeenCalledWith(expect.objectContaining({
+      command: 'node',
+      args: ['/dist/server.mjs', ...process.argv.slice(2)]
+    }))
+    expect(pmStart).toHaveBeenCalled()
   })
 
-  it('should start backend dev server and watch files when isReactApp is false', async () => {
+  it('should build, launch and watch for the backend dev server', async () => {
     const utils = await import('../../src/utils')
     vi.mocked(utils.isReactApp).mockReturnValue(false)
 
@@ -104,42 +100,67 @@ describe('ServeCommand', async () => {
     await cmd.handle(event)
 
     expect(ServerBuilderDev).toHaveBeenCalledWith(event)
+    expect(context.commandOutput.spin).toHaveBeenCalledWith('Building application…')
+    expect(context.spinner.succeed).toHaveBeenCalled()
     expect(ServerBuilderWatchFiles).toHaveBeenCalled()
-    expect(context.commandOutput.show).toHaveBeenCalledWith('yellow(⚡ Building application...)')
-    expect(spawnMock).toHaveBeenCalled()
+    expect(pmStart).toHaveBeenCalled()
+
+    // Backend onExit: a crash keeps the watcher alive with a warning; a clean exit is silent.
+    const onExit = pmCreate.mock.calls[0][0].onExit
+    onExit(1)
+    expect(context.commandOutput.warn).toHaveBeenCalledWith(expect.stringContaining('Server exited'))
+    context.commandOutput.warn.mockClear()
+    onExit(0)
+    expect(context.commandOutput.warn).not.toHaveBeenCalled()
   })
 
-  it('should call startProcess in file watcher success and error', async () => {
+  it('should mirror the child exit code for the react dev server', async () => {
+    const exitSpy = vi.spyOn(process, 'exit').mockImplementation(((): never => undefined as never))
+    context.blueprint.get.mockReturnValueOnce(undefined) // version resolves to '' via ?? fallback
+
+    const cmd = new ServeCommand(context)
+    await cmd.handle(event)
+
+    const onExit = pmCreate.mock.calls[0][0].onExit
+    onExit(2)
+    expect(exitSpy).toHaveBeenCalledWith(2)
+    onExit(null) // null → 0 via ?? fallback
+    expect(exitSpy).toHaveBeenCalledWith(0)
+    exitSpy.mockRestore()
+  })
+
+  it('should report a failed first build and not watch', async () => {
+    const utils = await import('../../src/utils')
+    vi.mocked(utils.isReactApp).mockReturnValue(false)
+    ServerBuilderDev.mockRejectedValueOnce('boom') // non-Error → exercises the `?? error` fallback
+
+    const cmd = new ServeCommand(context)
+    await cmd.handle(event)
+
+    expect(context.spinner.fail).toHaveBeenCalled()
+    expect(context.commandOutput.error).toHaveBeenCalledWith('boom')
+    expect(ServerBuilderWatchFiles).not.toHaveBeenCalled()
+  })
+
+  it('should rebuild and restart on a file change, and report a rebuild error', async () => {
     const utils = await import('../../src/utils')
     vi.mocked(utils.isReactApp).mockReturnValue(false)
 
     const cmd = new ServeCommand(context)
     await cmd.handle(event)
 
-    const instance = new ServerBuilder()
+    const cb = ServerBuilderWatchFiles.mock.calls[0][0]
 
-    // Simulate file change - success
-    const cb = instance.watchFiles.mock.calls[0][0]
-    await cb()
+    // Successful live-reload cycle
+    await cb('app/User.ts', 1)
     expect(ServerBuilderDev).toHaveBeenCalledWith(event, true)
-    expect(spawnMock).toHaveBeenCalledTimes(2)
+    expect(pmRestart).toHaveBeenCalled()
+    expect(context.commandOutput.succeed).toHaveBeenCalled()
 
-    // Simulate file change - error
-    instance.dev.mockRejectedValueOnce(new Error('fail'))
-    await cb()
-    expect(context.commandOutput.error).toHaveBeenCalledWith('Error: fail')
-  })
-
-  it('should kill existing process before spawning new one', async () => {
-    const proc = { kill: vi.fn(), on: vi.fn() }
-    spawnMock.mockReturnValueOnce(proc)
-
-    const cmd = new ServeCommand(context)
-    cmd.serverProcess = proc
-    await cmd.startProcess()
-
-    expect(proc.kill).toHaveBeenCalledWith('SIGTERM')
-    expect(spawnMock).toHaveBeenCalled()
+    // Failed live-reload cycle (non-Error rejection → `?? error` fallback)
+    ServerBuilderDev.mockRejectedValueOnce('fail')
+    await cb('app/User.ts', 2)
+    expect(context.commandOutput.error).toHaveBeenCalledWith(expect.stringContaining('Rebuild failed: fail'))
   })
 
   it('should expose correct command metadata and yargs options', () => {
@@ -163,27 +184,23 @@ describe('ServeCommand', async () => {
       desc: 'app target to serve',
       choices: ['server', 'react']
     })
-
     expect(yargs.option).toHaveBeenCalledWith('language', {
       alias: 'lang',
       type: 'string',
       desc: 'language to use',
       choices: ['javascript', 'typescript']
     })
-
     expect(yargs.option).toHaveBeenCalledWith('rendering', {
       alias: 'r',
       type: 'string',
       desc: 'web rendering type',
       choices: ['csr', 'ssr']
     })
-
     expect(yargs.option).toHaveBeenCalledWith('imperative', {
       alias: 'i',
       type: 'boolean',
       desc: 'imperative api'
     })
-
     expect(result).toBe(yargs)
   })
 })

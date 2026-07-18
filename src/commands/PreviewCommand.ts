@@ -48,7 +48,7 @@ export class PreviewCommand {
    * @param context - The service container to manage dependencies.
    */
   constructor (private readonly context: ConsoleContext) {
-    setupProcessSignalHandlers(this.serverProcess)
+    setupProcessSignalHandlers(() => this.serverProcess)
   }
 
   /**

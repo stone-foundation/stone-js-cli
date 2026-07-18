@@ -39,7 +39,17 @@ const rollupBuildConfig = defineConfig({
         }],
         '@babel/preset-typescript'
       ],
-      plugins: [['@babel/plugin-proposal-decorators', { version: '2023-11' }]]
+      // Decorators (TC39 2023-11) must run before the class-feature transforms. The class
+      // property/static-block/private-method transforms are listed explicitly so static
+      // properties, static blocks and private members are lowered deterministically —
+      // independent of the preset-env target — which keeps decorated classes correct across
+      // ES5/ES6 outputs instead of relying on the runtime's native class-feature support.
+      plugins: [
+        ['@babel/plugin-proposal-decorators', { version: '2023-11' }],
+        '@babel/plugin-transform-class-static-block',
+        '@babel/plugin-transform-class-properties',
+        '@babel/plugin-transform-private-methods'
+      ]
     })
   ]
 })
