@@ -28,15 +28,24 @@ vi.mock('../../src/utils', async () => {
     ...actual,
     isCSR: vi.fn(),
     isSSR: vi.fn(),
+    isSSG: vi.fn(() => false),
     isTypescriptApp: vi.fn(() => true),
     dirPath: vi.fn().mockReturnValue('/fake/dir')
   }
 })
 
-const mockBlueprint = {}
+const mockBlueprint: any = {
+  get: vi.fn().mockReturnValue('')
+}
 const mockEvent: any = {
   get: vi.fn().mockReturnValue('app')
 }
+
+// Identity proxy standing in for chalk: any `.color.modifier(text)` returns `text`.
+const identityFormat: any = new Proxy((v: string) => v, {
+  get: () => identityFormat,
+  apply: (_t, _this, args) => args[0]
+})
 
 const mockContext: any = {
   blueprint: mockBlueprint,
@@ -44,7 +53,12 @@ const mockContext: any = {
   commandOutput: {
     info: vi.fn(),
     show: vi.fn(),
-    format: { green: vi.fn((txt) => txt) }
+    warn: vi.fn(),
+    error: vi.fn(),
+    succeed: vi.fn(),
+    breakLine: vi.fn(),
+    spin: vi.fn(() => ({ stop: vi.fn() })),
+    format: identityFormat
   },
   commandInput: {
     confirm: vi.fn().mockResolvedValue(true)
@@ -108,7 +122,8 @@ describe('ReactBuilder', () => {
     expect(exit).toHaveBeenCalledWith(0)
     // @ts-expect-error
     expect(builder.executeThroughPipeline).toHaveBeenCalledWith(['csr'])
-    expect(mockContext.commandOutput.info).toHaveBeenCalledWith(expect.stringContaining('CSR'))
+    expect(mockContext.commandOutput.show).toHaveBeenCalledWith(expect.stringContaining('CSR'))
+    expect(mockContext.commandOutput.succeed).toHaveBeenCalledWith(expect.stringContaining('built successfully'))
   })
 
   it('should execute SSR build middleware and exit', async () => {
@@ -136,7 +151,8 @@ describe('ReactBuilder', () => {
     expect(exit).toHaveBeenCalledWith(0)
     // @ts-expect-error
     expect(builder.executeThroughPipeline).toHaveBeenCalledWith(['ssr'])
-    expect(mockContext.commandOutput.info).toHaveBeenCalledWith(expect.stringContaining('SSR'))
+    expect(mockContext.commandOutput.show).toHaveBeenCalledWith(expect.stringContaining('SSR'))
+    expect(mockContext.commandOutput.succeed).toHaveBeenCalledWith(expect.stringContaining('built successfully'))
   })
 
   it('should throw CliError if no build type matches', async () => {

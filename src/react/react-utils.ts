@@ -23,6 +23,7 @@ import {
 } from '@stone-js/use-react'
 import { existsSync } from 'fs'
 import { viteConfig } from './vite-config'
+import { AssetsConfig } from '../options/BuilderConfig'
 import { getStoneBuilderConfig } from '../utils'
 import { removeImportsVitePlugin } from './RemoveImportsVitePlugin'
 import { basePath, buildPath, distPath } from '@stone-js/filesystem'
@@ -53,7 +54,33 @@ export const getViteConfig = async (
 
   config ??= viteConfig({ command, mode })
 
-  return mergeConfig(config, stoneConfig.vite ?? {})
+  // Insert static-asset aliases (@img, @css, @assets, …) before the user passthrough,
+  // so `builder.vite.resolve.alias` still wins. Applies to dev, build, client and SSR.
+  const aliasConfig: Partial<UserConfig> = { resolve: { alias: buildAssetAliases(stoneConfig.assets) } }
+
+  return mergeConfig(mergeConfig(config, aliasConfig), stoneConfig.vite ?? {})
+}
+
+/**
+ * Build Vite `resolve.alias` entries for the configured static-asset aliases.
+ *
+ * Each alias maps to an absolute path under `<projectRoot>/<assets.dir>/<subfolder>`.
+ * Pure function (no I/O) so it is easy to unit-test.
+ *
+ * @param assets - The resolved assets configuration.
+ * @returns A record of alias → absolute directory path.
+ */
+export const buildAssetAliases = (assets?: AssetsConfig): Record<string, string> => {
+  const dir = assets?.dir ?? 'assets'
+  const aliases = assets?.aliases ?? {}
+  const result: Record<string, string> = {}
+
+  for (const [alias, subfolder] of Object.entries(aliases)) {
+    const relative = subfolder.length > 0 ? `${dir}/${subfolder}` : dir
+    result[alias] = basePath(relative)
+  }
+
+  return result
 }
 
 /**

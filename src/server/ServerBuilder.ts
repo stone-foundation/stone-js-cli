@@ -49,7 +49,9 @@ export class ServerBuilder {
    * @param _event The incoming event.
    */
   preview (_event: IncomingEvent): void {
-    const output = this.context.blueprint.get('stone.builder.output', 'index.mjs')
+    // Must match the build output default (ServerBuildMiddleware writes `dist/server.mjs`),
+    // otherwise `stone build` then `stone preview` always fails on a default config.
+    const output = this.context.blueprint.get('stone.builder.output', 'server.mjs')
     if (!existsSync(distPath(output))) {
       throw new CliError('The application must be built before previewing.')
     }

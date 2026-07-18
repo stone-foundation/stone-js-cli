@@ -6,14 +6,15 @@ import {
 } from './stubs'
 import { CliError } from '../errors/CliError'
 import { basePath } from '@stone-js/filesystem'
+import { StoneReporter } from '../StoneReporter'
 import { ConsoleContext } from '../declarations'
 import { MetaPipe, Pipeline } from '@stone-js/pipeline'
 import { IBlueprint, IncomingEvent } from '@stone-js/core'
 import { ReactPreviewMiddleware } from './ReactPreviewMiddleware'
-import { dirPath, isCSR, isSSR, isTypescriptApp } from '../utils'
+import { dirPath, isCSR, isSSR, isSSG, isTypescriptApp } from '../utils'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { ReactConsoleMiddleware, ReactDevMiddleware } from './ReactDevMiddleware'
-import { ReactCSRBuildMiddleware, ReactSSRBuildMiddleware } from './ReactBuildMiddleware'
+import { ReactCSRBuildMiddleware, ReactSSRBuildMiddleware, ReactSSGBuildMiddleware } from './ReactBuildMiddleware'
 
 /**
  * The React builder class.
@@ -32,11 +33,31 @@ export class ReactBuilder {
    * @param event The incoming event.
    */
   async build (event: IncomingEvent): Promise<void> {
+    const reporter = StoneReporter.create(this.context.commandOutput, this.resolveVersion())
     const [rendering, buildMiddleware] = this.getBuildMiddleware(event)
-    this.context.commandOutput.info(`Building React application with ${rendering}...`)
+    const startedAt = Date.now()
+
+    reporter.banner()
+    reporter.step(`Building React application (${rendering})…`)
+
     await this.executeThroughPipeline(buildMiddleware)
-    this.context.commandOutput.show(`🎉 ${this.context.commandOutput.format.green('React application built successfully!')}`)
+
+    reporter.success('React application built successfully', Date.now() - startedAt)
+    reporter.summary([
+      ['Mode', rendering],
+      ['Output', 'dist/']
+    ])
+
     setImmediate(() => process.exit(0)).unref()
+  }
+
+  /**
+   * Resolve the app version for the banner (best-effort, no throw).
+   *
+   * @returns The version string, or an empty string.
+   */
+  private resolveVersion (): string {
+    return this.context.blueprint.get<string>('stone.builder.version', '') ?? ''
   }
 
   /**
@@ -230,13 +251,16 @@ export class ReactBuilder {
    */
   private getBuildMiddleware (
     event: IncomingEvent
-  ): [string, typeof ReactCSRBuildMiddleware | typeof ReactSSRBuildMiddleware] {
-    if (isCSR(this.context.blueprint, event)) {
+  ): [string, typeof ReactCSRBuildMiddleware | typeof ReactSSRBuildMiddleware | typeof ReactSSGBuildMiddleware] {
+    // SSG is checked first: it runs the full SSR build, then pre-renders routes to HTML.
+    if (isSSG(this.context.blueprint, event)) {
+      return ['SSG', ReactSSGBuildMiddleware]
+    } else if (isCSR(this.context.blueprint, event)) {
       return ['CSR', ReactCSRBuildMiddleware]
     } else if (isSSR(this.context.blueprint, event)) {
       return ['SSR', ReactSSRBuildMiddleware]
     } else {
-      throw new CliError('Invalid build type. Please use "csr" or "ssr".')
+      throw new CliError('Invalid build type. Please use "csr", "ssr" or "ssg".')
     }
   }
 }

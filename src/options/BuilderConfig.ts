@@ -35,6 +35,25 @@ export interface InputConfig {
 }
 
 /**
+ * Static asset alias configuration.
+ *
+ * `dir` is the assets root (relative to the project root). `aliases` maps an import alias
+ * to a subfolder of `dir` (empty string means `dir` itself). Example resolution with
+ * `{ dir: 'assets', aliases: { '@img': 'images' } }`: `@img/logo.png` → `<root>/assets/images/logo.png`.
+ */
+export interface AssetsConfig {
+  /**
+   * The assets root directory, relative to the project root. Default `assets`.
+   */
+  dir?: string
+
+  /**
+   * Map of import alias to subfolder of `dir`.
+   */
+  aliases?: Record<string, string>
+}
+
+/**
  * Rollup configuration for the application.
  */
 export interface RollupConfig {
@@ -109,6 +128,32 @@ export interface BuilderConfig {
   input?: InputConfig
 
   /**
+   * Static asset import aliases for components (client and SSR).
+   *
+   * Lets components import assets with short, stable aliases instead of brittle relative
+   * paths, e.g. `import logo from '@img/logo.png'`. Each alias resolves to a subfolder of
+   * `assets.dir` under the project root. Applied to dev, build, client and SSR via Vite's
+   * `resolve.alias`; user `builder.vite.resolve.alias` still wins.
+   */
+  assets?: AssetsConfig
+
+  /**
+   * The public directory served/copied verbatim (defaults to `public`).
+   */
+  public?: string
+
+  /**
+   * Static Site Generation options (used with `rendering: 'ssg'` / `--ssg`).
+   */
+  ssg?: {
+    /**
+     * The routes to pre-render to static HTML. Defaults to `['/']`.
+     * Parameterized routes should be listed explicitly (e.g. `/blog/hello`).
+     */
+    routes?: string[]
+  }
+
+  /**
    * The output file path for the production build.
    */
   output?: string
@@ -140,6 +185,17 @@ export interface BuilderConfig {
 export const builder: BuilderConfig = {
   dotenv,
   lazy: false, // TODO: To be removed when the vite issue is fixed.
+  public: 'public',
+  assets: {
+    dir: 'assets',
+    aliases: {
+      '@assets': '',
+      '@img': 'images',
+      '@css': 'css',
+      '@fonts': 'fonts',
+      '@styles': 'styles'
+    }
+  },
   rollup: {
     build: rollupBuildConfig,
     bundle: rollupBundleConfig

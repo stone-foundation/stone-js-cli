@@ -295,6 +295,22 @@ export const isSSR = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
 }
 
 /**
+ * Determines if the application is using static site generation (SSG).
+ *
+ * SSG is opt-in via the `--ssg` flag or `stone.builder.rendering = 'ssg'`. It is never
+ * inferred from file contents (it is a deliberate deployment choice).
+ *
+ * @param blueprint The blueprint object.
+ * @param event The incoming event.
+ * @returns True if the application is using static site generation.
+ */
+export const isSSG = (blueprint: IBlueprint, event: IncomingEvent): boolean => {
+  if (event.get('ssg') === true) return true
+  if (!event.is('rendering', undefined)) return event.is('rendering', 'ssg')
+  return blueprint.is('stone.builder.rendering', 'ssg')
+}
+
+/**
  * Determines the rendering strategy based on the content of the file.
  *
  * @param content - The content of the file.

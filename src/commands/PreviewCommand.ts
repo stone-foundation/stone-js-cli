@@ -67,7 +67,8 @@ export class PreviewCommand {
       this.startProcess(buildPath('preview.mjs'))
     } else {
       await new ServerBuilder(this.context).preview(event)
-      this.startProcess(distPath('index.mjs'))
+      const output = this.context.blueprint.get<string>('stone.builder.output', 'server.mjs')
+      this.startProcess(distPath(output))
     }
   }
 
