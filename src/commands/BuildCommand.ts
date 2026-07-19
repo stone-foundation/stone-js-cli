@@ -31,7 +31,11 @@ export const buildCommandOptions: CommandOptions = {
         alias: 'r',
         type: 'string',
         desc: 'web rendering type',
-        choices: ['csr', 'ssr']
+        choices: ['csr', 'ssr', 'ssg']
+      })
+      .option('ssg', {
+        type: 'boolean',
+        desc: 'static site generation (pre-render routes to HTML)'
       })
       .option('lazy', {
         alias: 'l',

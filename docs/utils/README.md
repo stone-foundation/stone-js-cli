@@ -15,6 +15,7 @@
 - [isDeclarative](functions/isDeclarative.md)
 - [isLazyViews](functions/isLazyViews.md)
 - [isReactApp](functions/isReactApp.md)
+- [isSSG](functions/isSSG.md)
 - [isSSR](functions/isSSR.md)
 - [isTypescriptApp](functions/isTypescriptApp.md)
 - [setCache](functions/setCache.md)

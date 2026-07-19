@@ -3,6 +3,7 @@
 ## Variables
 
 - [ReactCSRBuildMiddleware](variables/ReactCSRBuildMiddleware.md)
+- [ReactSSGBuildMiddleware](variables/ReactSSGBuildMiddleware.md)
 - [ReactSSRBuildMiddleware](variables/ReactSSRBuildMiddleware.md)
 
 ## Functions
@@ -16,4 +17,5 @@
 - [GenerateLazyPageMiddleware](functions/GenerateLazyPageMiddleware.md)
 - [GeneratePublicEnvFileMiddleware](functions/GeneratePublicEnvFileMiddleware.md)
 - [GenerateReactServerFileMiddleware](functions/GenerateReactServerFileMiddleware.md)
+- [GenerateStaticSiteMiddleware](functions/GenerateStaticSiteMiddleware.md)
 - [GenerateViewsIndexMiddleware](functions/GenerateViewsIndexMiddleware.md)

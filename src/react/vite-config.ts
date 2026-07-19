@@ -54,7 +54,12 @@ export const viteConfig = defineConfig(() => {
             }],
             '@babel/preset-typescript'
           ],
-          plugins: [['@babel/plugin-proposal-decorators', { version: '2023-11' }]]
+          plugins: [
+            ['@babel/plugin-proposal-decorators', { version: '2023-11' }],
+            '@babel/plugin-transform-class-static-block',
+            '@babel/plugin-transform-class-properties',
+            '@babel/plugin-transform-private-methods'
+          ]
         }
       }),
       babel({
@@ -71,7 +76,12 @@ export const viteConfig = defineConfig(() => {
             }],
             '@babel/preset-typescript'
           ],
-          plugins: [['@babel/plugin-proposal-decorators', { version: '2023-11' }]]
+          plugins: [
+            ['@babel/plugin-proposal-decorators', { version: '2023-11' }],
+            '@babel/plugin-transform-class-static-block',
+            '@babel/plugin-transform-class-properties',
+            '@babel/plugin-transform-private-methods'
+          ]
         }
       })
     ],

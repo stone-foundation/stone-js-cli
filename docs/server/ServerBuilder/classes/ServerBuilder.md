@@ -148,15 +148,20 @@ The incoming event.
 watchFiles(cb): void;
 ```
 
-Server Files watcher.
+Watch the application sources and invoke `cb` (debounced) on every change.
+
+Only the source root (derived from `stone.builder.input.all`) and the project's config
+files are watched — not the whole working tree — so a README or `.git/` write never triggers
+a rebuild. Rapid successive saves are coalesced through a small debounce window so a single
+multi-file save produces one rebuild instead of a burst.
 
 #### Parameters
 
 ##### cb
 
-() => `void` \| `Promise`\<`void`\>
+(`path`, `count`) => `void` \| `Promise`\<`void`\>
 
-The callback function.
+Called with the triggering file path and its change count.
 
 #### Returns
 

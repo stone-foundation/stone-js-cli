@@ -4,6 +4,21 @@ Configuration for building the Stone.js application.
 
 ## Properties
 
+### assets?
+
+```ts
+optional assets?: AssetsConfig;
+```
+
+Static asset import aliases for components (client and SSR).
+
+Lets components import assets with short, stable aliases instead of brittle relative
+paths, e.g. `import logo from '@img/logo.png'`. Each alias resolves to a subfolder of
+`assets.dir` under the project root. Applied to dev, build, client and SSR via Vite's
+`resolve.alias`; user `builder.vite.resolve.alias` still wins.
+
+***
+
 ### browser?
 
 ```ts
@@ -82,6 +97,16 @@ The output file path for the production build.
 
 ***
 
+### public?
+
+```ts
+optional public?: string;
+```
+
+The public directory served/copied verbatim (defaults to `public`).
+
+***
+
 ### rendering?
 
 ```ts
@@ -117,6 +142,25 @@ optional printUrls?: boolean;
 ```
 
 Should print or not the URLs of the server.
+
+***
+
+### ssg?
+
+```ts
+optional ssg?: object;
+```
+
+Static Site Generation options (used with `rendering: 'ssg'` / `--ssg`).
+
+#### routes?
+
+```ts
+optional routes?: string[];
+```
+
+The routes to pre-render to static HTML. Defaults to `['/']`.
+Parameterized routes should be listed explicitly (e.g. `/blog/hello`).
 
 ***
 

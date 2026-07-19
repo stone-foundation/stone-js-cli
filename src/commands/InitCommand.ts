@@ -29,6 +29,11 @@ export const initCommandOptions: CommandOptions = {
         type: 'boolean',
         desc: 'Force overriding'
       })
+      .option('starters', {
+        alias: 's',
+        type: 'string',
+        desc: 'Comma-separated starter links (git/npm/local), e.g. github:owner/repo,@acme/stone-starters. Overrides the built-in default.'
+      })
   }
 }
 

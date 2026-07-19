@@ -1,9 +1,12 @@
 import { glob } from 'glob'
 import fsExtra from 'fs-extra'
+import { runSsg } from './ssg'
+import { CliError } from '../errors/CliError'
 import { relative } from 'node:path'
 import { existsSync } from 'node:fs'
 import { build, mergeConfig } from 'vite'
 import { ConsoleContext } from '../declarations'
+import { spawn, ChildProcess } from 'node:child_process'
 import { PageRouteDefinition } from '@stone-js/router'
 import { MetaPipe, NextPipe } from '@stone-js/pipeline'
 import { removeImportsVitePlugin } from './RemoveImportsVitePlugin'
@@ -435,4 +438,108 @@ export const ReactSSRBuildMiddleware: Array<MetaPipe<ConsoleContext, IBlueprint>
   { module: BuildReactServerAppMiddleware, priority: 7 },
   { module: BuildReactCleaningMiddleware, priority: 8 },
   { module: GeneratePublicEnvFileMiddleware, priority: 9 }
+]
+
+/**
+ * Wait for the spawned SSR server to be ready and return its base URL.
+ *
+ * Parses the server's stdout for a `localhost:<port>` (or any `host:port`) banner line.
+ * Falls back to the configured adapter port after a short delay.
+ *
+ * @param child - The spawned server process.
+ * @param fallbackUrl - The URL to assume if no banner is detected.
+ * @returns The base URL to crawl.
+ */
+async function waitForServer (child: ChildProcess, fallbackUrl: string, timeoutMs = 8000): Promise<string> {
+  return await new Promise<string>((resolve, reject) => {
+    let settled = false
+    let stderr = ''
+
+    const cleanup = (): void => {
+      clearTimeout(timer)
+      child.stdout?.off('data', onData)
+      child.stderr?.off('data', onStderr)
+      child.off('exit', onExit)
+    }
+    const done = (url: string): void => { if (!settled) { settled = true; cleanup(); resolve(url) } }
+    const fail = (error: Error): void => { if (!settled) { settled = true; cleanup(); reject(error) } }
+
+    const onData = (chunk: Buffer): void => {
+      const match = /https?:\/\/[^\s]*?:(\d+)/.exec(chunk.toString())
+      if (match !== null) { done(`http://127.0.0.1:${match[1]}`) }
+    }
+    const onStderr = (chunk: Buffer): void => { stderr += chunk.toString(); onData(chunk) }
+    // If the server exits before ever announcing a URL, it has no HTTP endpoint to crawl:
+    // fail fast with a clear message instead of waiting out the timeout and hitting ECONNREFUSED.
+    const onExit = (code: number | null): void => {
+      fail(new CliError(
+        'SSG requires an HTTP server adapter (e.g. @stone-js/node-http-adapter): the built server ' +
+        `exited (code ${code ?? 'null'}) without exposing an HTTP endpoint.${stderr.length > 0 ? `\n${stderr.trim()}` : ''}`
+      ))
+    }
+
+    const timer = setTimeout(() => done(fallbackUrl), timeoutMs)
+    child.stdout?.on('data', onData)
+    child.stderr?.on('data', onStderr)
+    child.on('exit', onExit)
+  })
+}
+
+/**
+ * Pre-render routes to static HTML (SSG).
+ *
+ * SSG is SSR executed at build time: this starts the freshly-built SSR server, crawls the
+ * configured routes (`stone.builder.ssg.routes`, defaulting to `/`), writes each response to
+ * `dist/<route>/index.html` via the SSG orchestrator, then stops the server. Pages therefore
+ * render identically whether pre-rendered or server-rendered.
+ *
+ * @param context - The console context.
+ * @param next - The next middleware.
+ * @returns The blueprint.
+ */
+export const GenerateStaticSiteMiddleware = async (
+  context: ConsoleContext,
+  next: NextPipe<ConsoleContext, IBlueprint>
+): Promise<IBlueprint> => {
+  const output = context.blueprint.get<string>('stone.builder.output', 'server.mjs')
+  const routes = context.blueprint.get<string[]>('stone.builder.ssg.routes', ['/'])
+  const adapterUrl = context.blueprint.get<string>('stone.adapter.url', 'http://localhost:8080')
+
+  const child = spawn('node', [distPath(output)], { stdio: ['ignore', 'pipe', 'pipe'] })
+
+  try {
+    const baseUrl = await waitForServer(child, adapterUrl.replace('localhost', '127.0.0.1'))
+
+    const written = await runSsg({
+      definitions: [],
+      extraTargets: routes.map((path) => ({ path })),
+      outDir: distPath(),
+      render: async (target) => {
+        try {
+          const response = await fetch(new URL(target.path, baseUrl))
+          return { path: target.path, html: await response.text(), statusCode: response.status }
+        } catch (error: any) {
+          throw new CliError(
+            `SSG failed to reach the SSR server at ${baseUrl}${target.path}. SSG needs an HTTP ` +
+            'server adapter (e.g. @stone-js/node-http-adapter) listening at that address.\n' +
+            `Cause: ${String(error?.message ?? error)}`
+          )
+        }
+      }
+    })
+
+    context.commandOutput.info(`Pre-rendered ${written.length} route(s) to static HTML.`)
+  } finally {
+    child.kill('SIGTERM')
+  }
+
+  return await next(context)
+}
+
+/**
+ * Middleware for building SSG React applications (SSR build + static pre-render).
+ */
+export const ReactSSGBuildMiddleware: Array<MetaPipe<ConsoleContext, IBlueprint>> = [
+  ...ReactSSRBuildMiddleware,
+  { module: GenerateStaticSiteMiddleware, priority: 10 }
 ]

@@ -1,8 +1,8 @@
 import fsExtra from 'fs-extra'
-import templates from './templates'
 import { CliError } from '../errors/CliError'
 import { basePath } from '@stone-js/filesystem'
 import { ConsoleContext } from '../declarations'
+import { getAvailableStarters } from './StarterContract'
 
 const { pathExistsSync } = fsExtra
 
@@ -28,10 +28,16 @@ export class Questionnaire {
   constructor (private readonly context: ConsoleContext) {}
 
   /**
-   * Returns the available templates.
+   * Returns the available starters: those from the configured/default links plus any
+   * auto-detected installed starter packages. The CLI knows nothing about specific starters —
+   * titles come from each starter's own manifest.
    */
-  private get templates (): Array<Record<'value' | 'title', string>> {
-    return templates({ format: this.context.commandOutput.format })
+  private async getTemplates (): Promise<Array<Record<'value' | 'title', string>>> {
+    const starters = await getAvailableStarters(this.context.blueprint, {
+      cwd: basePath(),
+      output: { info: (message: string) => this.context.commandOutput.info(message) }
+    })
+    return starters.map(({ value, title }) => ({ value, title: title ?? value }))
   }
 
   /**
@@ -39,8 +45,8 @@ export class Questionnaire {
    */
   private get typings (): Array<Record<'value' | 'title', string>> {
     return [
-      { value: 'vanilla', title: 'None (Vanilla)' },
-      { value: 'typescript', title: 'TypeScript' }
+      { value: 'typescript', title: 'TypeScript' },
+      { value: 'vanilla', title: 'None (Vanilla)' }
     ]
   }
 
@@ -127,7 +133,7 @@ export class Questionnaire {
 
     answers.template = await this.context.commandInput.choice(
       this.messages.template,
-      this.templates,
+      await this.getTemplates(),
       [0]
     )
 

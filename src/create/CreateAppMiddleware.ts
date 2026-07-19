@@ -5,14 +5,20 @@ import { CliError } from '../errors/CliError'
 import { execFileSync } from 'node:child_process'
 import { MetaPipe, NextPipe } from '@stone-js/pipeline'
 import { IBlueprint, isNotEmpty } from '@stone-js/core'
-import { basePath, tmpPath } from '@stone-js/filesystem'
+import { basePath } from '@stone-js/filesystem'
 import { CreateAppConfig } from '../options/CreateAppConfig'
 import { ConsoleContext, PackageJson } from '../declarations'
+import { deriveVanilla } from './vanilla'
+import { getAvailableStarters, materializeStarter } from './StarterContract'
 
-const { pathExistsSync, existsSync, renameSync, removeSync, copySync, readJsonSync, writeJsonSync } = fsExtra
+const { pathExistsSync, existsSync, renameSync, removeSync, readJsonSync, writeJsonSync } = fsExtra
 
 /**
- * Clone starter from GitHub.
+ * Materialise the selected starter into the destination directory.
+ *
+ * Resolves the starter from the registered providers (the default official provider or any
+ * third-party provider declared under `stone.createApp.starters`) and copies its files using
+ * the starter's own source (git/local/custom). Nothing about the starter set is hard-coded here.
  *
  * @param context - Input data to transform via middleware.
  * @param next - Function to pass to the next middleware.
@@ -25,29 +31,34 @@ export const CloneStarterMiddleware = async (
   const {
     overwrite = false,
     projectName = 'stone-project',
-    template = 'basic-service-declarative',
-    startersRepo = 'https://github.com/stone-foundation/stone-js-starters.git'
+    template = 'basic-service-declarative'
   } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
 
   const destDir = basePath(projectName)
-  const srcDir = tmpPath('stone-js-starters', template)
 
   if (!overwrite && pathExistsSync(destDir)) {
     throw new CliError(`Target directory (${destDir}) is not empty. Remove existing files and continue.`)
   }
 
+  const starters = await getAvailableStarters(context.blueprint, {
+    cwd: basePath(),
+    output: { info: (message: string) => context.commandOutput.info(message) }
+  })
+  const starter = starters.find((s) => s.value === template) ?? starters[0]
+
+  if (starter === undefined) {
+    throw new CliError('No starter available. Pass one with `--starters <link>` or install a starter package.')
+  }
+
   context.commandOutput.info(`Creating project in ${destDir}`)
 
   existsSync(destDir) && removeSync(destDir)
-  existsSync(tmpPath('stone-js-starters')) && removeSync(tmpPath('stone-js-starters'))
 
-  await simpleGit(tmpPath()).clone(startersRepo, 'stone-js-starters')
-
-  copySync(srcDir, destDir)
+  materializeStarter(starter, destDir)
 
   const packageJson = readJsonSync(join(destDir, 'package.json'))
 
-  context.blueprint.add('stone.createApp', { destDir, srcDir, packageJson })
+  context.blueprint.add('stone.createApp', { destDir, packageJson })
 
   return await next(context)
 }
@@ -93,38 +104,29 @@ export const InstallDependenciesMiddleware = async (
 }
 
 /**
- * Convert to vanilla JavaScript.
+ * Convert the scaffolded project to vanilla JavaScript when `typing === 'vanilla'`.
+ *
+ * Stone.js is a TypeScript AND JavaScript framework: the templates are authored once in TS and
+ * the JS variant is DERIVED (types stripped, stage-3 decorators preserved), so both the
+ * declarative and imperative APIs are available 1:1 in TS and JS without a second template set.
  *
  * @param context - Input data to transform via middleware.
  * @param next - Function to pass to the next middleware.
  * @returns A promise resolving with the context object.
  */
-// export const ConvertToVanillaMiddleware = async (
-//   context: ConsoleContext,
-//   next: NextPipe<ConsoleContext, IBlueprint>
-// ): Promise<IBlueprint> => {
-// const {
-//   // typing,
-//   // destDir = ''
-// } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
+export const ConvertToVanillaMiddleware = async (
+  context: ConsoleContext,
+  next: NextPipe<ConsoleContext, IBlueprint>
+): Promise<IBlueprint> => {
+  const { typing, destDir = '' } = context.blueprint.get<CreateAppConfig>('stone.createApp', {} as any)
 
-// TODO: Implement this feature
-// if (typing === 'vanilla') {
-//   createAppRollupConfig.input = join(destDir, 'app/**/*.ts')
+  if (typing === 'vanilla' && destDir.length > 0) {
+    const generated = deriveVanilla(join(destDir, 'app'))
+    context.commandOutput.info(`Converted ${generated.length} file(s) to vanilla JavaScript.`)
+  }
 
-//   if (isNotEmpty<OutputOptions>(createAppRollupConfig.output)) {
-//     process.chdir(destDir)
-//     createAppRollupConfig.output.dir = join(destDir, '.tmp')
-//     const builder = await rollup(createAppRollupConfig)
-//     await builder.write(createAppRollupConfig.output)
-//   }
-
-//   removeSync(join(destDir, 'app'))
-//   renameSync(join(destDir, '.tmp'), join(destDir, 'app'))
-// }
-
-//   return await next(context)
-// }
+  return await next(context)
+}
 
 /**
  * Configure testing.
@@ -218,8 +220,8 @@ export const FinalizeMiddleware = async (
  */
 export const CreateAppMiddleware: Array<MetaPipe<ConsoleContext, IBlueprint>> = [
   { priority: 0, module: CloneStarterMiddleware },
-  { priority: 1, module: InstallDependenciesMiddleware },
-  // { priority: 2, module: ConvertToVanillaMiddleware },
-  { priority: 2, module: ConfigureTestingMiddleware },
-  { priority: 3, module: FinalizeMiddleware }
+  { priority: 1, module: ConvertToVanillaMiddleware },
+  { priority: 2, module: InstallDependenciesMiddleware },
+  { priority: 3, module: ConfigureTestingMiddleware },
+  { priority: 4, module: FinalizeMiddleware }
 ]

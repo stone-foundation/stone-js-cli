@@ -78,7 +78,12 @@ describe('ServerBuilder', () => {
 
     context = {
       blueprint: {
-        get: vi.fn().mockReturnValue(['node_modules/**', 'dist/**', '.stone/**']),
+        get: vi.fn((key: string, fallback: any) => {
+          if (key === 'stone.builder.watcher.ignored') { return ['node_modules/**', 'dist/**', '.stone/**', '.git/**'] }
+          if (key === 'stone.builder.watcher.debounce') { return 20 }
+          if (key === 'stone.builder.input.all') { return 'app/**/*.**' }
+          return fallback
+        }),
         set: vi.fn()
       },
       commandInput: {
@@ -156,40 +161,63 @@ describe('ServerBuilder', () => {
     expect(writeFileSync).not.toHaveBeenCalled()
   })
 
-  it('should setup file watchers and trigger callback on change/add', async () => {
+  it('should watch the source root + configs (not the whole tree) and debounce the callback', async () => {
+    vi.useFakeTimers()
     const cb = vi.fn()
     builder.watchFiles(cb)
 
-    expect(watch).toHaveBeenCalledWith('.', expect.objectContaining({
-      ignored: ['node_modules/**', 'dist/**', '.stone/**'],
-      persistent: true
-    }))
+    expect(watch).toHaveBeenCalledWith(
+      expect.arrayContaining(['app', 'stone.config.mjs', 'rollup.config.mjs']),
+      expect.objectContaining({
+        ignored: ['node_modules/**', 'dist/**', '.stone/**', '.git/**'],
+        persistent: true
+      })
+    )
+    expect(watch).not.toHaveBeenCalledWith('.', expect.anything())
 
-    // simulate watcher callbacks manually
     const onCalls = mockedWatcher.on.mock.calls
     const changeHandler = onCalls.find(([event]: string[]) => event === 'change')[1]
     const addHandler = onCalls.find(([event]: string[]) => event === 'add')[1]
 
-    await changeHandler('foo.ts')
-    await addHandler('bar.ts')
+    changeHandler('foo.ts')
+    addHandler('bar.ts')
 
-    expect(cb).toHaveBeenCalledTimes(2)
-    expect(context.commandOutput.show).toHaveBeenCalledWith(expect.stringMatching(/\[stone\].*foo\.ts/))
-    expect(context.commandOutput.show).toHaveBeenCalledWith(expect.stringMatching(/\[stone\].*bar\.ts/))
+    // Debounced: callback runs once, for the last change, after the debounce window.
+    expect(cb).not.toHaveBeenCalled()
+    await vi.advanceTimersByTimeAsync(30)
+    expect(cb).toHaveBeenCalledTimes(1)
+    expect(cb).toHaveBeenCalledWith('bar.ts', 1)
+    vi.useRealTimers()
   })
 
-  it('should increment change count and display (xN)', async () => {
+  it('should pass an incrementing change count for the same file', async () => {
+    vi.useFakeTimers()
     const cb = vi.fn()
     builder.watchFiles(cb)
 
     const changeHandler = mockedWatcher.on.mock.calls.find(([event]: string[]) => event === 'change')[1]
 
-    await changeHandler('file.ts')
-    await changeHandler('file.ts')
-    await changeHandler('file.ts')
+    changeHandler('file.ts')
+    changeHandler('file.ts')
+    changeHandler('file.ts')
 
-    const lastCall = (context.commandOutput.show as any).mock.lastCall[0]
-    expect(lastCall).toMatch(/file\.ts \(x3\)/)
+    await vi.advanceTimersByTimeAsync(30)
+    expect(cb).toHaveBeenCalledTimes(1)
+    expect(cb).toHaveBeenCalledWith('file.ts', 3)
+    vi.useRealTimers()
+  })
+
+  it('should fall back to the "app" source root when input.all has no leading segment', () => {
+    ;(context.blueprint.get as any).mockImplementation((key: string, fallback: any) => {
+      if (key === 'stone.builder.input.all') { return '/**/*.ts' } // leading slash → empty first segment
+      if (key === 'stone.builder.watcher.debounce') { return 20 }
+      if (key === 'stone.builder.watcher.ignored') { return ['node_modules/**'] }
+      return fallback
+    })
+
+    builder.watchFiles(() => {})
+
+    expect(watch).toHaveBeenCalledWith(expect.arrayContaining(['app']), expect.any(Object))
   })
 
   it('should register SIGINT and SIGTERM listeners to close watcher', async () => {

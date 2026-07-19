@@ -2,6 +2,11 @@
 
 The serve command class.
 
+Owns the dev-server lifecycle: it builds once, launches a supervised child process, and — for
+backend apps — watches the sources to rebuild and restart on change. Console output is
+context-aware: the first launch shows a banner + build spinner + "watching" hint, while a
+live-reload cycle shows a concise "changed → rebuilt · restarted" line.
+
 ## Constructors
 
 ### Constructor

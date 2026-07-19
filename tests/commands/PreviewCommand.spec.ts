@@ -77,7 +77,8 @@ describe('PreviewCommand', async () => {
 
     context = {
       blueprint: {
-        meta: {}
+        meta: {},
+        get: vi.fn((_key: string, fallback?: unknown) => fallback)
       }
     }
 

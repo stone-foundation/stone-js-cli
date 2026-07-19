@@ -77,6 +77,19 @@ optional srcDir?: string;
 
 ***
 
+### starters?
+
+```ts
+optional starters?: string[];
+```
+
+Starter links (git/npm/local) to fetch, e.g. `github:owner/repo`, `@acme/stone-starters`,
+`./my-starter`. Also set via `--starters link1,link2`. Empty = the built-in default link.
+The CLI stays agnostic: each linked package declares its own starters via `stone.starters`
+in its package.json. Installed starter packages are additionally auto-detected (0-config).
+
+***
+
 ### startersRepo
 
 ```ts
